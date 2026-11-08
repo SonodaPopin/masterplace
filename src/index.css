@@ -1,0 +1,13 @@
+/* Estilos base. Responsable de la interfaz: Gabriel (RNF-7: foco visible y contraste >= 4,5:1). */
+:root {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  color: #1c1c1c;
+  background: #ffffff;
+}
+body { margin: 0; }
+a { color: #0b57d0; }
+:focus-visible { outline: 3px solid #0b57d0; outline-offset: 2px; }
+.contenedor { max-width: 960px; margin: 0 auto; padding: 16px; }
+nav ul { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding: 0; }
+.pendiente { border: 1px dashed #888; padding: 12px; border-radius: 8px; }
