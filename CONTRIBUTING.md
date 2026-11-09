@@ -3,8 +3,10 @@
 ## Ramas
 
 - `premain` es la rama de integración: **todos los PR van a `premain`**.
-- `main` es la versión estable. Se actualiza solo con un PR de `premain` a `main`, una vez que la integración está
-  probada (por ejemplo, antes de cada hito o demo).
+- `main` es la versión estable y la única que se publica en Vercel. **Solo Joaquín** abre y fusiona el PR de
+  `premain` a `main`, una vez que la integración está probada (por ejemplo, antes de cada hito o demo). El proyecto
+  de Vercel está en su cuenta y el plan gratuito solo despliega commits de sus miembros; por eso `vercel.json`
+  desactiva los despliegues de las demás ramas.
 - Nadie hace push directo a `premain` ni a `main`.
 - Cada integrante trabaja en ramas cortas que parten de `premain`, con este formato: `nombre/tema`.
   Ejemplos: `pedro/busqueda-postgis`, `ignacio/rls-mensajes`, `hugo/ci2-bayes`.
