@@ -2,6 +2,7 @@
 -- Responsable: Ignacio (datos y seguridad). Revisar, ajustar y aplicar el lunes 9-11.
 -- Todas las tablas parten con RLS activado y SIN políticas: nadie puede leer ni escribir
 -- hasta que Ignacio agregue las políticas en 20261110000000_politicas_rls.sql.
+-- Ya desplegado en vercel
 
 create extension if not exists postgis;
 
