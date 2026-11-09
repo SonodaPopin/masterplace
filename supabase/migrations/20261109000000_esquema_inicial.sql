@@ -3,6 +3,7 @@
 -- Todas las tablas parten con RLS activado y SIN políticas: nadie puede leer ni escribir
 -- hasta que Ignacio agregue las políticas en 20261110000000_politicas_rls.sql.
 -- Ya desplegado en vercel
+-- Revisado y editado en consideracion con tabla 21 de E1
 
 create extension if not exists postgis;
 
@@ -32,7 +33,7 @@ create table public.perfiles (
   telefono    text,
   comuna_id   smallint references public.comunas (id),
   creado_en   timestamptz not null default now()
-);
+);--auth.users.id registra correos es supabase por tanto se cumple la necesidad del mismo
 
 create type public.estado_identidad as enum ('pendiente', 'verificada', 'rechazada');
 
@@ -77,7 +78,13 @@ create table public.documentos (
   estado        public.estado_revision not null default 'pendiente',
   revisor_id    uuid references public.perfiles (id),
   revisado_en   timestamptz,
-  creado_en     timestamptz not null default now()
+  creado_en     timestamptz not null default now(),
+
+  -- Una cédula aprobada no puede conservar la ruta del archivo (RF-2, §5.3).
+  -- Una cédula rechazada sí la conserva hasta su eliminación programada (30 días).
+  -- El certificado puede conservar su ruta mientras esté vigente (RB-8).
+  constraint documentos_cedula_aprobada_sin_archivo
+    check (not (tipo = 'cedula' and estado = 'aprobado' and ruta_archivo is not null))
 );
 
 -- Contactos, mensajes y reseñas ----------------------------------------------
@@ -111,6 +118,33 @@ create table public.resenas (
   creada_en     timestamptz not null default now()
 );
 
+-- RB-2: una reseña solo se puede guardar si su contacto tiene el servicio confirmado.
+create or replace function public.validar_resena_servicio_confirmado()
+returns trigger
+language plpgsql
+set search_path = public
+as $$
+begin
+  if not exists (
+    select 1
+      from public.contactos c
+     where c.id = new.contacto_id
+       and c.estado = 'servicio_confirmado'
+  ) then
+    raise exception 'Solo se puede reseñar un contacto con el servicio confirmado (RB-2)';
+  end if;
+  return new;
+end;
+$$;
+
+create trigger resenas_requiere_servicio_confirmado
+  before insert or update of contacto_id on public.resenas
+  for each row
+  execute function public.validar_resena_servicio_confirmado();
+
+comment on table public.resenas is
+  'RB-2: solo se crea si el contacto está en servicio_confirmado (trigger). RB-7: una reseña por contacto (unique). Un cliente puede tener varios contactos con un maestro; cada uno admite su propia reseña.';
+
 -- Auditoría de revisiones y borrados (sin documentos ni chat) ----------------
 
 create table public.auditoria (
@@ -121,6 +155,59 @@ create table public.auditoria (
   creada_en  timestamptz not null default now()
 );
 
+-- Plazo del chat (§5.3): 30 días después de cerrar el contacto o, si no se cierra,
+-- 90 días desde la última actividad (último mensaje; si no hay, la creación del contacto).
+-- Borra solo mensajes: el contacto se conserva porque la reseña depende de él (RB-2, RB-7).
+create or replace function public.purgar_mensajes_vencidos()
+returns integer
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_borrados integer;
+begin
+  with vencidos as (
+    select c.id
+      from public.contactos c
+     where (
+             c.estado = 'cerrado'
+         and c.cerrado_en is not null
+         and c.cerrado_en < now() - interval '30 days'
+           )
+        or (
+             (c.estado <> 'cerrado' or c.cerrado_en is null)
+         and coalesce(
+               (select max(m.enviado_en) from public.mensajes m where m.contacto_id = c.id),
+               c.creado_en
+             ) < now() - interval '90 days'
+           )
+  ),
+  borrados as (
+    delete from public.mensajes m
+     using vencidos v
+     where m.contacto_id = v.id
+    returning m.id
+  )
+  select count(*) into v_borrados from borrados;
+
+  -- Registro de ejecución sin contenido del chat (§5.3)
+  insert into public.auditoria (actor_id, accion, objeto)
+  values (null, 'purga_chat', v_borrados || ' mensajes eliminados por vencimiento de plazo');
+
+  return v_borrados;
+end;
+$$;
+
+-- Solo la ejecuta la tarea programada, no los usuarios de la app.
+revoke execute on function public.purgar_mensajes_vencidos() from public, anon, authenticated;
+
+comment on function public.purgar_mensajes_vencidos() is
+  '§5.3: borra mensajes 30 días después del cierre del contacto, o 90 días tras la última actividad si no se cierra. No borra contactos ni reseñas.';
+
+-- Tarea diaria (requiere habilitar pg_cron en Supabase; por eso va comentada):
+-- create extension if not exists pg_cron;
+-- select cron.schedule('purgar-chat-diario', '0 3 * * *', $$select public.purgar_mensajes_vencidos()$$);
 -- RLS activado en todo (deniega por defecto) -----------------------------------
 
 alter table public.comunas           enable row level security;
