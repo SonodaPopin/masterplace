@@ -29,9 +29,9 @@
 | D2 | mar 10-11 | **Reunión de equipo** (acta). Registro e inicio de sesión funcionando; semilla con 6 comunas y 5 oficios; RLS básicas |
 | D3 | mié 11-11 | **Integración 1:** registro de maestro con cédula al bucket privado; búsqueda por comuna devuelve maestros verificados |
 | D4 | jue 12-11 | Panel de moderación aprueba y borra la cédula; mapa con marcadores y lista; contacto crea conversación |
-| D5 | vie 13-11 | **Integración 2:** flujo completo en Vercel (registro → verificación → búsqueda → contacto → chat). Reseña básica |
-| D6 | sáb 14-11 | Validación con usuarios (primeras sesiones); mediciones TNF-01 y TNF-02 |
-| D7 | dom 15-11 | Validación con usuarios (resto); correcciones de defectos críticos; resultados CI-1 y CI-2 |
+| D5 | vie 13-11 | **Integración 2:** flujo completo en Vercel (registro → verificación → búsqueda → contacto → chat). Reseña básica. A las 20:00 se envía el formulario de validación |
+| D6 | sáb 14-11 | Respuestas de la validación remota (recordatorio a mediodía); mediciones TNF-01 y TNF-02 |
+| D7 | dom 15-11 | Cierre de la validación a las 20:00 y verificación en la base; correcciones de defectos críticos; resultados CI-1 y CI-2 |
 | D8 | lun 16-11 | **Congelar código a las 18:00.** Diapositivas, guion de demo, ensayo completo cronometrado |
 | E3 | mar 17-11 | Presentación |
 
