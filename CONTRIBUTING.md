@@ -2,8 +2,11 @@
 
 ## Ramas
 
-- `main` siempre compila y pasa la CI. Nadie hace push directo a `main`.
-- Cada integrante trabaja en ramas cortas con este formato: `nombre/tema`.
+- `premain` es la rama de integración: **todos los PR van a `premain`**.
+- `main` es la versión estable. Se actualiza solo con un PR de `premain` a `main`, una vez que la integración está
+  probada (por ejemplo, antes de cada hito o demo).
+- Nadie hace push directo a `premain` ni a `main`.
+- Cada integrante trabaja en ramas cortas que parten de `premain`, con este formato: `nombre/tema`.
   Ejemplos: `pedro/busqueda-postgis`, `ignacio/rls-mensajes`, `hugo/ci2-bayes`.
 - Una rama dura uno o dos días. Si crece más, se divide.
 
@@ -25,9 +28,17 @@ pruebas, bitácora) cuenta igual que uno de código.
 
 ## Pull requests
 
-1. `git switch main && git pull`, luego `git switch -c nombre/tema`.
+1. Parte desde `premain` actualizado: `git switch premain && git pull`, luego `git switch -c nombre/tema`.
+   La primera vez, si no tienes `premain` local: `git fetch origin && git switch premain` (git la crea siguiendo a
+   `origin/premain`).
 2. Trabaja, haz commits y luego `git push -u origin nombre/tema`.
-3. Abre el PR con la plantilla y pide revisión a **una persona distinta**. Revisor por defecto:
+3. Abre el PR **hacia `premain`** con la plantilla y pide revisión a **una persona distinta**:
+
+   ```bash
+   gh pr create --base premain --fill
+   ```
+
+   Revisor por defecto:
 
    | Autor | Revisa |
    |---|---|
