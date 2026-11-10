@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useLocation } from 'react-router-dom'
 import Campo from '../../components/Campo'
+import Icono from '../../components/Icono'
+import DisenoCuentas from './DisenoCuentas'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
 import { useSesion } from '../../lib/auth/contexto'
 import { mensajeErrorAuth, normalizarCorreo, validarCorreo } from '../../lib/auth/validacion'
@@ -44,20 +46,22 @@ export default function IniciarSesion() {
   }
 
   return (
-    <section aria-labelledby="titulo-ingresar" className="tarjeta">
-      <h2 id="titulo-ingresar">Ingresar</h2>
-      <p>
-        ¿No tienes cuenta? <Link to="/registro/cliente">Regístrate como cliente</Link> o{' '}
-        <Link to="/registro/maestro">como maestro</Link>.
-      </p>
-
+    <DisenoCuentas
+      titulo="Te damos la bienvenida"
+      subtitulo={
+        <>
+          ¿No tienes cuenta? <Link to="/registro/cliente">Crea una gratis</Link>
+        </>
+      }
+    >
       {!supabaseConfigurado && (
         <p className="aviso" role="note">
+          <Icono nombre="alerta" tamano={18} />
           Falta configurar Supabase en <code>.env.local</code>; el inicio de sesión no funcionará en este entorno.
         </p>
       )}
 
-      <form onSubmit={enviar} noValidate>
+      <form onSubmit={enviar} noValidate className="formulario">
         <Campo
           id="correo"
           etiqueta="Correo"
@@ -81,15 +85,21 @@ export default function IniciarSesion() {
         />
 
         {errorGeneral && (
-          <p className="campo-error" role="alert">
+          <p className="alerta-error" role="alert">
+            <Icono nombre="alerta" tamano={18} />
             {errorGeneral}
           </p>
         )}
 
-        <button type="submit" disabled={enviando}>
+        <button type="submit" className="boton boton-primario boton-ancho" disabled={enviando} aria-busy={enviando}>
+          {enviando && <span className="girador" aria-hidden="true" />}
           {enviando ? 'Ingresando…' : 'Ingresar'}
         </button>
       </form>
-    </section>
+
+      <p className="cuentas-alterno">
+        ¿Eres maestro y aún no publicas tu perfil? <Link to="/registro/maestro">Regístrate como maestro</Link>
+      </p>
+    </DisenoCuentas>
   )
 }

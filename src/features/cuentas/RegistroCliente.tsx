@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate } from 'react-router-dom'
 import Campo from '../../components/Campo'
+import Icono from '../../components/Icono'
+import DisenoCuentas from './DisenoCuentas'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
 import { useSesion } from '../../lib/auth/contexto'
 import { COMUNAS_PILOTO } from '../../lib/catalogos/comunas'
@@ -38,13 +40,20 @@ export default function RegistroCliente() {
 
   if (correoPorConfirmar) {
     return (
-      <section aria-labelledby="titulo-registro" className="tarjeta">
-        <h2 id="titulo-registro">Revisa tu correo</h2>
-        <p role="status">
-          Te enviamos un enlace de confirmación a <strong>{correoPorConfirmar}</strong>. Ábrelo para activar tu cuenta y
-          luego <Link to="/ingresar">ingresa</Link>.
-        </p>
-      </section>
+      <DisenoCuentas titulo="Revisa tu correo">
+        <div className="confirmacion" role="status">
+          <span className="confirmacion-icono">
+            <Icono nombre="correo" tamano={32} />
+          </span>
+          <p>
+            Te enviamos un enlace de confirmación a <strong>{correoPorConfirmar}</strong>. Ábrelo para activar tu cuenta.
+          </p>
+          <p className="texto-suave">Si no lo ves en unos minutos, revisa la carpeta de spam.</p>
+          <Link to="/ingresar" className="boton boton-primario boton-ancho">
+            Ir a ingresar
+          </Link>
+        </div>
+      </DisenoCuentas>
     )
   }
 
@@ -96,29 +105,45 @@ export default function RegistroCliente() {
   }
 
   return (
-    <section aria-labelledby="titulo-registro" className="tarjeta">
-      <h2 id="titulo-registro">Crear cuenta de cliente</h2>
-      <p>
-        ¿Eres maestro? <Link to="/registro/maestro">Regístrate como maestro</Link>. ¿Ya tienes cuenta?{' '}
-        <Link to="/ingresar">Ingresa</Link>.
-      </p>
-
+    <DisenoCuentas
+      titulo="Crea tu cuenta"
+      subtitulo={
+        <>
+          ¿Ya tienes cuenta? <Link to="/ingresar">Ingresa</Link>
+        </>
+      }
+    >
       {!supabaseConfigurado && (
         <p className="aviso" role="note">
+          <Icono nombre="alerta" tamano={18} />
           Falta configurar Supabase en <code>.env.local</code>; el registro no funcionará en este entorno.
         </p>
       )}
 
-      <form onSubmit={enviar} noValidate>
-        <Campo
-          id="nombre"
-          etiqueta="Nombre"
-          autoComplete="name"
-          value={datos.nombre}
-          onChange={(e) => cambiar('nombre', e.target.value)}
-          error={errores.nombre}
-          required
-        />
+      <form onSubmit={enviar} noValidate className="formulario">
+        <div className="cuentas-campos-pareja">
+          <Campo
+            id="nombre"
+            etiqueta="Nombre"
+            autoComplete="name"
+            value={datos.nombre}
+            onChange={(e) => cambiar('nombre', e.target.value)}
+            error={errores.nombre}
+            required
+          />
+          <Campo
+            id="telefono"
+            etiqueta="Celular"
+            type="tel"
+            autoComplete="tel"
+            inputMode="tel"
+            placeholder="9 1234 5678"
+            value={datos.telefono}
+            onChange={(e) => cambiar('telefono', e.target.value)}
+            error={errores.telefono}
+          />
+        </div>
+
         <Campo
           id="correo"
           etiqueta="Correo"
@@ -130,19 +155,8 @@ export default function RegistroCliente() {
           error={errores.correo}
           required
         />
-        <Campo
-          id="telefono"
-          etiqueta="Celular (opcional)"
-          type="tel"
-          autoComplete="tel"
-          inputMode="tel"
-          placeholder="9 1234 5678"
-          value={datos.telefono}
-          onChange={(e) => cambiar('telefono', e.target.value)}
-          error={errores.telefono}
-        />
 
-        <div className="campo">
+        <div className={`campo${errores.comunaId ? ' campo-con-error' : ''}`}>
           <label htmlFor="comunaId">Comuna</label>
           <select
             id="comunaId"
@@ -162,43 +176,57 @@ export default function RegistroCliente() {
           </select>
           {errores.comunaId && (
             <p id="comunaId-error" className="campo-error">
+              <Icono nombre="alerta" tamano={16} />
               {errores.comunaId}
             </p>
           )}
         </div>
 
-        <Campo
-          id="contrasena"
-          etiqueta="Contraseña"
-          type="password"
-          autoComplete="new-password"
-          value={datos.contrasena}
-          onChange={(e) => cambiar('contrasena', e.target.value)}
-          error={errores.contrasena}
-          ayuda={`Al menos ${LARGO_MINIMO_CONTRASENA} caracteres, con letras y números.`}
-          required
-        />
-        <Campo
-          id="confirmacion"
-          etiqueta="Repite la contraseña"
-          type="password"
-          autoComplete="new-password"
-          value={datos.confirmacion}
-          onChange={(e) => cambiar('confirmacion', e.target.value)}
-          error={errores.confirmacion}
-          required
-        />
+        <div className="cuentas-campos-pareja">
+          <Campo
+            id="contrasena"
+            etiqueta="Contraseña"
+            type="password"
+            autoComplete="new-password"
+            value={datos.contrasena}
+            onChange={(e) => cambiar('contrasena', e.target.value)}
+            error={errores.contrasena}
+            ayuda={`Al menos ${LARGO_MINIMO_CONTRASENA} caracteres, con letras y números.`}
+            required
+          />
+          <Campo
+            id="confirmacion"
+            etiqueta="Repite la contraseña"
+            type="password"
+            autoComplete="new-password"
+            value={datos.confirmacion}
+            onChange={(e) => cambiar('confirmacion', e.target.value)}
+            error={errores.confirmacion}
+            required
+          />
+        </div>
 
         {errorGeneral && (
-          <p className="campo-error" role="alert">
+          <p className="alerta-error" role="alert">
+            <Icono nombre="alerta" tamano={18} />
             {errorGeneral}
           </p>
         )}
 
-        <button type="submit" disabled={enviando}>
+        <button type="submit" className="boton boton-primario boton-ancho" disabled={enviando} aria-busy={enviando}>
+          {enviando && <span className="girador" aria-hidden="true" />}
           {enviando ? 'Creando cuenta…' : 'Crear cuenta'}
+          {!enviando && (
+            <span className="icono-flecha">
+              <Icono nombre="flecha" tamano={18} />
+            </span>
+          )}
         </button>
       </form>
-    </section>
+
+      <p className="cuentas-alterno">
+        ¿Ofreces servicios de un oficio? <Link to="/registro/maestro">Regístrate como maestro</Link>
+      </p>
+    </DisenoCuentas>
   )
 }
