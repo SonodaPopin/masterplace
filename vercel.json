@@ -4,5 +4,6 @@
       "*": false,
       "main": true
     }
-  }
+  },
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
