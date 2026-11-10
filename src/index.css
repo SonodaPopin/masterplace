@@ -11,3 +11,18 @@ a { color: #0b57d0; }
 .contenedor { max-width: 960px; margin: 0 auto; padding: 16px; }
 nav ul { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding: 0; }
 .pendiente { border: 1px dashed #888; padding: 12px; border-radius: 8px; }
+
+/* Formularios de cuenta (RF-10, RNF-7) */
+.tarjeta { max-width: 480px; }
+.campo { display: flex; flex-direction: column; gap: 4px; margin-bottom: 14px; }
+.campo label { font-weight: 600; }
+.campo input, .campo select { font: inherit; padding: 8px 10px; border: 1px solid #6b6b6b; border-radius: 6px; }
+.campo [aria-invalid="true"] { border-color: #b3261e; }
+.campo-ayuda { margin: 0; font-size: 0.9em; color: #4a4a4a; }
+.campo-error { margin: 0; color: #b3261e; font-weight: 600; }
+button { font: inherit; padding: 8px 16px; border-radius: 6px; border: 1px solid #0b57d0; background: #0b57d0; color: #fff; cursor: pointer; }
+button:disabled { opacity: 0.6; cursor: progress; }
+.boton-secundario { background: #fff; color: #0b57d0; padding: 4px 10px; }
+.estado-sesion { margin: 0 0 8px; }
+.etiqueta-rol { color: #4a4a4a; }
+.aviso { background: #fff4e5; border: 1px solid #b26a00; padding: 8px 12px; border-radius: 6px; }

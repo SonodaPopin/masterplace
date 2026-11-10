@@ -6,6 +6,7 @@ import Busqueda from './features/busqueda/Busqueda'
 import PanelModeracion from './features/admin/PanelModeracion'
 import Conversacion from './features/contacto/Conversacion'
 import NuevaResena from './features/resenas/NuevaResena'
+import EstadoSesion from './components/EstadoSesion'
 
 // Rutas del flujo principal (MVP Must). Cada página indica su responsable.
 export default function App() {
@@ -18,10 +19,10 @@ export default function App() {
             <li><Link to="/">Buscar maestros</Link></li>
             <li><Link to="/registro/cliente">Registro cliente</Link></li>
             <li><Link to="/registro/maestro">Registro maestro</Link></li>
-            <li><Link to="/ingresar">Ingresar</Link></li>
             <li><Link to="/admin">Moderación</Link></li>
           </ul>
         </nav>
+        <EstadoSesion />
       </header>
       <main>
         <Routes>
