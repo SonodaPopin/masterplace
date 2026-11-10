@@ -33,7 +33,7 @@ create table public.perfiles (
   telefono    text,
   comuna_id   smallint references public.comunas (id),
   creado_en   timestamptz not null default now()
-);--auth.users.id registra correos es supabase por tanto se cumple la necesidad del mismo
+);--auth.users.id registra correos en supabase por tanto se cumple la necesidad del mismo
 
 create type public.estado_identidad as enum ('pendiente', 'verificada', 'rechazada');
 
