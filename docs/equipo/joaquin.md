@@ -9,7 +9,7 @@
 | mar 10 | Monitor de disponibilidad cada 5 min (por ejemplo, UptimeRobot gratuito) para iniciar **TNF-04**. Configurar `vercel.json` con reescritura a `index.html` para que las rutas de React funcionen al recargar | `ci(vercel): rutas SPA y monitor` |
 | mié 11 | **RF-4 Contacto:** botón Contactar en el perfil del maestro que crea (o reutiliza) un contacto cliente–maestro y lleva a `/contactos/:id` | `feat(contacto): crear contacto desde perfil` |
 | jue 12 | **RF-11 Chat:** `src/features/contacto/Conversacion.tsx` carga los mensajes en orden y envía mensajes nuevos | `feat(chat): enviar y listar mensajes` |
-| vie 13 | Supabase Realtime: el otro participante ve el mensaje sin recargar; sin duplicados al reconectar. Integración 2 en Vercel | `feat(chat): mensajes en tiempo real` |
+| vie 13 | Supabase Realtime: el otro participante ve el mensaje sin recargar; sin duplicados al reconectar. Integración 2 en Vercel. **Antes de las 18:00**, congelar la versión para la validación y desactivar "Confirm email" en Supabase Auth hasta el domingo en la noche (`plan_validacion.md`, sección 3) | `feat(chat): mensajes en tiempo real` |
 | sáb 14 | Medir cuotas usadas (base de datos, Storage, ancho de banda) y llenar el costo ejecutado en `docs/gestion/costos.md` | `docs(costos): cuotas y gasto ejecutado` |
 | dom 15 | Actualizar riesgos materializados (R-01, R-07, R-08) en `docs/gestion/riesgos.md`. Preparar las cuentas de la demo | `docs(riesgos): estado al 15-11` |
 | lun 16 | Guion de la demo en `docs/pruebas/guion_demo.md` y dos ensayos de la demo cronometrados; plan B si falla internet (local con datos de prueba) | `docs(demo): guion y plan B` |
