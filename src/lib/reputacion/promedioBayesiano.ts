@@ -17,9 +17,29 @@ export function promedioBayesiano(
   C: number | null,
   m: number = M_POR_DEFECTO,
 ): number | null {
-  void n
-  void r
-  void C
-  void m
-  throw new Error('Por implementar (CI-2, Hugo): ver docs/ciencias/CI-2_promedio_bayesiano.md')
+  if (C === null) {
+    return null
+  }
+
+  if (!Number.isInteger(n) || n < 0) {
+    throw new Error('La cantidad de reseñas debe ser un entero no negativo')
+  }
+
+  if (!Number.isFinite(m) || m <= 0) {
+    throw new Error('El peso m debe ser positivo')
+  }
+
+  if (!Number.isFinite(C) || C < 1 || C > 5) {
+    throw new Error('El promedio global debe estar entre 1 y 5')
+  }
+
+  if (n === 0) {
+    return C
+  }
+
+  if (!Number.isFinite(r) || r < 1 || r > 5) {
+    throw new Error('El promedio del maestro debe estar entre 1 y 5')
+  }
+
+  return (n * r + m * C) / (n + m)
 }
