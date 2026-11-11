@@ -83,7 +83,7 @@ Formato de cada iteración: **disparador** (medición, prueba, retroalimentació
 - **Alternativas:** (a) mantener la propuesta original de E1; (b) acotar el aporte a la certificación verificada como
   señal separada y a la búsqueda por cercanía; (c) presentar MasterPlace como prototipo académico que replica parte del
   flujo de 2x3.
-- **Decisión:** [COMPLETAR con lo acordado en la reunión del 9-11 (ver `docs/actas/2026-11-09.md`), idealmente con el resultado de las entrevistas.]
+- **Decisión:** [COMPLETAR en la próxima reunión de equipo, idealmente con el resultado de las entrevistas.]
 - **Efecto verificado:** [COMPLETAR: por ejemplo, qué opinaron los participantes de la validación sobre la
   certificación y la distancia.]
 
