@@ -9,9 +9,11 @@ import { mensajeErrorAuth, normalizarCorreo, validarCorreo } from '../../lib/aut
 
 // RF-10 · Inicio de sesión con correo y contraseña (Supabase Auth). Responsable: Gabriel.
 export default function IniciarSesion() {
-  const { sesion } = useSesion()
+  const { sesion, rol } = useSesion()
   const ubicacion = useLocation()
-  const destino = (ubicacion.state as { desde?: string } | null)?.desde ?? '/'
+  // Un maestro va a su registro: ahí retoma los pasos pendientes o ve el estado de su verificación.
+  const destino =
+    (ubicacion.state as { desde?: string } | null)?.desde ?? (rol === 'maestro' ? '/registro/maestro' : '/')
 
   const [correo, setCorreo] = useState('')
   const [contrasena, setContrasena] = useState('')
