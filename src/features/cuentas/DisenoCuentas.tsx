@@ -22,12 +22,14 @@ type Props = {
   /** Indicador "Paso X de Y" junto al título (solo si se pasan ambos). */
   pasoActual?: number
   pasoTotal?: number
+  /** Nombre corto del paso actual, por ejemplo "Oficio y comunas". */
+  nombrePaso?: string
   children: ReactNode
 }
 
 // Diseño de dos columnas para las pantallas de cuenta: panel de marca con beneficios y tarjeta con el
 // formulario. En móvil el panel se reduce a una franja sobre el formulario.
-export default function DisenoCuentas({ titulo, subtitulo, publico = 'cliente', pasoActual, pasoTotal, children }: Props) {
+export default function DisenoCuentas({ titulo, subtitulo, publico = 'cliente', pasoActual, pasoTotal, nombrePaso, children }: Props) {
   const beneficios = publico === 'maestro' ? BENEFICIOS_MAESTRO : BENEFICIOS_CLIENTE
   return (
     <div className="cuentas">
@@ -82,7 +84,9 @@ export default function DisenoCuentas({ titulo, subtitulo, publico = 'cliente', 
       <section className="cuentas-tarjeta" aria-labelledby="titulo-cuenta">
         <div className="cuentas-encabezado-form">
           <div>
-            <h1 id="titulo-cuenta">{titulo}</h1>
+            <h1 id="titulo-cuenta" tabIndex={-1}>
+              {titulo}
+            </h1>
             {subtitulo && <p className="cuentas-subtitulo">{subtitulo}</p>}
           </div>
           {pasoActual != null && pasoTotal != null && (
@@ -90,7 +94,8 @@ export default function DisenoCuentas({ titulo, subtitulo, publico = 'cliente', 
               <span className="cuentas-paso-etiqueta">
                 Paso {pasoActual} de {pasoTotal}
               </span>
-              <span className="cuentas-paso-barra">
+              {nombrePaso && <span className="cuentas-paso-nombre">{nombrePaso}</span>}
+              <span className="cuentas-paso-barra" aria-hidden="true">
                 <span className="cuentas-paso-progreso" style={{ width: `${(pasoActual / pasoTotal) * 100}%` }} />
               </span>
             </div>
