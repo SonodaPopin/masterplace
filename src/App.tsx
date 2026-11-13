@@ -8,11 +8,13 @@ import Conversacion from './features/contacto/Conversacion'
 import NuevaResena from './features/resenas/NuevaResena'
 import Encabezado from './components/Encabezado'
 import PiePagina from './components/PiePagina'
+import AnunciarPagina from './components/AnunciarPagina'
 
 // Rutas del flujo principal (MVP Must). Cada página indica su responsable.
 export default function App() {
   return (
     <div className="app">
+      <AnunciarPagina />
       <a href="#contenido" className="saltar-contenido">
         Saltar al contenido
       </a>

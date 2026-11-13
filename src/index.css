@@ -71,6 +71,7 @@ code { font-size: 0.9em; background: var(--color-primario-suave); padding: 1px 6
   padding: clamp(20px, 4vw, 48px) 16px;
 }
 .contenido:focus { outline: none; }
+.contenido h1[tabindex='-1']:focus:not(:focus-visible) { outline: none; }
 
 .saltar-contenido {
   position: absolute; left: 16px; top: -60px; z-index: 100;
