@@ -112,4 +112,43 @@ Formato de cada iteración: **disparador** (medición, prueba, retroalimentació
   no está en el bucket y hay una fila en `auditoria`.] Las reglas puras del panel (cédula a revisar, validación del
   motivo, texto de auditoría sin la ruta del archivo) tienen 15 pruebas en `src/lib/moderacion/moderacion.test.ts`.
 
-### Iteración 3 · [título] (opcional para E3, exigida en E4)
+### Revisión de la Integración 2 frente al MVP de E1 §9.1 (13-11-2026)
+
+Estado de cada Must en `premain` el 13-11 a las 17:00, revisado en el código y en las migraciones.
+
+| Must | Estado | Qué falta | Responsable |
+|---|---|---|---|
+| RF-10 Registro de cliente e inicio de sesión | Listo | Desactivar "Confirm email" en Supabase para la validación | Joaquín |
+| RF-1 Registro de maestro con cédula | Listo | — | Gabriel |
+| RF-2 Verificación de identidad | En revisión (PR `diego/moderacion`) | Aplicar la migración `revisar_identidad` en Supabase y crear un admin | Diego e Ignacio |
+| RF-3 Búsqueda y filtro | Funciona con respaldo | Función `buscar_maestros` en PostGIS; gásfiters verificados en Talcahuano, Hualpén y Penco | Pedro e Ignacio |
+| RF-4 Contacto | Parcial | La función `crear_o_reutilizar_contacto` existe, pero ninguna pantalla la llama (falta el botón "Contactar") | Joaquín |
+| RF-11 Mensajería | Parcial | La conversación funciona, pero sin Realtime: el otro participante debe recargar | Joaquín |
+| RF-5 Reseña | Pendiente | La pantalla sigue "En construcción" | Hugo |
+| RF-8 Moderación de denuncias | Fuera de E3 | Depende de RF-12 (Should); queda para E4 | Diego |
+
+**Resultado:** 2 de 7 Must de E3 completos, 4 parciales o en revisión y 1 pendiente. La Integración 2 no se cumplió
+el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de congelar el código.]
+
+### Iteración 3 · Alcance de la demo de E3 tras la Integración 2 (13-11-2026)
+
+- **Disparador:** la revisión anterior. Al 13-11 el flujo completo (registro → verificación → búsqueda → contacto →
+  chat → reseña) no corre en Vercel: `main` todavía no tiene la búsqueda, faltan el botón "Contactar", la reseña y la
+  función PostGIS, y la verificación espera revisión. Quedan 3 días y la validación con usuarios empieza hoy a las
+  20:00.
+- **Alternativas:**
+  - (a) Mantener los 7 Must y trabajar hasta el lunes 16 a las 18:00.
+  - (b) Aplicar el orden de recorte de `docs/PLAN_E3.md`: primero la reseña (RF-5), luego el mapa (queda la lista) y
+    luego Realtime (el chat se actualiza al enviar o recargar). Nunca se recortan las políticas RLS ni el borrado de la
+    cédula.
+  - (c) Mostrar en la demo solo lo que funciona y explicar el resto con capturas.
+- **Decisión:** [CONFIRMAR con el equipo] (b), con prioridad en lo que necesita la validación (búsqueda y contacto).
+  Ya se aplicó un recorte de este tipo sin perder funcionalidad: la búsqueda consulta las tablas y calcula la
+  distancia con Haversine en el navegador cuando `buscar_maestros` no existe (`src/lib/busqueda/buscarMaestros.ts`),
+  así que RF-3 funciona sin esperar a PostGIS. Esto también sirve para CI-1: se pueden comparar los dos cálculos. Lo
+  mismo se hizo con la verificación: como las políticas impiden que la app cambie el estado del maestro, se resolvió
+  con una función en la base (Iteración 2) en lugar de relajar las políticas.
+- **Efecto verificado:** [COMPLETAR el 16-11: qué Must quedaron en la demo, resultado del ensayo cronometrado y
+  si los participantes de la validación completaron T3 (búsqueda) y T4 (contacto), según la consulta de Hugo.]
+
+### Iteración 4 · [título] (opcional para E3, exigida en E4)
