@@ -1,0 +1,332 @@
+/* MasterPlace · RF-11 Chat
+   Estilos de presentación para Conversacion.tsx.
+   Utiliza los tokens definidos en src/index.css. */
+
+.conversacion {
+  width: min(100%, 900px);
+  margin: clamp(18px, 3vw, 36px) auto;
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radio-grande);
+  box-shadow: var(--sombra);
+}
+
+.conversacion-encabezado {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: clamp(20px, 3vw, 30px) clamp(20px, 4vw, 34px) 22px;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f7f5 100%);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.conversacion-encabezado > div {
+  min-width: 0;
+}
+
+.conversacion-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 8px;
+  color: var(--color-primario);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.conversacion-encabezado h1 {
+  margin: 0 0 8px;
+  color: var(--color-texto);
+  font-size: clamp(1.65rem, 1.2rem + 1.7vw, 2.25rem);
+  line-height: 1.12;
+}
+
+.conversacion-encabezado .texto-suave {
+  margin: 0;
+  max-width: 620px;
+  color: var(--color-texto-suave);
+  font-size: 0.94rem;
+}
+
+/* Cuando está presente el indicador de Supabase Realtime, se muestra como una
+   pequeña línea de estado y no como otro párrafo grande. */
+.conversacion-encabezado .texto-suave[role='status'] {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 12px;
+  padding: 5px 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.conversacion-estado {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 5px 12px;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-texto-suave);
+  font-size: 0.82rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.conversacion-estado-abierto {
+  border-color: #b9dcc4;
+  background: #edf8f0;
+  color: #1f6b3a;
+}
+
+.conversacion-estado-servicio_confirmado {
+  border-color: #c5d6ef;
+  background: #eef4fc;
+  color: #214f85;
+}
+
+.conversacion-estado-cerrado {
+  border-color: var(--color-borde);
+  background: #f1f3f2;
+  color: var(--color-texto-suave);
+}
+
+.conversacion-mensajes {
+  list-style: none;
+  margin: 0;
+  padding: clamp(18px, 3vw, 30px);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 340px;
+  max-height: min(58vh, 580px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    radial-gradient(circle at 1px 1px, rgb(14 79 74 / 4%) 1px, transparent 0) 0 0 / 22px 22px,
+    #f6f8f7;
+  scrollbar-color: #aabbb6 transparent;
+  scrollbar-width: thin;
+}
+
+.conversacion-mensajes > li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.conversacion-fila {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.conversacion-fila-propia {
+  justify-content: flex-end;
+}
+
+.conversacion-burbuja {
+  width: fit-content;
+  max-width: min(78%, 620px);
+  padding: 12px 15px 9px;
+  border: 1px solid #dce5e1;
+  border-radius: 17px 17px 17px 5px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgb(16 33 30 / 5%);
+  overflow-wrap: anywhere;
+}
+
+.conversacion-burbuja-propia {
+  border-color: var(--color-primario);
+  border-radius: 17px 17px 5px 17px;
+  background: var(--color-primario);
+  color: #fff;
+}
+
+.conversacion-burbuja p {
+  margin: 0;
+  color: inherit;
+  font-size: 0.96rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.conversacion-burbuja time {
+  display: block;
+  margin-top: 6px;
+  color: var(--color-texto-suave);
+  font-size: 0.70rem;
+  line-height: 1.3;
+  text-align: right;
+}
+
+.conversacion-burbuja-propia time {
+  color: rgb(255 255 255 / 78%);
+}
+
+.conversacion-vacia {
+  align-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: min(100%, 390px);
+  min-height: 210px;
+  padding: 24px;
+  border: 1px dashed var(--color-borde-fuerte);
+  border-radius: var(--radio);
+  background: rgb(255 255 255 / 82%);
+  color: var(--color-texto-suave);
+  text-align: center;
+}
+
+.conversacion-vacia > .icono {
+  margin-bottom: 6px;
+  color: var(--color-primario);
+}
+
+.conversacion-vacia p {
+  margin: 0;
+  color: var(--color-texto);
+  font-weight: 800;
+}
+
+.conversacion-vacia span {
+  font-size: 0.88rem;
+}
+
+.conversacion-final {
+  width: 1px;
+  height: 1px;
+  flex: 0 0 1px;
+}
+
+.conversacion-formulario {
+  display: grid;
+  gap: 12px;
+  padding: 18px clamp(18px, 3vw, 28px) 22px;
+  border-top: 1px solid var(--color-borde);
+  background: #fff;
+}
+
+.conversacion-formulario textarea {
+  display: block;
+  width: 100%;
+  min-height: 76px;
+  max-height: 180px;
+  padding: 13px 15px;
+  resize: vertical;
+  border: 1.5px solid var(--color-borde-fuerte);
+  border-radius: var(--radio);
+  background: #fbfcfc;
+  color: var(--color-texto);
+  font: inherit;
+  line-height: 1.5;
+  transition: border-color 0.15s, box-shadow 0.15s, background-color 0.15s;
+}
+
+.conversacion-formulario textarea::placeholder {
+  color: #687873;
+}
+
+.conversacion-formulario textarea:hover:not(:disabled) {
+  border-color: var(--color-texto-suave);
+  background: #fff;
+}
+
+.conversacion-formulario textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-primario);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgb(14 79 74 / 13%);
+}
+
+.conversacion-formulario textarea:disabled {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.conversacion-acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.conversacion-acciones .texto-suave {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 0.8rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.conversacion-acciones .boton {
+  min-height: 46px;
+  padding-inline: 19px;
+  border-radius: 999px;
+}
+
+.conversacion-formulario .alerta-error {
+  margin: 0;
+}
+
+.conversacion > .aviso,
+.conversacion > .alerta-error {
+  margin: 20px 24px 24px;
+}
+
+.conversacion > [role='status'].texto-suave {
+  margin: 18px 24px 24px;
+}
+
+@media (max-width: 600px) {
+  .conversacion {
+    margin: 12px auto;
+    border-radius: 17px;
+  }
+
+  .conversacion-encabezado {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 20px 18px;
+  }
+
+  .conversacion-encabezado .texto-suave {
+    font-size: 0.88rem;
+  }
+
+  .conversacion-mensajes {
+    min-height: 300px;
+    max-height: 52vh;
+    padding: 17px 13px;
+    gap: 11px;
+  }
+
+  .conversacion-burbuja {
+    max-width: 88%;
+    padding: 10px 12px 8px;
+  }
+
+  .conversacion-formulario {
+    padding: 14px 13px 16px;
+  }
+
+  .conversacion-acciones .boton {
+    padding-inline: 14px;
+  }
+}
