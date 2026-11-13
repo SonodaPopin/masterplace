@@ -11,8 +11,8 @@
  * Ejecutarlo dos veces crea dos formularios distintos (no reemplaza el anterior).
  */
 
-const URL_PAGINA = 'https://CAMBIAR.vercel.app';        // dirección publicada de MasterPlace
-const URL_CARNET = 'https://CAMBIAR-enlace-al-carnet';  // imagen "DOCUMENTO FICTICIO SIN VALIDEZ"
+const URL_PAGINA = 'https://masterplace.vercel.app';    // dirección publicada de MasterPlace
+const URL_CARNET = 'https://drive.google.com/file/d/19_jtOscMLPtzyF_hpJkEXETlVV34QYrm/view?usp=sharing';  // imagen "DOCUMENTO FICTICIO SIN VALIDEZ"
 
 const ESCALA_LOGRO = ['Sí, sin problemas', 'Sí, pero me costó', 'No pude', 'No lo intenté'];
 const ESCALA_TIEMPO = ['Menos de 2 minutos', 'Entre 2 y 5 minutos', 'Entre 5 y 10 minutos', 'Más de 10 minutos'];
