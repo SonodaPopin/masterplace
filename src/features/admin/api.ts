@@ -1,19 +1,15 @@
 // Acceso a datos del panel de moderación (RF-2, RF-8). Responsable: Diego.
 //
-// Requiere en la base (Ignacio): es_admin(), políticas RLS que dejen al admin leer maestros pendientes con su
-// perfil y documentos, actualizar documentos y maestros, e insertar en auditoría; y el bucket privado `cedulas`
-// con lectura solo para admin. Sin esas políticas las consultas devuelven listas vacías o un error de permiso.
+// Usa es_admin() y las políticas de 20261110000000 (el admin lee maestros pendientes, sus perfiles y documentos,
+// y lee y borra en el bucket privado `cedulas`).
 //
-// Nota: aprobar y rechazar se hacen en varios pasos desde el cliente. Si Ignacio publica una función
-// `revisar_identidad(...)` que lo haga en una sola transacción, basta con reemplazar el cuerpo de
-// aprobarIdentidad y rechazarIdentidad por un `supabase.rpc(...)`; la pantalla no cambia.
+// Aprobar y rechazar pasan por la función `revisar_identidad` (supabase/migrations/20261113120000).
 
 import { supabase } from '../../lib/supabase'
 import {
   cedulaPorRevisar,
   normalizarMotivo,
   SEGUNDOS_URL_FIRMADA,
-  textoAuditoria,
   type DocumentoResumen,
 } from '../../lib/moderacion/moderacion'
 
@@ -72,62 +68,34 @@ export async function urlFirmadaCedula(ruta: string): Promise<string> {
 
 type Revision = { documentoId: string; maestroId: string; ruta: string; revisorId: string }
 
-async function marcarDocumento(
-  documentoId: string,
-  cambios: Record<string, unknown>,
-): Promise<void> {
-  // Solo actualiza si sigue pendiente: evita que dos admins revisen el mismo documento a la vez.
-  const { data, error } = await supabase
-    .from('documentos')
-    .update(cambios)
-    .eq('id', documentoId)
-    .eq('estado', 'pendiente')
-    .select('id')
+// La revisión la hace la función `revisar_identidad` en la base (migración 20261113120000): comprueba que quien
+// llama es admin y, en una sola transacción, actualiza el documento y el maestro y registra en auditoría.
+async function revisar(documentoId: string, aprobar: boolean, motivo?: string): Promise<string | null> {
+  const { data, error } = await supabase.rpc('revisar_identidad', {
+    p_documento_id: documentoId,
+    p_aprobar: aprobar,
+    p_motivo: motivo ?? null,
+  })
   if (error) throw new Error(error.message)
-  if (!data || data.length === 0) throw new Error('Este documento ya fue revisado o no tienes permiso para revisarlo.')
-}
-
-async function marcarMaestro(maestroId: string, estado: 'verificada' | 'rechazada'): Promise<void> {
-  const { error } = await supabase.from('maestros').update({ estado_identidad: estado }).eq('id', maestroId)
-  if (error) throw new Error(error.message)
-}
-
-async function auditar(actorId: string, accion: string, objeto: string): Promise<void> {
-  const { error } = await supabase.from('auditoria').insert({ actor_id: actorId, accion, objeto })
-  if (error) throw new Error(`La revisión se guardó, pero no quedó en auditoría: ${error.message}`)
+  return (data as string | null) ?? null
 }
 
 /**
- * Aprueba la identidad: documento aprobado sin archivo (check de la tabla), maestro verificado, archivo
- * borrado del bucket y registro en auditoría (RF-2, §5.3). Si el trigger de Ignacio ya borró el archivo,
- * el `remove` no hace nada.
+ * Aprueba la identidad: la cédula queda aprobada y sin ruta, el maestro queda verificado (aparece en la búsqueda)
+ * y la revisión queda en auditoría. Después se borra el archivo del bucket (§5.3).
  */
-export async function aprobarIdentidad({ documentoId, maestroId, ruta, revisorId }: Revision): Promise<void> {
-  await marcarDocumento(documentoId, {
-    estado: 'aprobado',
-    ruta_archivo: null,
-    revisor_id: revisorId,
-    revisado_en: new Date().toISOString(),
-  })
-  await marcarMaestro(maestroId, 'verificada')
-
-  const { error: errorBorrado } = await supabase.storage.from('cedulas').remove([ruta])
-  await auditar(revisorId, 'aprobar_cedula', textoAuditoria(documentoId, maestroId))
-  if (errorBorrado) {
-    throw new Error(`El maestro quedó verificado, pero el archivo no se pudo borrar: ${errorBorrado.message}`)
+export async function aprobarIdentidad({ documentoId, ruta }: Revision): Promise<void> {
+  const rutaGuardada = await revisar(documentoId, true)
+  const { error } = await supabase.storage.from('cedulas').remove([rutaGuardada ?? ruta])
+  if (error) {
+    throw new Error(`El maestro quedó verificado, pero el archivo no se pudo borrar: ${error.message}`)
   }
 }
 
 /**
- * Rechaza la identidad con motivo. La cédula rechazada conserva su archivo hasta la eliminación programada
- * (30 días, según el comentario del esquema). El motivo queda en auditoría, porque `documentos` no tiene columna.
+ * Rechaza la identidad con motivo. La cédula rechazada conserva su archivo hasta la eliminación programada.
+ * El motivo queda en auditoría, porque `documentos` no tiene columna para él.
  */
-export async function rechazarIdentidad({ documentoId, maestroId, revisorId, motivo }: Revision & { motivo: string }) {
-  await marcarDocumento(documentoId, {
-    estado: 'rechazado',
-    revisor_id: revisorId,
-    revisado_en: new Date().toISOString(),
-  })
-  await marcarMaestro(maestroId, 'rechazada')
-  await auditar(revisorId, 'rechazar_cedula', textoAuditoria(documentoId, maestroId, normalizarMotivo(motivo)))
+export async function rechazarIdentidad({ documentoId, motivo }: Revision & { motivo: string }): Promise<void> {
+  await revisar(documentoId, false, normalizarMotivo(motivo))
 }
