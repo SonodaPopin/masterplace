@@ -1,6 +1,6 @@
 
 import { useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Icono from '../../components/Icono'
 import { useSesion } from '../../lib/auth/contexto'
 import { crearOReutilizarContacto } from '../contacto/servicioContactos.ts'
@@ -170,7 +170,12 @@ export default function ListaResultados({
                       ? 'Contactando...'
                       : 'Contactar'}
                   </button>
-
+		<Link
+		  to={`/maestros/${r.id}`}
+		  className="boton boton-chico"
+		>
+		  Ver perfil
+		</Link>
                   <button
                     type="button"
                     className="resultado-ver-mapa"
