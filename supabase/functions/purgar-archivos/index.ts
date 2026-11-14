@@ -8,10 +8,20 @@
 
 import { createClient } from 'npm:@supabase/supabase-js@2'
 
-const json = (body: unknown, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } })
+// CORS: el panel de moderación la llama desde el navegador, que primero manda un OPTIONS (preflight).
+// Abrirla a cualquier origen no expone nada: solo borra archivos que la base ya marcó para borrar.
+const cors = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+}
 
-Deno.serve(async () => {
+const json = (body: unknown, status = 200) =>
+  new Response(JSON.stringify(body), { status, headers: { ...cors, 'Content-Type': 'application/json' } })
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
+
   // SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY las inyecta Supabase en las Edge Functions.
   const sb = createClient(
     Deno.env.get('SUPABASE_URL')!,
