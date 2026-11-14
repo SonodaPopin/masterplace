@@ -3,6 +3,7 @@ import { Link, NavLink, useLocation } from 'react-router-dom'
 import Logo from './Logo'
 import Icono from './Icono'
 import EstadoSesion from './EstadoSesion'
+import { useSesion } from '../lib/auth/contexto'
 
 const ENLACES = [
   { a: '/', texto: 'Buscar maestros', fin: true },
@@ -15,6 +16,10 @@ const ENLACES = [
 export default function Encabezado() {
   const [abierto, setAbierto] = useState(false)
   const { pathname } = useLocation()
+  const { usuario, rol } = useSesion()
+  const enlaces = usuario && (rol === 'cliente' || rol === 'maestro')
+    ? [...ENLACES, { a: '/contactos', texto: 'Mensajes', fin: false }]
+    : ENLACES
 
   // Cierra el menú móvil al cambiar de página.
   useEffect(() => setAbierto(false), [pathname])
@@ -40,7 +45,7 @@ export default function Encabezado() {
         <div id="menu-principal" className={`encabezado-menu${abierto ? ' abierto' : ''}`}>
           <nav aria-label="Principal">
             <ul className="nav-lista">
-              {ENLACES.map((e) => (
+              {enlaces.map((e) => (
                 <li key={e.a}>
                   <NavLink to={e.a} end={e.fin} className="nav-enlace">
                     {e.texto}
