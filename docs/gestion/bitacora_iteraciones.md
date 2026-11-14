@@ -151,4 +151,22 @@ el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de 
 - **Efecto verificado:** [COMPLETAR el 16-11: qué Must quedaron en la demo, resultado del ensayo cronometrado y
   si los participantes de la validación completaron T3 (búsqueda) y T4 (contacto), según la consulta de Hugo.]
 
-### Iteración 4 · [título] (opcional para E3, exigida en E4)
+### Iteración 4 · Instrumento de la validación con usuarios dentro de la página (14-11-2026)
+
+- **Disparador:** al preparar el envío, el equipo vio que la prueba remota obligaba a los participantes a ir y volver
+  entre el Google Form y la página. En el celular, que es lo que usan los maestros, eso es lento y confuso, y arriesga
+  que abandonen. Además, el plan reconocía como límite que los tiempos de las tareas eran autorreportados.
+- **Alternativas:**
+  - (a) Mantener el Google Form y pedir que hagan primero todas las tareas y respondan el formulario al final.
+  - (b) Un formulario dentro de la página que simule la navegación de las tareas.
+  - (c) Un enlace único por participante que lo guía paso a paso sobre la página real, con un panel fijo durante cada
+    tarea, y guarda respuestas y tiempos en tablas solo para la validación.
+- **Decisión:** (c). Se descartó (b) porque mediría una simulación y no MasterPlace: V1 y V2 perderían validez y no se
+  podría verificar en la base. (a) reduce el ir y venir, pero mantiene los tiempos autorreportados. Se decidió antes de
+  enviar el primer enlace, así que todos los participantes usan el mismo instrumento. Se conservan los textos del
+  formulario (consentimiento, tareas, SUS y preguntas) para no cambiar lo que se mide. Implementación: migración
+  `20261114000000_validacion_usuarios.sql` y `src/features/validacion/`.
+- **Efecto verificado:** [COMPLETAR el 15-11: cuántos participantes terminaron y el tiempo medido de T1 frente a la meta
+  de 5 minutos. Comparar el abandono con lo esperado (8 a 10 invitados para obtener 5 respuestas).]
+
+### Iteración 5 · [título] (opcional para E3, exigida en E4)
