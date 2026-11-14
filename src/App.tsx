@@ -12,6 +12,7 @@ import ProveedorPrueba from './features/validacion/ProveedorPrueba'
 import Encabezado from './components/Encabezado'
 import PiePagina from './components/PiePagina'
 import AnunciarPagina from './components/AnunciarPagina'
+import BandejaContactos from './features/contacto/BandejaContactos'
 
 // Rutas del flujo principal (MVP Must). Cada página indica su responsable.
 export default function App() {
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/admin" element={<PanelModeracion />} />
             <Route path="/contactos/:contactoId" element={<Conversacion />} />
             <Route path="/contactos/:contactoId/resena" element={<NuevaResena />} />
+            <Route path="/contactos" element={<BandejaContactos />} />
             <Route path="/prueba/:token" element={<PaginaPrueba />} />
           </Routes>
         </main>
