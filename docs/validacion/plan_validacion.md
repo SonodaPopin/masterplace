@@ -20,6 +20,23 @@ ni para una videollamada de 30 minutos. Costo de este cambio: no se observa a la
 que los tiempos y las dificultades son autorreportados. Para compensarlo, el éxito de cada tarea se comprueba también
 en la base de datos (sección 6). Este cambio de método debe anotarse en la bitácora de iteraciones (R3-C1).
 
+**Cambio del 14-11: el instrumento pasa a estar dentro de la página.** Antes de enviar ningún enlace se reemplazó el
+Google Form por un **enlace único por participante** (`https://masterplace.vercel.app/prueba/<token>`). La página guía
+paso a paso con los mismos textos del formulario (consentimiento, datos, A1, tareas, T5, SUS y A2 a A4) y, durante
+cada tarea, muestra un panel fijo abajo con la instrucción, el correo y el carnet de prueba y la pregunta «¿Pudo
+hacerlo?». Motivo: en el celular, ir y volver entre el formulario y la página era la principal barrera para los
+maestros. Efectos sobre el estudio:
+
+- Las tareas se hacen en la página real (no es una simulación), así que la verificación en la base (sección 6) sigue
+  igual.
+- El tiempo de cada tarea se **mide** entre «Comenzar» y «Terminé», en lugar de autorreportarse. Se quita la pregunta
+  «¿Cuánto se demoró?».
+- Las respuestas quedan en las tablas `validacion_participantes` y `validacion_respuestas` (migración
+  `20261114000000_validacion_usuarios.sql`), separadas del producto; solo un admin las lee. Los enlaces se crean con
+  [participantes.sql](participantes.sql) y los resultados se obtienen con [resultados.sql](resultados.sql).
+- El consentimiento agrega que se guarda cuánto tarda en cada tarea.
+- [crear_formulario.gs](crear_formulario.gs) queda como plan B si la página falla.
+
 ---
 
 ## 1. Qué se busca establecer
@@ -28,7 +45,7 @@ en la base de datos (sección 6). Este cambio de método debe anotarse en la bit
 |---|---|---|---|
 | V1 | ¿Un maestro puede registrarse sin ayuda y en ≤ 5 minutos? | Tarea T1: autorreporte más verificación en la base de datos | RF-1, RNF-3 |
 | V2 | ¿Un cliente encuentra a un maestro compatible y lo contacta? | Tareas T3 y T4: autorreporte más mensaje registrado en la base | RF-3, RF-4, RF-11 |
-| V3 | ¿Distinguen "identidad verificada", "reseñas" y "certificado"? | Pregunta T5, respondida con sus palabras | RB-10, riesgo R-05 |
+| V3 | ¿Distinguen "identidad verificada" y "certificado"? (las reseñas, RF-5, aún no existen: su importancia se mide en A2) | Pregunta T5, respondida con sus palabras | RB-10, riesgo R-05 |
 | V4 | ¿Les importa lo que 2x3 no ofrece: certificación verificada, cercanía y cobertura en su comuna? | Preguntas A2 y A3 | Iteración 1 (bitácora) |
 | V5 | ¿La usabilidad percibida alcanza la meta? | Cuestionario SUS | RNF-3 (meta SUS ≥ 75) |
 
@@ -99,12 +116,14 @@ Si el sábado en la noche hay menos de 5 respuestas, se activa el riesgo R-03 y 
 | Versión de la página congelada para la prueba en Vercel; anotar el número del commit | Joaquín |
 | Durante la prueba, desactivar "Confirm email" en Supabase Auth, para que los participantes se registren con el correo de prueba que se les asigna (`p1@prueba.masterplace.cl`, etc.) y no tengan que dar su correo real. Reactivarlo el domingo en la noche | Joaquín |
 | Tres o más maestros ficticios ya verificados en cada comuna y oficio, para que la búsqueda de los clientes tenga resultados | Ignacio |
-| Imagen de carnet ficticio con la marca "DOCUMENTO FICTICIO SIN VALIDEZ", publicada en un enlace de descarga | Gabriel |
-| Formulario creado con el script `crear_formulario.gs` y probado de principio a fin por un integrante (las respuestas de esa prueba se borran) | Gabriel |
-| Consulta SQL para verificar las tareas de cada código (sección 6) | Hugo |
+| Imagen de carnet ficticio con la marca "DOCUMENTO FICTICIO SIN VALIDEZ" (se descarga desde el panel de la tarea: `public/carnet_prueba.png`) | Gabriel |
+| Migración `20261114000000_validacion_usuarios.sql` aplicada y enlaces creados con `participantes.sql` | Gabriel |
+| Prueba de punta a punta del equipo con los enlaces P90–P97 (uno por integrante; P90 y P92–P94 maestro, P91 y P95–P97 cliente). Después se borran sus respuestas y cuentas (`participantes.sql`) | Gabriel |
+| Consulta SQL para verificar las tareas de cada código (sección 6): [resultados.sql](resultados.sql) | Hugo |
 
 **Asignación de correos:** cada participante usa `p<número>@prueba.masterplace.cl` y una contraseña que elija. Así
-sus acciones se ubican en la base por su código, sin datos personales.
+sus acciones se ubican en la base por su código, sin datos personales. El panel de la tarea le muestra su correo con
+un botón para copiarlo.
 
 ---
 
@@ -153,7 +172,7 @@ Cada tarea dice qué hacer en la página sin nombrar botones, y luego pregunta:
 | T2 Cuenta | Cliente | "Cree una cuenta de cliente con el correo de prueba de su código." | Perfil de cliente creado |
 | T3 Búsqueda | Cliente | "Imagine que se le rompió una cañería en su casa. Busque un gásfiter que atienda en su comuna. ¿Qué maestro eligió y por qué cree que apareció primero?" | — (se analiza la respuesta) |
 | T4 Contacto | Cliente | "Escríbale a ese maestro para preguntarle si puede ir mañana." | Contacto y mensaje registrados por ese cliente |
-| T5 Señales | Ambos | "En la página, los perfiles muestran marcas como 'Identidad verificada', las reseñas y 'Certificado'. Explique con sus palabras qué significa cada una." | — (se clasifica la respuesta) |
+| T5 Señales | Ambos | "En la página, los perfiles muestran marcas como 'Identidad verificada' y 'Certificado'. Explique con sus palabras qué significa cada una." (cambio del 14-11, antes de enviar enlaces: se quitaron las reseñas porque RF-5 no está implementado y los perfiles no las muestran) | — (se clasifica la respuesta) |
 
 Si una función no está lista el viernes 13 (por ejemplo, el chat), esa tarea se quita del formulario y se informa como
 **"no aplicable: función no implementada"**. No se simula ni se cuenta como éxito.
@@ -239,7 +258,7 @@ está por sobre ese promedio. El SUS mide usabilidad percibida, no si la persona
 2. **Eficiencia:** distribución del tiempo autorreportado de T1 y el tiempo aproximado según la base, comparados con
    la meta de 5 minutos.
 3. **Satisfacción:** SUS por participante, promedio, mínimo y máximo, comparados con la meta de 75.
-4. **Comprensión de señales (V3):** clasificar cada respuesta de T5 como "distingue las tres", "distingue algunas" o
+4. **Comprensión de señales (V3):** clasificar cada respuesta de T5 como "distingue las dos", "distingue una" o
    "las confunde". Dos integrantes clasifican por separado y, si no coinciden, lo resuelven juntos.
 5. **Preguntas abiertas:** agrupar las respuestas por tema (confianza, búsqueda y cobertura, contacto, barreras
    digitales y comparación con 2x3); contar coincidencias y citar frases textuales. En A2, contar cuántas veces cada
@@ -283,4 +302,5 @@ está por sobre ese promedio. El SUS mide usabilidad percibida, no si la persona
   quedó hecha, pero no cómo se hizo ni dónde se confundió la persona.
 - Quienes no terminaron el formulario no aportan datos, y sus dificultades pueden quedar fuera (sesgo de abandono).
 - Los participantes son conocidos del equipo, lo que puede inflar las respuestas positivas (sesgo de complacencia).
-- Prototipo incompleto (las tareas no aplicables se informan) y datos ficticios.
+- Prototipo incompleto (las tareas no aplicables se informan) y datos ficticios. En particular, las reseñas (RF-5) no
+  existen: V3 no evalúa si se entienden, y su importancia solo se conoce por lo que declaran en A2.

@@ -3,7 +3,16 @@ import { tituloDeRuta } from './titulos'
 
 describe('tituloDeRuta', () => {
   it('da un título distinto a cada página del flujo principal', () => {
-    const rutas = ['/', '/registro/cliente', '/registro/maestro', '/ingresar', '/admin', '/contactos/abc', '/contactos/abc/resena']
+    const rutas = [
+      '/',
+      '/registro/cliente',
+      '/registro/maestro',
+      '/ingresar',
+      '/admin',
+      '/contactos',
+      '/contactos/abc',
+      '/contactos/abc/resena',
+    ]
     const titulos = rutas.map(tituloDeRuta)
     expect(new Set(titulos).size).toBe(rutas.length)
     titulos.forEach((t) => expect(t).toMatch(/· MasterPlace$/))
