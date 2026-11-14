@@ -80,16 +80,37 @@ async function revisar(documentoId: string, aprobar: boolean, motivo?: string): 
   return (data as string | null) ?? null
 }
 
+type ResultadoPurga = { pendientes: number; borrados: number; fallos?: string[] }
+
+// Al aprobar, el trigger de 20261112000000 anota la ruta en `archivos_por_borrar`. La Edge Function
+// `purgar-archivos` borra lo que esté en esa cola con service_role y lo marca como borrado.
+// No lanza: devuelve el motivo del fallo, o null si la cola quedó vacía.
+async function purgarCola(): Promise<string | null> {
+  try {
+    const { data, error } = await supabase.functions.invoke<ResultadoPurga>('purgar-archivos')
+    if (error) return error.message
+    if (data?.fallos?.length) return data.fallos.join('; ')
+    return null
+  } catch (e) {
+    return e instanceof Error ? e.message : String(e)
+  }
+}
+
 /**
  * Aprueba la identidad: la cédula queda aprobada y sin ruta, el maestro queda verificado (aparece en la búsqueda)
- * y la revisión queda en auditoría. Después se borra el archivo del bucket (§5.3).
+ * y la revisión queda en auditoría. Después se borra el archivo del bucket (§5.3) y se vacía la cola de borrado.
+ * Si el borrado directo falla, la Edge Function lo reintenta; solo se avisa si fallan los dos.
  */
 export async function aprobarIdentidad({ documentoId, ruta }: Revision): Promise<void> {
   const rutaGuardada = await revisar(documentoId, true)
   const { error } = await supabase.storage.from('cedulas').remove([rutaGuardada ?? ruta])
-  if (error) {
-    throw new Error(`El maestro quedó verificado, pero el archivo no se pudo borrar: ${error.message}`)
+  const falloPurga = await purgarCola()
+  if (error && falloPurga) {
+    throw new Error(
+      `El maestro quedó verificado, pero el archivo no se pudo borrar: ${error.message}. Quedó en la cola de borrado.`,
+    )
   }
+  if (falloPurga) console.warn('purgar-archivos:', falloPurga)
 }
 
 /**
