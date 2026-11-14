@@ -15,6 +15,11 @@ type Contacto = {
   estado: EstadoContacto
 }
 
+type Contraparte = {
+  nombre: string
+  rol: 'cliente' | 'maestro' | 'admin' | string
+}
+
 type Mensaje = {
   id: number
   contacto_id: string
@@ -63,6 +68,7 @@ export default function Conversacion() {
   const ubicacion = useLocation()
   const { usuario, cargando: cargandoSesion } = useSesion()
   const [contacto, setContacto] = useState<Contacto | null>(null)
+  const [contraparte, setContraparte] = useState<Contraparte | null>(null)
   const [mensajes, setMensajes] = useState<Mensaje[]>([])
   const [texto, setTexto] = useState('')
   const [cargando, setCargando] = useState(true)
@@ -114,6 +120,7 @@ export default function Conversacion() {
       setCargando(true)
       setErrorCarga(null)
       setContacto(null)
+      setContraparte(null)
       setMensajes([])
       setEstadoRealtime('conectando')
 
@@ -139,6 +146,23 @@ export default function Conversacion() {
         }
 
         setContacto(contactoActual)
+
+        // El perfil de la contraparte es visible por la política RLS perfiles_select_contraparte.
+        // Solo pedimos nombre y rol; nunca correo, teléfono ni datos privados.
+        const contraparteId = contactoActual.cliente_id === usuarioActual.id
+          ? contactoActual.maestro_id
+          : contactoActual.cliente_id
+        const { data: perfilContraparte } = await supabase
+          .from('perfiles')
+          .select('id, nombre, rol')
+          .eq('id', contraparteId)
+          .maybeSingle()
+
+        if (!vigente) return
+        setContraparte({
+          nombre: perfilContraparte?.nombre ?? (contactoActual.cliente_id === usuarioActual.id ? 'Maestro' : 'Cliente'),
+          rol: perfilContraparte?.rol ?? (contactoActual.cliente_id === usuarioActual.id ? 'maestro' : 'cliente'),
+        })
 
         // Suscripción específica a los mensajes de este contacto.
         canal = supabase
@@ -258,8 +282,8 @@ export default function Conversacion() {
       <header className="conversacion-encabezado">
         <div>
           <p className="conversacion-eyebrow">MasterPlace · Contacto</p>
-          <h1 id="conversacion-titulo">Conversación</h1>
-          <p className="texto-suave">Los mensajes de este contacto son privados para sus participantes.</p>
+          <h1 id="conversacion-titulo">{contraparte ? `Conversación con ${contraparte.nombre}` : 'Conversación'}</h1>
+          <p className="texto-suave">{contraparte ? `${contraparte.rol === 'cliente' ? 'Cliente' : contraparte.rol === 'maestro' ? 'Maestro' : 'Participante'} · ` : ''}Los mensajes son privados para sus participantes.</p>
           <p className="texto-suave" role="status" aria-live="polite">
             {estadoRealtime === 'conectado'
               ? 'Actualización en tiempo real conectada.'
