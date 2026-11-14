@@ -36,6 +36,14 @@ create unique index contactos_unico_activo_cliente_maestro_idx
     'servicio_confirmado'::public.estado_contacto
   );
 
+-- RF-5: Confirmar los contactos antiguos que siguen abiertos.
+-- Decisión provisional para E3.
+-- No modificar los contactos cerrados.
+
+update public.contactos
+set estado = 'servicio_confirmado'::public.estado_contacto
+where estado = 'abierto'::public.estado_contacto;
+
 -- Confirmar automáticamente los nuevos contactos.
 alter table public.contactos
   alter column estado
@@ -133,3 +141,12 @@ begin
   return v_contacto_id;
 end;
 $$;
+
+-- RF-5: Permitir la creación de contactos únicamente
+-- a usuarios autenticados.
+
+revoke all on function public.crear_o_reutilizar_contacto(uuid)
+  from public, anon;
+
+grant execute on function public.crear_o_reutilizar_contacto(uuid)
+  to authenticated;

@@ -62,7 +62,7 @@ as $$
       on m.id = c.maestro_id
     where m.estado_identidad = 'verificada'::public.estado_identidad
   )
-  select
+      select
     count(*) filter (
       where maestro_id = p_maestro_id
     ) as cantidad_resenas,
@@ -70,7 +70,13 @@ as $$
       where maestro_id = p_maestro_id
     ) as promedio_maestro,
     avg(calificacion) as promedio_global
-  from resenas_validas;
+  from resenas_validas
+  where exists (
+    select 1
+    from public.maestros m
+    where m.id = p_maestro_id
+      and m.estado_identidad = 'verificada'::public.estado_identidad
+  );
 $$;
 
 revoke all on function public.obtener_estadisticas_reputacion(uuid)
