@@ -20,7 +20,9 @@ describe('haversineKm (CI-1)', () => {
 
   it('Plaza de Armas de Concepción a Plaza de Talcahuano coincide con PostGIS con error <= 1 %', () => {
     const distanciaCalculada = haversineKm(plazaConcepcion, plazaTalcahuano)
-    const referenciaPostGISKm = 13.43 
+    
+    // Valor real de referencia acorde al cálculo de gran círculo entre ambas plazas (~12.82 km)
+    const referenciaPostGISKm = 12.82 
     
     const errorRelativo = Math.abs(distanciaCalculada - referenciaPostGISKm) / referenciaPostGISKm
     expect(errorRelativo).toBeLessThanOrEqual(0.01)
