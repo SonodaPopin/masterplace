@@ -9,7 +9,7 @@ import { mensajeErrorAuth, normalizarCorreo, validarCorreo } from '../../lib/aut
 
 // RF-10 · Inicio de sesión con correo y contraseña (Supabase Auth). Responsable: Gabriel.
 export default function IniciarSesion() {
-  const { sesion, rol } = useSesion()
+  const { sesion, rol, cargando } = useSesion()
   const ubicacion = useLocation()
   // Un maestro va a su registro: ahí retoma los pasos pendientes o ve el estado de su verificación.
   const destino =
@@ -22,7 +22,17 @@ export default function IniciarSesion() {
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
   const [enviando, setEnviando] = useState(false)
 
-  if (sesion) return <Navigate to={destino} replace />
+  // Espera a conocer el rol real (perfiles) para mandar al maestro a su registro y no a la búsqueda.
+  if (sesion) {
+    return cargando ? (
+      <div className="cargando-pantalla" role="status">
+        <span className="girador girador-oscuro" aria-hidden="true" />
+        Ingresando…
+      </div>
+    ) : (
+      <Navigate to={destino} replace />
+    )
+  }
 
   async function enviar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault()

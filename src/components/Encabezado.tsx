@@ -4,22 +4,15 @@ import Logo from './Logo'
 import Icono from './Icono'
 import EstadoSesion from './EstadoSesion'
 import { useSesion } from '../lib/auth/contexto'
-
-const ENLACES = [
-  { a: '/', texto: 'Buscar maestros', fin: true },
-  { a: '/registro/maestro', texto: 'Soy maestro', fin: false },
-  { a: '/admin', texto: 'Moderación', fin: false },
-]
+import { enlacesDelMenu, inicioDelRol } from '../lib/navegacion/menu'
 
 // Encabezado común: marca, navegación principal y sesión. En móvil la navegación se pliega (RNF-7: botón
-// con aria-expanded y aria-controls).
+// con aria-expanded y aria-controls). Los enlaces dependen del rol (src/lib/navegacion/menu.ts).
 export default function Encabezado() {
   const [abierto, setAbierto] = useState(false)
   const { pathname } = useLocation()
-  const { usuario, rol } = useSesion()
-  const enlaces = usuario && (rol === 'cliente' || rol === 'maestro')
-    ? [...ENLACES, { a: '/contactos', texto: 'Mensajes', fin: false }]
-    : ENLACES
+  const { sesion, cargando, rol } = useSesion()
+  const enlaces = enlacesDelMenu({ conSesion: Boolean(sesion), cargando, rol })
 
   // Cierra el menú móvil al cambiar de página.
   useEffect(() => setAbierto(false), [pathname])
@@ -27,7 +20,7 @@ export default function Encabezado() {
   return (
     <header className="encabezado">
       <div className="encabezado-interior">
-        <Link to="/" className="encabezado-marca" aria-label="MasterPlace, ir al inicio">
+        <Link to={inicioDelRol(rol)} className="encabezado-marca" aria-label="MasterPlace, ir al inicio">
           <Logo />
         </Link>
 
@@ -46,7 +39,7 @@ export default function Encabezado() {
           <nav aria-label="Principal">
             <ul className="nav-lista">
               {enlaces.map((e) => (
-                <li key={e.a}>
+                <li key={`${e.a}-${e.texto}`}>
                   <NavLink to={e.a} end={e.fin} className="nav-enlace">
                     {e.texto}
                   </NavLink>

@@ -9,6 +9,7 @@ const TITULOS: { patron: string; titulo: string }[] = [
   { patron: '/registro/maestro', titulo: 'Registro de maestro' },
   { patron: '/ingresar', titulo: 'Ingresar' },
   { patron: '/admin', titulo: 'Moderación' },
+  { patron: '/contactos', titulo: 'Mensajes' },
   { patron: '/contactos/:contactoId/resena', titulo: 'Nueva reseña' },
   { patron: '/contactos/:contactoId', titulo: 'Conversación' },
 ]

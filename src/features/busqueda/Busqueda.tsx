@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { Navigate, useSearchParams } from 'react-router-dom'
 import Icono from '../../components/Icono'
 import ListaResultados from './ListaResultados'
 import './busqueda.css'
@@ -9,6 +9,7 @@ import { useOficios } from '../../lib/catalogos/oficios'
 import type { Punto } from '../../lib/geo/haversine'
 import { buscarMaestros } from '../../lib/busqueda/buscarMaestros'
 import type { ResultadoBusqueda } from '../../lib/busqueda/resultados'
+import { inicioDelRol } from '../../lib/navegacion/menu'
 
 type OrigenPunto = 'comuna' | 'ubicacion' | 'manual'
 type EstadoUbicacion = 'inactiva' | 'buscando' | 'denegada' | 'no-disponible'
@@ -22,9 +23,26 @@ const COMUNA_POR_DEFECTO = COMUNAS_PILOTO[0]
 // Leaflet pesa ~170 kB: se carga aparte para que la lista aparezca primero en el celular.
 const MapaResultados = lazy(() => import('./MapaResultados'))
 
+// La búsqueda es la página de inicio, salvo para el maestro: a él no le sirve buscar a otros maestros, así que va
+// a sus mensajes (src/lib/navegacion/menu.ts). Mientras se conoce el rol de la sesión no se consulta nada.
+export default function Busqueda() {
+  const { cargando, sesion, rol } = useSesion()
+  if (sesion && cargando) {
+    return (
+      <div className="cargando-pantalla" role="status">
+        <span className="girador girador-oscuro" aria-hidden="true" />
+        Cargando…
+      </div>
+    )
+  }
+  const inicio = inicioDelRol(rol)
+  if (sesion && inicio !== '/') return <Navigate to={inicio} replace />
+  return <BuscadorMaestros />
+}
+
 // RF-3 · Búsqueda de maestros por oficio, comuna y cercanía. Consulta: Pedro. Mapa, lista y punto: Gabriel.
 // Los filtros viven en la URL (?oficio=1&comuna=8101) para poder compartir o recargar una búsqueda.
-export default function Busqueda() {
+function BuscadorMaestros() {
   const { usuario } = useSesion()
   const oficios = useOficios()
   const [parametros, setParametros] = useSearchParams()
