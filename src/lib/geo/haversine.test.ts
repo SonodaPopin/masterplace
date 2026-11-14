@@ -18,14 +18,24 @@ describe('haversineKm (CI-1)', () => {
     expect(dAB).toBeGreaterThan(0)
   })
 
-  it('Plaza de Armas de Concepción a Plaza de Talcahuano coincide con PostGIS con error <= 1 %', () => {
-    const distanciaCalculada = haversineKm(plazaConcepcion, plazaTalcahuano)
-    
-    // Valor real de referencia acorde al cálculo de gran círculo entre ambas plazas (~12.82 km)
-    const referenciaPostGISKm = 12.82 
-    
+  // Par 1 de la tabla de CI-1 (docs/ciencias/CI-1_distancia.md): puntos de referencia de Concepción y Talcahuano
+  // en `comunas.centroide` (seed.sql). Los valores salen de docs/ciencias/ci1_distancias.sql en Supabase:
+  // Haversine 13,903 km y ST_Distance sobre geography (WGS84) 13,888 km.
+  const centroConcepcion: Punto = { lat: -36.8281944, lng: -73.0513694 }
+  const centroTalcahuano: Punto = { lat: -36.71667, lng: -73.12194 }
+
+  it('coincide con el Haversine calculado en la base de datos para el par 1 de CI-1', () => {
+    expect(haversineKm(centroConcepcion, centroTalcahuano)).toBeCloseTo(13.903, 3)
+  })
+
+  it('Concepción–Talcahuano coincide con PostGIS (ST_Distance, WGS84) con error <= 1 %', () => {
+    const distanciaCalculada = haversineKm(centroConcepcion, centroTalcahuano)
+    const referenciaPostGISKm = 13.888
+
     const errorRelativo = Math.abs(distanciaCalculada - referenciaPostGISKm) / referenciaPostGISKm
     expect(errorRelativo).toBeLessThanOrEqual(0.01)
+    // Resultado de CI-1: error del 0,111 % en este par.
+    expect(errorRelativo).toBeLessThan(0.002)
   })
 
   it('rechaza latitudes fuera de [-90, 90] y longitudes fuera de [-180, 180]', () => {
