@@ -45,7 +45,7 @@ maestros. Efectos sobre el estudio:
 |---|---|---|---|
 | V1 | ¿Un maestro puede registrarse sin ayuda y en ≤ 5 minutos? | Tarea T1: autorreporte más verificación en la base de datos | RF-1, RNF-3 |
 | V2 | ¿Un cliente encuentra a un maestro compatible y lo contacta? | Tareas T3 y T4: autorreporte más mensaje registrado en la base | RF-3, RF-4, RF-11 |
-| V3 | ¿Distinguen "identidad verificada", "reseñas" y "certificado"? | Pregunta T5, respondida con sus palabras | RB-10, riesgo R-05 |
+| V3 | ¿Distinguen "identidad verificada" y "certificado"? (las reseñas, RF-5, aún no existen: su importancia se mide en A2) | Pregunta T5, respondida con sus palabras | RB-10, riesgo R-05 |
 | V4 | ¿Les importa lo que 2x3 no ofrece: certificación verificada, cercanía y cobertura en su comuna? | Preguntas A2 y A3 | Iteración 1 (bitácora) |
 | V5 | ¿La usabilidad percibida alcanza la meta? | Cuestionario SUS | RNF-3 (meta SUS ≥ 75) |
 
@@ -118,7 +118,7 @@ Si el sábado en la noche hay menos de 5 respuestas, se activa el riesgo R-03 y 
 | Tres o más maestros ficticios ya verificados en cada comuna y oficio, para que la búsqueda de los clientes tenga resultados | Ignacio |
 | Imagen de carnet ficticio con la marca "DOCUMENTO FICTICIO SIN VALIDEZ" (se descarga desde el panel de la tarea: `public/carnet_prueba.png`) | Gabriel |
 | Migración `20261114000000_validacion_usuarios.sql` aplicada y enlaces creados con `participantes.sql` | Gabriel |
-| Prueba de punta a punta con los enlaces del equipo P90 (maestro) y P91 (cliente); después se borran sus respuestas | Gabriel |
+| Prueba de punta a punta del equipo con los enlaces P90–P97 (uno por integrante; P90 y P92–P94 maestro, P91 y P95–P97 cliente). Después se borran sus respuestas y cuentas (`participantes.sql`) | Gabriel |
 | Consulta SQL para verificar las tareas de cada código (sección 6): [resultados.sql](resultados.sql) | Hugo |
 
 **Asignación de correos:** cada participante usa `p<número>@prueba.masterplace.cl` y una contraseña que elija. Así
@@ -172,7 +172,7 @@ Cada tarea dice qué hacer en la página sin nombrar botones, y luego pregunta:
 | T2 Cuenta | Cliente | "Cree una cuenta de cliente con el correo de prueba de su código." | Perfil de cliente creado |
 | T3 Búsqueda | Cliente | "Imagine que se le rompió una cañería en su casa. Busque un gásfiter que atienda en su comuna. ¿Qué maestro eligió y por qué cree que apareció primero?" | — (se analiza la respuesta) |
 | T4 Contacto | Cliente | "Escríbale a ese maestro para preguntarle si puede ir mañana." | Contacto y mensaje registrados por ese cliente |
-| T5 Señales | Ambos | "En la página, los perfiles muestran marcas como 'Identidad verificada', las reseñas y 'Certificado'. Explique con sus palabras qué significa cada una." | — (se clasifica la respuesta) |
+| T5 Señales | Ambos | "En la página, los perfiles muestran marcas como 'Identidad verificada' y 'Certificado'. Explique con sus palabras qué significa cada una." (cambio del 14-11, antes de enviar enlaces: se quitaron las reseñas porque RF-5 no está implementado y los perfiles no las muestran) | — (se clasifica la respuesta) |
 
 Si una función no está lista el viernes 13 (por ejemplo, el chat), esa tarea se quita del formulario y se informa como
 **"no aplicable: función no implementada"**. No se simula ni se cuenta como éxito.
@@ -258,7 +258,7 @@ está por sobre ese promedio. El SUS mide usabilidad percibida, no si la persona
 2. **Eficiencia:** distribución del tiempo autorreportado de T1 y el tiempo aproximado según la base, comparados con
    la meta de 5 minutos.
 3. **Satisfacción:** SUS por participante, promedio, mínimo y máximo, comparados con la meta de 75.
-4. **Comprensión de señales (V3):** clasificar cada respuesta de T5 como "distingue las tres", "distingue algunas" o
+4. **Comprensión de señales (V3):** clasificar cada respuesta de T5 como "distingue las dos", "distingue una" o
    "las confunde". Dos integrantes clasifican por separado y, si no coinciden, lo resuelven juntos.
 5. **Preguntas abiertas:** agrupar las respuestas por tema (confianza, búsqueda y cobertura, contacto, barreras
    digitales y comparación con 2x3); contar coincidencias y citar frases textuales. En A2, contar cuántas veces cada
@@ -302,4 +302,5 @@ está por sobre ese promedio. El SUS mide usabilidad percibida, no si la persona
   quedó hecha, pero no cómo se hizo ni dónde se confundió la persona.
 - Quienes no terminaron el formulario no aportan datos, y sus dificultades pueden quedar fuera (sesgo de abandono).
 - Los participantes son conocidos del equipo, lo que puede inflar las respuestas positivas (sesgo de complacencia).
-- Prototipo incompleto (las tareas no aplicables se informan) y datos ficticios.
+- Prototipo incompleto (las tareas no aplicables se informan) y datos ficticios. En particular, las reseñas (RF-5) no
+  existen: V3 no evalúa si se entienden, y su importancia solo se conoce por lo que declaran en A2.

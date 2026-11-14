@@ -34,8 +34,10 @@ export const PREGUNTA_ANTES: Record<Perfil, string> = {
   cliente: 'Antes de empezar: cuéntenos la última vez que buscó un maestro. ¿Cómo lo encontró y qué le preocupaba?',
 }
 
+// Solo las marcas que el participante ve: las reseñas (RF-5) aún no existen, así que no se pregunta por ellas aquí.
+// Su importancia para elegir se recoge igual en A2.
 export const PREGUNTA_SENALES =
-  'En la página, los perfiles muestran marcas como "Identidad verificada", las reseñas y "Certificado". ' +
+  'En la página, los perfiles muestran marcas como "Identidad verificada" y "Certificado". ' +
   'Explique con sus palabras qué significa cada una.'
 
 export const ITEMS_SUS = [
