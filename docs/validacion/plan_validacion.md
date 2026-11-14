@@ -20,6 +20,23 @@ ni para una videollamada de 30 minutos. Costo de este cambio: no se observa a la
 que los tiempos y las dificultades son autorreportados. Para compensarlo, el éxito de cada tarea se comprueba también
 en la base de datos (sección 6). Este cambio de método debe anotarse en la bitácora de iteraciones (R3-C1).
 
+**Cambio del 14-11: el instrumento pasa a estar dentro de la página.** Antes de enviar ningún enlace se reemplazó el
+Google Form por un **enlace único por participante** (`https://masterplace.vercel.app/prueba/<token>`). La página guía
+paso a paso con los mismos textos del formulario (consentimiento, datos, A1, tareas, T5, SUS y A2 a A4) y, durante
+cada tarea, muestra un panel fijo abajo con la instrucción, el correo y el carnet de prueba y la pregunta «¿Pudo
+hacerlo?». Motivo: en el celular, ir y volver entre el formulario y la página era la principal barrera para los
+maestros. Efectos sobre el estudio:
+
+- Las tareas se hacen en la página real (no es una simulación), así que la verificación en la base (sección 6) sigue
+  igual.
+- El tiempo de cada tarea se **mide** entre «Comenzar» y «Terminé», en lugar de autorreportarse. Se quita la pregunta
+  «¿Cuánto se demoró?».
+- Las respuestas quedan en las tablas `validacion_participantes` y `validacion_respuestas` (migración
+  `20261114000000_validacion_usuarios.sql`), separadas del producto; solo un admin las lee. Los enlaces se crean con
+  [participantes.sql](participantes.sql) y los resultados se obtienen con [resultados.sql](resultados.sql).
+- El consentimiento agrega que se guarda cuánto tarda en cada tarea.
+- [crear_formulario.gs](crear_formulario.gs) queda como plan B si la página falla.
+
 ---
 
 ## 1. Qué se busca establecer
@@ -99,12 +116,14 @@ Si el sábado en la noche hay menos de 5 respuestas, se activa el riesgo R-03 y 
 | Versión de la página congelada para la prueba en Vercel; anotar el número del commit | Joaquín |
 | Durante la prueba, desactivar "Confirm email" en Supabase Auth, para que los participantes se registren con el correo de prueba que se les asigna (`p1@prueba.masterplace.cl`, etc.) y no tengan que dar su correo real. Reactivarlo el domingo en la noche | Joaquín |
 | Tres o más maestros ficticios ya verificados en cada comuna y oficio, para que la búsqueda de los clientes tenga resultados | Ignacio |
-| Imagen de carnet ficticio con la marca "DOCUMENTO FICTICIO SIN VALIDEZ", publicada en un enlace de descarga | Gabriel |
-| Formulario creado con el script `crear_formulario.gs` y probado de principio a fin por un integrante (las respuestas de esa prueba se borran) | Gabriel |
-| Consulta SQL para verificar las tareas de cada código (sección 6) | Hugo |
+| Imagen de carnet ficticio con la marca "DOCUMENTO FICTICIO SIN VALIDEZ" (se descarga desde el panel de la tarea: `public/carnet_prueba.png`) | Gabriel |
+| Migración `20261114000000_validacion_usuarios.sql` aplicada y enlaces creados con `participantes.sql` | Gabriel |
+| Prueba de punta a punta con los enlaces del equipo P90 (maestro) y P91 (cliente); después se borran sus respuestas | Gabriel |
+| Consulta SQL para verificar las tareas de cada código (sección 6): [resultados.sql](resultados.sql) | Hugo |
 
 **Asignación de correos:** cada participante usa `p<número>@prueba.masterplace.cl` y una contraseña que elija. Así
-sus acciones se ubican en la base por su código, sin datos personales.
+sus acciones se ubican en la base por su código, sin datos personales. El panel de la tarea le muestra su correo con
+un botón para copiarlo.
 
 ---
 

@@ -11,6 +11,7 @@ const TITULOS: { patron: string; titulo: string }[] = [
   { patron: '/admin', titulo: 'Moderación' },
   { patron: '/contactos/:contactoId/resena', titulo: 'Nueva reseña' },
   { patron: '/contactos/:contactoId', titulo: 'Conversación' },
+  { patron: '/prueba/:token', titulo: 'Prueba de la página' },
 ]
 
 export function tituloDeRuta(pathname: string): string {
