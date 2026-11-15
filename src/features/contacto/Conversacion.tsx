@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Navigate, useLocation, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
 import Icono from '../../components/Icono'
 import { useSesion } from '../../lib/auth/contexto'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
@@ -238,10 +238,10 @@ export default function Conversacion() {
     const contenido = texto.trim()
     if (!contenido || !usuario || !contacto || !contactoId || enviando) return
 
-    if (contacto.estado !== 'abierto') {
-      setErrorEnvio('Esta conversación no está abierta y no admite nuevos mensajes.')
-      return
-    }
+    if (contacto.estado === 'cerrado') {
+	setErrorEnvio('Esta conversación está cerrada y no admite nuevos mensajes.')
+	return
+	}
     if (contenido.length > 2000) {
       setErrorEnvio('El mensaje no puede superar los 2000 caracteres.')
       return
@@ -303,6 +303,18 @@ export default function Conversacion() {
         </span>
       </header>
 
+{contacto?.estado === 'servicio_confirmado' &&
+  contacto.cliente_id === usuario.id && (
+    <div className="conversacion-acciones">
+      <Link
+        to={`/contactos/${contacto.id}/resena`}
+        className="boton boton-primario"
+      >
+        Dejar reseña
+      </Link>
+    </div>
+  )}
+
       {cargando && <p className="texto-suave" role="status">Cargando conversación…</p>}
 
       {errorCarga && (
@@ -336,7 +348,7 @@ export default function Conversacion() {
             <li ref={finalMensajesRef} aria-hidden="true" className="conversacion-final" />
           </ol>
 
-          {contacto?.estado === 'abierto' ? (
+          {contacto && contacto.estado !== 'cerrado' ? (
             <form className="conversacion-formulario" onSubmit={enviarMensaje}>
               <label className="solo-lector" htmlFor="mensaje-contenido">Escribe un mensaje</label>
               <textarea
