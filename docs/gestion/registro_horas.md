@@ -9,6 +9,12 @@ evidencia de contribución (R6).
 |---|---|---|---|---|
 | 2026-11-08 | Gabriel | | Preparación del repositorio y del plan hacia E3 | |
 
+| 2026-11-09 | Ignacio | 1 hora y 30 minutos aprox | Revisar el borrador supabase/migrations/20261109000000_esquema_inicial.sql | |
+| 2026-11-10 | Ignacio | 1 hora y 30 minutos aprox | Semilla: 6 comunas con código y centroides, 5 oficios, 15 maestros ficticios (3 por oficio) y 20 clientes. Creacion de función es_admin() | |
+| 2026-11-11 | Ignacio | 1 hora y 30 minutos aprox | db(rls): políticas por rol y participante | |
+| 2026-13-08 | Ignacio | 3 hora y 30 minutos aprox | db(cedula): borrar archivo al aprobar y test(seguridad): TNF-01 accesos indebidos | |
+| 2026-13-08 | Ignacio | 1 hora y 30 minutos aprox | Corregir lo que falló en TNF-01 | |
+
 ## Resumen semanal (lo completa Diego)
 
 | Semana | Estimado (Gantt E1) | Registrado | Diferencia | Causa |
