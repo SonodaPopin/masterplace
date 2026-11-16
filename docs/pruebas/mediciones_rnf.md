@@ -11,7 +11,7 @@ interpretar las desviaciones.
 | RNF-4 Disponibilidad | ≥ 95 % de comprobaciones correctas en 7 días | TNF-04 | Monitor cada 5 min desde el 10-11 (en E3 se informa el periodo parcial) |Herramienta: UptimeRobot, URL Monitoriada: https://masterplace.vercel.app Fecha y hora de Inicio: 10/11/2026 a las 21:12 | ![alt text](image.png)| Joaquín |
 | RNF-5 Mantenibilidad | Cobertura ≥ 70 % en módulos críticos; TypeScript sin errores | TNF-05 | `npm run test:coverage` y `npm run typecheck` en la CI | | | Hugo |
 | RNF-7 Accesibilidad | Teclado, foco, etiquetas, contraste ≥ 4,5:1 y lista equivalente al mapa | TNF-06 | Revisión manual y Lighthouse en registro y búsqueda. Ejecutado el 13-11 con axe-core 4.10.2 (el motor de las auditorías de accesibilidad de Lighthouse), reglas WCAG 2 A/AA y buenas prácticas, más revisión con teclado (ver detalle abajo) | 0 infracciones automáticas en 4 páginas (incluido contraste); 2 defectos manuales encontrados y corregidos | Cumple, con límites: falta Lighthouse completo y probar en navegador los pasos 2 y 3 del registro de maestro | Gabriel |
-| RNF-3 Usabilidad | Registro de maestro ≤ 3 pasos y ≤ 5 min; SUS ≥ 75 | TNF-03 | Sesiones de validación | | | Gabriel |
+| RNF-3 Usabilidad | Registro de maestro ≤ 3 pasos y ≤ 5 min; SUS ≥ 75 | TNF-03 | Prueba remota guiada dentro de la app, 14 y 15-11, 7 participantes (3 maestros y 4 clientes); SUS estándar de 10 ítems; tiempo entre «Comenzar» y «Terminé» (`plan_validacion.md`, sección 9) | Registro en 3 pasos (por diseño). Tiempo de T1: 5:28 (P2); P5, 0:47, no representativo; P3 no terminó. SUS promedio 88,9 (70–100): maestros 77,5 y clientes 97,5 | SUS: cumple. Tiempo ≤ 5 min: no se cumple (único dato válido: 5:28) | Gabriel |
 
 ## Interpretación de desviaciones
 
