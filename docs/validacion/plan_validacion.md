@@ -96,16 +96,36 @@ Si el sábado en la noche hay menos de 5 respuestas, se activa el riesgo R-03 y 
 
 ### Registro de invitaciones
 
+Completado el 15-11 con la base de datos (`validacion_participantes`, `validacion_respuestas` y las cuentas creadas).
+Horas de Chile (UTC−3). «Respondió» indica si la persona llegó al final de la prueba guiada; si la tarea quedó hecha en
+la base se analiza en la sección 9. Los enlaces del equipo (P90 en adelante) no se cuentan.
+
 | Código | Perfil | Oficio o comuna | Aceptó | Enlace enviado | Respondió |
 |---|---|---|---|---|---|
-| P1 | Maestro | | | | |
-| P2 | Maestro | | | | |
-| P3 | Maestro | | | | |
-| P4 | Maestro | | | | |
-| P5 | Maestro | | | | |
-| P6 | Cliente | | | | |
-| P7 | Cliente | | | | |
-| P8 | Cliente | | | | |
+| P1 | Maestro | — | Sí (por eso se le envió el enlace) | Sí | No: el enlace nunca se abrió |
+| P2 | Maestro | Comuna: «Otra» (fuera del piloto); oficio no registrado | Sí (consentimiento en la app) | Sí | Sí, terminó el 15-11 a las 09:39 |
+| P3 | Maestro | Comuna: Concepción; oficio no registrado | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 15:56 |
+| P4 | Maestro | — | — | No (código sin usar) | — |
+| P5 | Maestro | — | — | No (código sin usar) | — |
+| P6 | Cliente | Comuna: Concepción | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 16:20 |
+| P7 | Cliente | Comuna: Concepción | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 17:32 |
+| P8 | Cliente | Comuna: Concepción | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 13:34 |
+| P9 | Cliente | Comuna: «Otra» (fuera del piloto) | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 15:45 |
+| P10 | Cliente | — | — | No (código sin usar) | — |
+
+**Resumen:** se enviaron 7 enlaces (3 maestros y 4 clientes) y 6 se respondieron hasta el final (2 maestros y 4
+clientes); P1 nunca abrió el suyo. P4, P5 y P10 no se usaron. Se cumple el mínimo de 5 respuestas
+completas, pero **no el de 3 maestros**. P2 y P9 declararon una comuna fuera de las 6 del piloto, que es un criterio de
+inclusión: se informa como límite y se analizan igual.
+
+**Observaciones de la base para la sección 9:**
+
+- **T1 (P2 y P3):** ninguno de los dos maestros dejó una cuenta en la base: no hay cuenta `p2@`/`p3@` ni ninguna cuenta de
+  maestro creada durante sus intentos. P3 respondió «No pude» (90 s). **P2 respondió «Sí, sin problemas» (328 s)
+  sin que exista su registro**: según la sección 6, vale la base y se anota como hallazgo.
+- **T4 (P7):** creó la cuenta con un correo distinto al de prueba (quedó vinculada a P7 por el enlace) y abrió un
+  contacto, pero **no envió ningún mensaje**, aunque respondió «Sí, sin problemas». P6, P8 y P9 sí tienen contacto con
+  mensaje.
 
 ---
 
