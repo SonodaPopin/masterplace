@@ -162,8 +162,8 @@ el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de 
 - **Efecto verificado:** al 15-11 los 7 Must de E3 están en `premain`, así que el recorte (b) no hizo falta: la
   búsqueda usa `buscar_maestros` con PostGIS (migración 20261114120000) y conserva el respaldo; el botón "Contactar"
   abre la conversación; el chat se actualiza con Realtime (20261113173000), y la reseña tiene confirmación del servicio
-  y lectura pública (20261114180000 y 20261114190000). Ojo: al 15-11 esas migraciones están en el repositorio, pero no
-  aplicadas en la base de producción (riesgo R-11). En la validación terminaron 7 participantes (3 maestros y 4
+  y lectura pública (20261114180000 y 20261114190000). Esas migraciones quedaron aplicadas en la base de producción el
+  15-11 en la noche; hasta entonces la búsqueda usaba el respaldo en el navegador (riesgo R-11). En la validación terminaron 7 participantes (3 maestros y 4
   clientes): los 4 clientes contactaron a un maestro (T4) y 2 de 3 maestros se registraron (T1), en ambos casos con
   datos confirmados en conversación con los participantes. El hallazgo principal de T1 es que la guía no dejaba claro
   dónde inscribirse (H-01; `docs/validacion/plan_validacion.md`, sección 9).
