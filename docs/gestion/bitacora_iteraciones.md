@@ -166,7 +166,26 @@ el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de 
   enviar el primer enlace, así que todos los participantes usan el mismo instrumento. Se conservan los textos del
   formulario (consentimiento, tareas, SUS y preguntas) para no cambiar lo que se mide. Implementación: migración
   `20261114000000_validacion_usuarios.sql` y `src/features/validacion/`.
-- **Efecto verificado:** [COMPLETAR el 15-11: cuántos participantes terminaron y el tiempo medido de T1 frente a la meta
-  de 5 minutos. Comparar el abandono con lo esperado (8 a 10 invitados para obtener 5 respuestas).]
+- **Efecto verificado (15-11):** de 8 invitados terminaron 7 (3 maestros y 4 clientes), más de lo esperado (5 de 8 a
+  10). El tiempo de T1 se midió en la página, pero solo un dato es válido: 5:28 (P2), sobre la meta de 5 minutos. Los
+  botones «Comenzar» y «Terminé» no siempre se pulsaron durante la tarea (H-06), así que la medición automática no
+  reemplazó del todo a la verificación en la base. Detalle en `docs/validacion/plan_validacion.md`, sección 9.
 
-### Iteración 5 · [título] (opcional para E3, exigida en E4)
+### Iteración 5 · Cambios a partir de la validación con usuarios (15-11-2026)
+
+- **Disparador:** resultados de la validación (14 y 15-11, 7 participantes). Un maestro no encontró dónde inscribirse
+  (H-01, crítico), ningún cliente distinguió «Identidad verificada» de «Certificado» (H-03) y un cliente creyó haber
+  enviado un mensaje que no se guardó (H-04). En A2, las reseñas y la identidad verificada quedaron primeras y la
+  cercanía última.
+- **Alternativas:**
+  - (a) Informar los hallazgos en E3 y dejar todos los cambios para E4.
+  - (b) Corregir antes del congelamiento del 16-11 los cambios pequeños y de bajo riesgo, y planificar el resto para E4.
+  - (c) Rediseñar el registro de maestro y los sellos antes de E3.
+- **Decisión (propuesta de Gabriel, a confirmar en el ensayo del 16-11):** (b). Se descarta (c) porque arriesga la demo
+  a un día de congelar el código. Entran antes de E3, si caben: el acceso directo a «Soy maestro» en la guía de T1 (H-01)
+  y el texto de ayuda en los sellos (H-03). Quedan para E4: la confirmación de «Mensaje enviado» (H-04), la vinculación
+  de la cuenta al enlace (H-02) y la foto de perfil (H-07). La propuesta de valor frente a 2x3 (Iteración 1) se apoya en
+  las reseñas y la identidad verificada más que en la cercanía.
+- **Efecto verificado:** pendiente; se medirá en la validación de E4 con el mismo instrumento.
+
+### Iteración 6 · [título] (opcional para E3, exigida en E4)
