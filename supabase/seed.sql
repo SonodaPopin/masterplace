@@ -6,7 +6,10 @@
 --
 -- Piloto: gasfitería sanitaria, albañilería, carpintería, hojalatería y estructuras
 -- metálicas, en Concepción, Talcahuano, Hualpén, San Pedro de la Paz, Chiguayante y Penco.
--- Contenido: 6 comunas, 5 oficios, 15 maestros (3 por oficio) y 20 clientes.
+-- Contenido: 6 comunas, 5 oficios, 18 maestros y 20 clientes.
+--   Maestros 01-15: 3 por oficio (3 con identidad pendiente, para probar estados).
+--   Maestros 16-18: gásfiters verificados y disponibles en Talcahuano, Hualpén y Penco,
+--   para que cada comuna del piloto tenga al menos un gásfiter (T3). Total: 15 verificados.
 -- Cuentas: correos @masterplace.test (dominio reservado, no existe) y contraseña
 -- de desarrollo común: Masterplace-dev-2026
 -- RUT: ficticios con dígito verificador válido, en el rango 90.000.001+ (rango de
@@ -61,6 +64,9 @@ with datos (id, email, nombre) as (values
   ('61f5932a-0448-521c-ac46-b1aee170830f', 'maestro13@masterplace.test', 'Víctor López Valenzuela'),
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', 'maestro14@masterplace.test', 'Claudio Fuentes Castillo'),
   ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 'maestro15@masterplace.test', 'Manuel Hernández Tapia'),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', 'maestro16@masterplace.test', 'Rodrigo Parra Bustos'),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', 'maestro17@masterplace.test', 'Cristián Navarro Ortiz'),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', 'maestro18@masterplace.test', 'Felipe Maldonado Lagos'),
   ('62289cda-24fc-516c-bab8-7c7e698d6117', 'cliente01@masterplace.test', 'Juan Díaz Rodríguez'),
   ('3b73e358-7bd1-51f9-9970-20777e94e60b', 'cliente02@masterplace.test', 'Camila Pérez López'),
   ('d32a8324-0366-58fb-b32c-b95345f7423f', 'cliente03@masterplace.test', 'Francisca Soto Fuentes'),
@@ -111,6 +117,9 @@ with datos (id, email) as (values
   ('61f5932a-0448-521c-ac46-b1aee170830f', 'maestro13@masterplace.test'),
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', 'maestro14@masterplace.test'),
   ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 'maestro15@masterplace.test'),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', 'maestro16@masterplace.test'),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', 'maestro17@masterplace.test'),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', 'maestro18@masterplace.test'),
   ('62289cda-24fc-516c-bab8-7c7e698d6117', 'cliente01@masterplace.test'),
   ('3b73e358-7bd1-51f9-9970-20777e94e60b', 'cliente02@masterplace.test'),
   ('d32a8324-0366-58fb-b32c-b95345f7423f', 'cliente03@masterplace.test'),
@@ -156,6 +165,9 @@ insert into public.perfiles (id, rol, nombre, telefono, comuna_id) values
   ('61f5932a-0448-521c-ac46-b1aee170830f', 'maestro', 'Víctor López Valenzuela', '+56 9 5550 0013', 8101),
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', 'maestro', 'Claudio Fuentes Castillo', '+56 9 5550 0014', 8103),
   ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 'maestro', 'Manuel Hernández Tapia', '+56 9 5550 0015', 8108),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', 'maestro', 'Rodrigo Parra Bustos', '+56 9 5550 0016', 8110),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', 'maestro', 'Cristián Navarro Ortiz', '+56 9 5550 0017', 8112),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', 'maestro', 'Felipe Maldonado Lagos', '+56 9 5550 0018', 8107),
   ('62289cda-24fc-516c-bab8-7c7e698d6117', 'cliente', 'Juan Díaz Rodríguez', '+56 9 5551 0001', 8103),
   ('3b73e358-7bd1-51f9-9970-20777e94e60b', 'cliente', 'Camila Pérez López', '+56 9 5551 0002', 8101),
   ('d32a8324-0366-58fb-b32c-b95345f7423f', 'cliente', 'Francisca Soto Fuentes', '+56 9 5551 0003', 8107),
@@ -178,7 +190,7 @@ insert into public.perfiles (id, rol, nombre, telefono, comuna_id) values
   ('40f05b9d-9964-5a86-9816-6b774d2ff021', 'cliente', 'Verónica Reyes Ramírez', '+56 9 5551 0020', 8101)
 on conflict (id) do nothing;
 
--- 5. Maestros (3 por oficio). Punto de referencia = centroide de su comuna con
+-- 5. Maestros (01-15: 3 por oficio; 16-18: gásfiters de Talcahuano, Hualpén y Penco). Punto de referencia = centroide de su comuna con
 --    un desplazamiento fijo de ±0,8 km aprox., para que ST_Distance sea variado.
 insert into public.maestros
   (id, oficio_id, descripcion, anios_experiencia, referencia, disponible, estado_identidad, nivel_reputacion, certificado_ok) values
@@ -196,7 +208,10 @@ insert into public.maestros
   ('ebf98ee5-ea00-5744-8808-83d7c2b5903e', 4, 'Canaletas, bajadas de agua, forros, ductos y trabajos en plancha de zinc y acero.', 14, st_makepoint(-72.999443, -36.736069)::geography, true, 'verificada', false, true),
   ('61f5932a-0448-521c-ac46-b1aee170830f', 5, 'Soldadura y fabricación de rejas, portones, escaleras y estructuras de acero.', 17, st_makepoint(-73.044122, -36.821198)::geography, true, 'verificada', false, false),
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', 5, 'Soldadura y fabricación de rejas, portones, escaleras y estructuras de acero.', 20, st_makepoint(-73.021173, -36.914208)::geography, false, 'verificada', false, false),
-  ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 5, 'Soldadura y fabricación de rejas, portones, escaleras y estructuras de acero.', 23, st_makepoint(-73.110997, -36.835697)::geography, true, 'pendiente', false, false)
+  ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 5, 'Soldadura y fabricación de rejas, portones, escaleras y estructuras de acero.', 23, st_makepoint(-73.110997, -36.835697)::geography, true, 'pendiente', false, false),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', 1, 'Instalación y reparación de redes de agua potable y alcantarillado, artefactos sanitarios y calefont. Detección de fugas.', 9, st_makepoint(-73.119336, -36.710678)::geography, true, 'verificada', false, true),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', 1, 'Instalación y reparación de redes de agua potable y alcantarillado, artefactos sanitarios y calefont. Detección de fugas.', 13, st_makepoint(-73.083627, -36.790306)::geography, true, 'verificada', false, false),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', 1, 'Instalación y reparación de redes de agua potable y alcantarillado, artefactos sanitarios y calefont. Detección de fugas.', 6, st_makepoint(-72.987019, -36.742218)::geography, true, 'verificada', false, false)
 on conflict (id) do nothing;
 
 -- 6. Datos privados (RUT ficticio)
@@ -215,7 +230,10 @@ insert into public.maestros_privado (id, rut) values
   ('ebf98ee5-ea00-5744-8808-83d7c2b5903e', '90000012-K'),
   ('61f5932a-0448-521c-ac46-b1aee170830f', '90000013-8'),
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', '90000014-6'),
-  ('b7fb7f27-fdab-50c5-bca1-6996e2369980', '90000015-4')
+  ('b7fb7f27-fdab-50c5-bca1-6996e2369980', '90000015-4'),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', '90000016-2'),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', '90000017-0'),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', '90000018-9')
 on conflict (id) do nothing;
 
 -- 7. Cobertura: su comuna + una vecina
@@ -249,9 +267,14 @@ insert into public.coberturas (maestro_id, comuna_id) values
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', 8103),
   ('726cd497-a0d0-50d2-a8fd-57c51966f15c', 8101),
   ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 8108),
-  ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 8101)
+  ('b7fb7f27-fdab-50c5-bca1-6996e2369980', 8101),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', 8110),
+  ('9a1498a7-f0a4-5cfd-883b-5286a10ca2af', 8112),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', 8112),
+  ('11b40d8e-b788-5a1e-b9a3-e0d8d513e2f1', 8110),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', 8107),
+  ('c2052065-ea73-56d1-a29e-cd7b70441ad3', 8110)
 on conflict do nothing;
 
--- Hecho (Ignacio, martes 10-11): las 6 comunas con su código oficial y un centroide
--- Hecho (Concepción, Talcahuano, Hualpén, San Pedro de la Paz, Chiguayante, Penco), citando la fuente
--- de las coordenadas; luego 15 maestros (3 por oficio) y 20 clientes de prueba.
+-- Hecho (Ignacio, martes 10-11): 6 comunas con código y centroide (fuente citada arriba),
+-- 5 oficios, 18 maestros (15 verificados, 3 pendientes) y 20 clientes de prueba.

@@ -21,7 +21,17 @@ seguridad que no dependa solo de la interfaz (RNF-1).
 ALT-2. Puntaje ponderado de la matriz de E2: ALT-1 3,35, **ALT-2 4,05**, ALT-3 2,85. En el escenario de sensibilidad B:
 3,35 / **3,90** / 3,15. ALT-2 gana en ambos escenarios.
 
-> [Pedro: copiar aquí los criterios, los pesos y los puntajes por criterio desde la diapositiva de E2.]
+### Criterios, pesos y puntajes de E2
+
+| Criterio | Peso | ALT-1 (Django) | ALT-2 (Supabase) | ALT-3 (Node) | Justificación |
+| :--- | :---: | :---: | :---: | :---: | :--- |
+| **Factibilidad de calendario** | 25% | 3 | **4** | 2 | Recurso más escaso (300 h-persona); Supabase ahorra tiempo al no construir backend desde cero[cite: 10, 11]. |
+| **Cobertura del flujo Must** | 20% | 4 | **4** | 3 | Demostración en vivo como condición de aprobación del piloto[cite: 10, 11]. |
+| **Privacidad y seguridad** | 20% | 3 | **4** | 3 | Manejo de cédulas, chat, RNF-1 y cumplimiento Ley 19.628 (RLS y buckets privados)[cite: 10, 11]. |
+| **Costo y operación** | 15% | 4 | **5** | 3 | Respeto estricto del techo presupuestario de $30.000/mes (aprovechando el plan gratuito)[cite: 10, 11]. |
+| **Mantenibilidad y despliegue** | 10% | 3 | **4** | 3 | Cumplimiento de los requisitos no funcionales RNF-5 y RNF-9[cite: 10, 11]. |
+| **Rendimiento y continuidad** | 10% | 3 | **3** | 4 | Soporte adecuado para la carga baja estimada de 50 usuarios concurrentes[cite: 10, 11]. |
+| **Total Ponderado / 5** | **100%** | **3,35** | **4,05** | **2,85** | **ALT-2 gana por calendario, costo y privacidad**[cite: 10, 11]. |
 
 ## Consecuencias y trade-off
 
