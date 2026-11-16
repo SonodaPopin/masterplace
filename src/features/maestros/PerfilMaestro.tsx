@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
+import { useSesion } from '../../lib/auth/contexto'
+import { nombreDeRelacion, type Relacion } from '../../lib/maestros/perfilPublico'
+import { crearOReutilizarContacto } from '../contacto/servicioContactos'
 import {
   obtenerReputacionMaestro,
   type ReputacionMaestro,
@@ -12,8 +15,8 @@ type MaestroPublico = {
   anios_experiencia: number | null
   disponible: boolean
   certificado_ok: boolean
-  perfiles: { nombre: string }[]
-  oficios: { nombre: string }[]
+  perfiles: Relacion
+  oficios: Relacion
 }
 
 export default function PerfilMaestro() {
@@ -25,6 +28,34 @@ export default function PerfilMaestro() {
   const [reputacion, setReputacion] = useState<ReputacionMaestro | null>(null)
   const [cargandoResenas, setCargandoResenas] = useState(true)
   const [errorResenas, setErrorResenas] = useState<string | null>(null)
+  const { usuario, rol } = useSesion()
+  const navigate = useNavigate()
+  const location = useLocation()
+  const [contactando, setContactando] = useState(false)
+  const [errorContacto, setErrorContacto] = useState<string | null>(null)
+
+  // RF-4 desde el perfil (D-01): misma regla que la lista de resultados. Sin sesión lleva a ingresar y vuelve aquí;
+  // solo los clientes pueden iniciar un contacto.
+  async function contactar() {
+    if (!maestroId) return
+    if (!usuario) {
+      navigate('/ingresar', { state: { desde: location.pathname } })
+      return
+    }
+    if (rol !== 'cliente') {
+      setErrorContacto('Solo las cuentas de cliente pueden contactar a un maestro.')
+      return
+    }
+    setContactando(true)
+    setErrorContacto(null)
+    try {
+      const contactoId = await crearOReutilizarContacto(maestroId)
+      navigate(`/contactos/${contactoId}`)
+    } catch (e) {
+      setErrorContacto(e instanceof Error ? e.message : 'No fue posible contactar al maestro.')
+      setContactando(false)
+    }
+  }
 
   useEffect(() => {
     if (!maestroId || !supabaseConfigurado) return
@@ -115,9 +146,29 @@ void cargarReputacion()
 
       {!cargando && maestro && (
         <>
-          <h1>{maestro.perfiles?.[0]?.nombre ?? 'Maestro verificado'}</h1>
+          <h1>{nombreDeRelacion(maestro.perfiles) ?? 'Maestro verificado'}</h1>
 
-          <p>{maestro.oficios?.[0]?.nombre ?? 'Oficio no disponible'}</p>
+          <p>{nombreDeRelacion(maestro.oficios) ?? 'Oficio no disponible'}</p>
+
+          {rol !== 'maestro' && rol !== 'admin' && (
+            <div className="perfil-acciones">
+              <button
+                type="button"
+                className="boton boton-primario"
+                onClick={() => void contactar()}
+                disabled={contactando || !maestro.disponible}
+                aria-busy={contactando}
+              >
+                {contactando ? 'Contactando...' : 'Contactar'}
+              </button>
+              {!maestro.disponible && <p className="texto-suave">Este maestro no tiene cupo por ahora.</p>}
+              {errorContacto && (
+                <p className="alerta-error" role="alert">
+                  {errorContacto}
+                </p>
+              )}
+            </div>
+          )}
 
           <h2>Información profesional</h2>
 

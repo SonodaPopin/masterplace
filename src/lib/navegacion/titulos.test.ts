@@ -12,6 +12,7 @@ describe('tituloDeRuta', () => {
       '/contactos',
       '/contactos/abc',
       '/contactos/abc/resena',
+      '/maestros/abc',
     ]
     const titulos = rutas.map(tituloDeRuta)
     expect(new Set(titulos).size).toBe(rutas.length)

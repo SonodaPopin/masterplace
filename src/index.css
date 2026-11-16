@@ -487,3 +487,6 @@ code { font-size: 0.9em; background: var(--color-primario-suave); padding: 1px 6
 }
 .pie-interior p { margin: 0; font-size: 0.87rem; color: var(--color-texto-suave); max-width: 560px; }
 .pie .logo-texto { font-size: 1.05rem; }
+
+/* Perfil público del maestro (D-01): acción de contacto. */
+.perfil-acciones { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin: 12px 0 20px; }

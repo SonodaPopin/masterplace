@@ -46,9 +46,9 @@ E4 la comparación entre estimado y ejecutado sea completa.
 | Riesgo | Qué pasó | Acción aplicada | Efecto |
 |---|---|---|---|
 | R-09 Calendario | E3 adelantada sin código iniciado | Plan de 8 días con orden de recorte (`PLAN_E3.md`) | Integración 2 incompleta el 13-11 (Iteración 3 de la bitácora) |
-| R-01 Técnica | Dependencias en cadena: RLS → registro → moderación → búsqueda → chat | Respaldos para no bloquear: búsqueda sin PostGIS y verificación con función en la base | RF-3 funciona sin `buscar_maestros` |
-| R-03 Validación | Se consiguieron 2 maestros de los 3 pedidos y 2 participantes son de fuera del piloto | Enlaces suplentes y aviso al equipo | 6 respuestas completas: se cumple el mínimo de 5, no el de 3 maestros (se informa como límite) |
-| R-06 Equipo | 4 de 6 integrantes sin registro de horas | Se exige el registro en cada PR | No se puede medir con precisión el ejecutado de S6 |
+| R-01 Técnica | Dependencias en cadena: RLS → registro → moderación → búsqueda → chat | Respaldos para no bloquear: búsqueda sin PostGIS y verificación con función en la base | RF-3 funcionó con el respaldo hasta el 15-11; ese día se aplicaron en producción las migraciones pendientes y la búsqueda usa PostGIS (R-11) |
+| R-03 Validación | Un maestro invitado (P1) no respondió y faltaba uno para llegar a 3 | Se envió un enlace suplente (P5) | 7 respuestas completas (3 maestros y 4 clientes): se cumplen ambos mínimos, con P5 fuera de plazo (se informa como límite) |
+| R-06 Equipo | Al 15-11, 4 de 6 integrantes no habían registrado sus horas | Se estimaron desde los commits y cada integrante las confirmó el 16-11; desde ahora se registran en cada PR | Ejecutado de S6 medido: 82,3 h |
 
 ## 4. Qué se compromete y qué queda fuera
 
@@ -57,8 +57,8 @@ los Must que faltan; los Should solo si sobra tiempo según las horas reales reg
 
 | Hito | Se compromete | Queda fuera y por qué |
 |---|---|---|
-| E3 (17-11) | Los 7 Must de E3 (en `premain` al 15-11): registro → verificación → búsqueda → contacto → chat → reseña; TNF-01; validación (6 respuestas); CI-1 (error máximo 0,194 %) y CI-2 | No se recortó nada del flujo. Queda fuera corregir el hallazgo de T1 (los maestros no lograron registrarse): pasa a E4 |
-| E4 ([fecha]) | Corregir el registro de maestro según la validación (T1); RF-6 (Nivel 2 por reseñas); RF-12 y RF-8 (denuncias y su moderación); RF-9 (editar perfil); `buscar_maestros` con PostGIS si no está | RF-13 (notificaciones), por ser el Should de menor valor para la confianza |
+| E3 (17-11) | Los 7 Must de E3 (en `premain` al 15-11): registro → verificación → búsqueda → contacto → chat → reseña; TNF-01; validación (7 respuestas); TC-01 a TC-05 aprobados; CI-1 (error máximo 0,194 %) y CI-2 | No se recortó nada del flujo. Queda fuera corregir los hallazgos de la validación (H-01 guía de T1, H-03 sellos, H-04 mensaje sin enviar): pasan a E4 |
+| E4 ([fecha]) | Corregir los hallazgos de la validación (H-01 a H-04); RF-6 (Nivel 2 por reseñas); RF-12 y RF-8 (denuncias y su moderación); RF-9 (editar perfil) | RF-13 (notificaciones), por ser el Should de menor valor para la confianza |
 | E5 ([fecha]) | RF-7 (certificado, Nivel 3); RF-13; mejoras de la validación; medición de disponibilidad completa (RNF-4) | Pagos y cualquier servicio con costo sobre $30.000 al mes (riesgo R-08) |
 
 ## 5. Gantt hasta E5
