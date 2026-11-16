@@ -27,7 +27,7 @@ escrito). [Si alguien recuerda otra, agregarla con el mismo formato.]
 | # | Observación (resumen) | Qué cambiamos | Evidencia | Estado |
 |---|---|---|---|---|
 | O1 | La estimación de esfuerzo no es realista: 5 h semanales por persona (300 h-persona) es muy poco para el proyecto. Pidió estimar con una jornada completa de 40 h semanales | Se reestima con 40 h semanales: 6 × 40 h × 10 semanas = **2.400 h-persona**, valoradas en **$12.000.000** con la misma tarifa de $5.000 por hora. Esto reemplaza la corrección C7 de E1 (300 h). Las horas reales se siguen registrando para comparar estimado con ejecutado en la replanificación | `docs/gestion/registro_horas.md`, `docs/gestion/costos.md`, replanificación post E3 | Por actualizar en registro de horas, costos y Gantt |
-| O2 | ¿Cómo se retiene a los maestros? Pueden conseguir contactos a través de la página y después seguir con el cliente por fuera, sin volver a usarla | Lo tratamos como riesgo de desintermediación: ver la respuesta detallada abajo. La reputación solo se acumula dentro de la plataforma, y el modelo es sin comisión, así que salirse no le ahorra nada al maestro | Respuesta O2 (abajo); `docs/gestion/riesgos.md`; RB-2, RB-7, RF-5, RF-6 en `docs/requisitos.md` | En curso: [CONFIRMAR con el equipo] |
+| O2 | ¿Cómo se retiene a los maestros? Pueden conseguir contactos a través de la página y después seguir con el cliente por fuera, sin volver a usarla | Lo tratamos como riesgo de desintermediación: ver la respuesta detallada abajo. La reputación solo se acumula dentro de la plataforma, y el modelo se financia con anuncios y no con comisión, así que salirse no le ahorra nada al maestro | Respuesta O2 (abajo); `docs/gestion/riesgos.md`; RB-2, RB-7, RF-5, RF-6 en `docs/requisitos.md` | Hecho; medición en E4 |
 
 #### Respuesta a O1 · Estimación de esfuerzo
 
@@ -57,17 +57,19 @@ dos partes pueden seguir por teléfono. Nuestra respuesta es que al maestro le c
    lo hace aparecer mejor frente a clientes nuevos.
 2. **Los niveles de verificación son un activo que no se lleva.** La identidad verificada (Nivel 1), la reputación
    (Nivel 2) y el certificado del oficio (Nivel 3) solo se muestran en MasterPlace.
-3. **Sin comisión no hay incentivo económico para salirse.** [CONFIRMAR modelo de E1] Como la plataforma no cobra
-   por trabajo, cerrar el trato por fuera no le ahorra nada al maestro. Si en el futuro hubiera cobro, debería ser una
-   suscripción o un destaque pagado, nunca una comisión por trabajo, justamente por este riesgo.
+3. **El ingreso viene de anuncios, no de cada trabajo.** El modelo de E1 se financia con anuncios, sin comisión por
+   servicio. Cerrar el trato por fuera no le ahorra nada al maestro, y a la plataforma no le afecta en lo económico que
+   un cliente y un maestro sigan por su cuenta: le importa que vuelvan a la página, y eso lo logran los puntos 1, 2 y 4.
+   Si en el futuro se cobrara a los maestros, debería ser por suscripción o destaque, nunca por comisión, justamente por
+   este riesgo.
 4. **El cliente que vuelve, vuelve por la plataforma.** El cliente fiel a un maestro igual puede volver a contactarlo
    desde MasterPlace, y cada contacto nuevo vuelve a dejar una reseña.
-5. **Medirlo en lugar de suponerlo.** [PROPUESTA] En la validación con usuarios (C5) preguntamos a los maestros
-   qué los haría volver. Para E4 se puede medir la tasa de maestros con más de un contacto por mes.
+5. **Medirlo en lugar de suponerlo.** Para E4 se mide la tasa de maestros con más de un contacto al mes y cuántos
+   reciben reseñas, como indicador de que siguen usando la plataforma (disparador del riesgo R-10).
 
 **Qué se mantiene y por qué:** no se bloquea el intercambio de teléfonos en el chat, porque sería invasivo y fácil
 de evadir, y perjudicaría a clientes y maestros que ya se conocen. **Riesgo nuevo** en `docs/gestion/riesgos.md`:
-desintermediación, con probabilidad alta, impacto medio y la mitigación anterior. [Agregarlo.]
+desintermediación, con probabilidad alta, impacto medio y la mitigación anterior.
 
 ## 2. Iteraciones de diseño
 
@@ -83,9 +85,17 @@ Formato de cada iteración: **disparador** (medición, prueba, retroalimentació
 - **Alternativas:** (a) mantener la propuesta original de E1; (b) acotar el aporte a la certificación verificada como
   señal separada y a la búsqueda por cercanía; (c) presentar MasterPlace como prototipo académico que replica parte del
   flujo de 2x3.
-- **Decisión:** [COMPLETAR en la próxima reunión de equipo, idealmente con el resultado de las entrevistas.]
-- **Efecto verificado:** [COMPLETAR: por ejemplo, qué opinaron los participantes de la validación sobre la
-  certificación y la distancia.]
+- **Decisión:** (a) mantener la propuesta de E1. La comparación muestra que lo que diferencia a MasterPlace de 2x3 ya
+  estaba en E1: la certificación del oficio verificada y mostrada como señal aparte de la identidad (Nivel 3, RB-10),
+  la búsqueda ordenada por distancia (RF-3, CI-1) y la cobertura en comunas donde 2x3 tiene poca oferta. Cambiar la
+  propuesta no aportaba nada; sí cambia cómo se presenta: en E3 se explica frente a 2x3 en lugar de frente a "no hay
+  alternativas".
+- **Efecto verificado:** la búsqueda por distancia funciona en `main` (con PostGIS o con el cálculo de respaldo) y
+  la tarea T3 de la validación pide justamente buscar un gásfiter en la comuna de cada participante; la pregunta T5
+  mide si distinguen identidad y certificado. Resultado de la validación (15-11): los 4 clientes completaron T3, y los
+  que explicaron su elección citaron la cercanía; en T5, los 3 maestros distinguieron identidad y certificado, pero
+  ningún cliente (H-03). En A2, las reseñas y la identidad verificada quedaron primeras y la cercanía última
+  (`docs/validacion/plan_validacion.md`, sección 9; Iteración 5).
 
 ### Iteración 2 · Cómo decide el sistema quién es administrador y cómo se aprueba la cédula (10-11-2026)
 
@@ -106,11 +116,12 @@ Formato de cada iteración: **disparador** (medición, prueba, retroalimentació
   en el mismo paso, así el check nunca falla. La capa de datos (`src/features/admin/api.ts`) queda aislada, de modo
   que se pueda cambiar a (b) o (c) cuando Ignacio publique la función, sin tocar la pantalla. El motivo del rechazo
   se guarda en `auditoria` porque `documentos` no tiene esa columna.
-- **Efecto verificado:** [COMPLETAR cuando estén las políticas: (1) un usuario con `rol: 'admin'` en sus metadatos,
-  pero cliente en `perfiles`, ve «Esta sección es solo para administración» y la API le devuelve la lista vacía
-  (registrar en TNF-01); (2) tras aprobar, el maestro aparece en la búsqueda, `ruta_archivo` es null, el archivo ya
-  no está en el bucket y hay una fila en `auditoria`.] Las reglas puras del panel (cédula a revisar, validación del
-  motivo, texto de auditoría sin la ruta del archivo) tienen 15 pruebas en `src/lib/moderacion/moderacion.test.ts`.
+- **Efecto verificado:** la función `revisar_identidad` se probó primero en una base local con las migraciones y
+  políticas del equipo: un cliente no puede aprobar, el admin sí, un documento no se revisa dos veces y un rechazo sin
+  motivo se bloquea. En Supabase, la aprobación de una cédula quedó registrada en `auditoria` con el revisor, sin la
+  ruta del archivo (13-11). La comprobación de que un usuario no puede darse el rol de admin queda dentro de TNF-01
+  (Ignacio, `docs/pruebas/mediciones_rnf.md`). Las reglas puras del panel tienen 15 pruebas en
+  `src/lib/moderacion/moderacion.test.ts`.
 
 ### Revisión de la Integración 2 frente al MVP de E1 §9.1 (13-11-2026)
 
@@ -142,14 +153,21 @@ el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de 
     luego Realtime (el chat se actualiza al enviar o recargar). Nunca se recortan las políticas RLS ni el borrado de la
     cédula.
   - (c) Mostrar en la demo solo lo que funciona y explicar el resto con capturas.
-- **Decisión:** [CONFIRMAR con el equipo] (b), con prioridad en lo que necesita la validación (búsqueda y contacto).
+- **Decisión:** (b), con prioridad en lo que necesita la validación (búsqueda y contacto).
   Ya se aplicó un recorte de este tipo sin perder funcionalidad: la búsqueda consulta las tablas y calcula la
   distancia con Haversine en el navegador cuando `buscar_maestros` no existe (`src/lib/busqueda/buscarMaestros.ts`),
   así que RF-3 funciona sin esperar a PostGIS. Esto también sirve para CI-1: se pueden comparar los dos cálculos. Lo
   mismo se hizo con la verificación: como las políticas impiden que la app cambie el estado del maestro, se resolvió
   con una función en la base (Iteración 2) en lugar de relajar las políticas.
-- **Efecto verificado:** [COMPLETAR el 16-11: qué Must quedaron en la demo, resultado del ensayo cronometrado y
-  si los participantes de la validación completaron T3 (búsqueda) y T4 (contacto), según la consulta de Hugo.]
+- **Efecto verificado:** al 15-11 los 7 Must de E3 están en `premain`, así que el recorte (b) no hizo falta: la
+  búsqueda usa `buscar_maestros` con PostGIS (migración 20261114120000) y conserva el respaldo; el botón "Contactar"
+  abre la conversación; el chat se actualiza con Realtime (20261113173000), y la reseña tiene confirmación del servicio
+  y lectura pública (20261114180000 y 20261114190000). Ojo: al 15-11 esas migraciones están en el repositorio, pero no
+  aplicadas en la base de producción (riesgo R-11). En la validación terminaron 7 participantes (3 maestros y 4
+  clientes): los 4 clientes contactaron a un maestro (T4) y 2 de 3 maestros se registraron (T1), en ambos casos con
+  datos confirmados en conversación con los participantes. El hallazgo principal de T1 es que la guía no dejaba claro
+  dónde inscribirse (H-01; `docs/validacion/plan_validacion.md`, sección 9).
+  [Agregar el 16-11: si el flujo completo corrió en el ensayo y el tiempo cronometrado.]
 
 ### Iteración 4 · Instrumento de la validación con usuarios dentro de la página (14-11-2026)
 

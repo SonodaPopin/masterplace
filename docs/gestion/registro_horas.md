@@ -21,23 +21,26 @@ evidencia de contribución (R6).
 | 2026-11-13 | Ignacio | 3 hora y 30 minutos aprox | db(cedula): borrar archivo al aprobar y test(seguridad): TNF-01 accesos indebidos | Update jue 12 |
 | 2026-11-14 | Ignacio | 1 hora y 30 minutos aprox | Corregir lo que falló en TNF-01 | Update viernes 13 |
 | 2026-11-15 | Ignacio | 1 hora y 50 minutos aprox | Continuar comprobaciones en TNF-01 | Comprobaciones parciales TNF 1|
+| 2026-11-10 | Diego | 1,5 | Revisión del plan y del repositorio; borrador de la bitácora y del panel de moderación | |
+| 2026-11-11 | Diego | 1,5 | Observaciones de E2 en la bitácora y riesgo R-10; PR de documentos | PR #14 |
+| 2026-11-13 | Diego | 3 | Función `revisar_identidad`, PR del panel; revisión del MVP, Iteración 3 y borrador de la replanificación | PR #28, PR #29 |
+| 2026-11-14 | Diego | 1 | Prueba de los enlaces de validación y reclutamiento del participante P2 | |
+| 2026-11-15 | Diego | 2 | Cierre de las iteraciones 1 a 3, replanificación y preguntas probables | |
 | 2026-11-09 | Joaquín | 2 (estimado, a confirmar) | Proyecto Supabase, conexión con Vercel y primer despliegue | «deploy en vercel» |
 | 2026-11-10 | Joaquín | 2 (estimado, a confirmar) | Rutas SPA en Vercel y monitor de disponibilidad (UptimeRobot) | PR #13 |
 | 2026-11-12 | Joaquín | 4 (estimado, a confirmar) | RF-4 contacto y RF-11 chat (enviar y listar mensajes) | PR #22 |
 | 2026-11-13 | Joaquín | 5 (estimado, a confirmar) | Chat en tiempo real y bandeja de contactos | PR #37 |
-| 2026-11-09 a 15 | Joaquín | 2 (estimado, a confirmar) | Revisión e integración de PR de `premain` a `main` | PR #1 a #47 |
+| 2026-11-09 a 15 | Joaquín | 2 (estimado, a confirmar) | Revisión e integración de PR de `premain` a `main` | PR #1 a #48 |
 | 2026-11-10 | Hugo | 3 (estimado, a confirmar) | CI-2: promedio bayesiano con pruebas y análisis de sensibilidad | `87791bd`, `f67038a` |
 | 2026-11-11 | Hugo | 2 (estimado, a confirmar) | Plan de pruebas para E3 | PR #18 |
 | 2026-11-14 | Hugo | 5 (estimado, a confirmar) | RF-5 reseñas y perfil público del maestro, con pruebas | PR #43 |
 | 2026-11-11 | Pedro | 2 (estimado, a confirmar) | `haversineKm` para CI-1 | `3ea2c93`, `22176d1` |
 | 2026-11-13 | Pedro | 2 (estimado, a confirmar) | Función `buscar_maestros` con PostGIS | `5d6d2b7` |
 | 2026-11-14 | Pedro | 4 (estimado, a confirmar) | Pruebas de Haversine, corrección de `buscar_maestros`, CI-1 y ADR-001 | `fe7c6be` a `52446a3` |
-| 2026-11-11 | Diego | 3 (estimado, a confirmar) | Observaciones de E1 y E2 con su respuesta; primera versión del panel de moderación | PR #14, `diego/moderacion` |
-| 2026-11-13 | Diego | 4 (estimado, a confirmar) | Aprobar o rechazar identidad con pruebas; iteración 3 y revisión del MVP | PR #28, PR #29 |
 
 ## Resumen semanal (lo completa Diego)
 
 | Semana | Estimado (Gantt E1) | Registrado | Diferencia | Causa |
 |---|---|---|---|---|
-| S6 09–15 nov | 240 h | ≈ 80 h | ≈ −160 h | Registro parcial: salvo Ignacio, las horas se estimaron el 15-11 a partir de los commits y PR de cada uno (marcadas «a confirmar»); no incluyen reuniones, estudio ni trabajo sin commit. Además, la implementación empezó el 9-11 y no el 12-10 (R-09) |
+| S6 09–15 nov | 240 h | ≈ 82 h | ≈ −158 h | Ignacio y Diego registraron sus horas (20,3 h); las de Gabriel (29 h en S6) son una estimación propia, y las de Joaquín, Hugo y Pedro se estimaron el 15-11 desde sus commits y PR (a confirmar). No incluyen reuniones ni trabajo sin commit; ver `replanificacion.md` |
 | S7 16–22 nov | 240 h | | | |

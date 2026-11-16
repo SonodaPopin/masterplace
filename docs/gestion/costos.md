@@ -17,14 +17,14 @@ Responsable: Joaquín. Insumo de R3-C6 ("costo estimado versus ejecutado con des
 
 | Concepto | Estimado | Ejecutado | Fuente |
 |---|---|---|---|
-| Horas-persona a la fecha (S6, 9 al 15-11) | 240 h | ≈ 80 h | `registro_horas.md` (salvo Ignacio, estimadas desde los commits) |
-| Valor ($5.000 por hora) | $1.200.000 | ≈ $400.000 | |
+| Horas-persona a la fecha (S6, 9 al 15-11) | 240 h | ≈ 82 h | `registro_horas.md` (Ignacio y Diego registradas; el resto estimadas desde los commits) |
+| Valor ($5.000 por hora) | $1.200.000 | ≈ $410.000 | |
 
 ## Desviaciones y causa
 
 - **Dinero (−$30.000 al mes):** todo el prototipo cabe en los planes gratuitos de Supabase y Vercel, y el uso real está
   muy lejos de sus límites. Los ítems de respaldos, correo y contingencia no se necesitaron en el piloto. Si en E4 crece
   el uso, el primer límite cercano sería el de la base de datos (hoy 7 %).
-- **Esfuerzo (≈ −160 h en la semana 6):** la implementación empezó el 9-11 y no el 12-10, como indicaba la Gantt de E1
-  (R-09), y el registro de horas es parcial: salvo Ignacio, se estimó desde los commits y no incluye reuniones ni
+- **Esfuerzo (≈ −158 h en la semana 6):** la implementación empezó el 9-11 y no el 12-10, como indicaba la Gantt de E1
+  (R-09), y el registro de horas es parcial: salvo Ignacio y Diego, se estimó desde los commits y no incluye reuniones ni
   trabajo sin commit. Cada integrante debe confirmar o corregir sus horas.
