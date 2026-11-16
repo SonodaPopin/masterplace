@@ -26,21 +26,35 @@ evidencia de contribución (R6).
 | 2026-11-13 | Diego | 3 | Función `revisar_identidad`, PR del panel; revisión del MVP, Iteración 3 y borrador de la replanificación | PR #28, PR #29 |
 | 2026-11-14 | Diego | 1 | Prueba de los enlaces de validación y reclutamiento del participante P2 | |
 | 2026-11-15 | Diego | 2 | Cierre de las iteraciones 1 a 3, replanificación y preguntas probables | |
-| 2026-11-09 | Joaquín | 2 (estimado, a confirmar) | Proyecto Supabase, conexión con Vercel y primer despliegue | «deploy en vercel» |
-| 2026-11-10 | Joaquín | 2 (estimado, a confirmar) | Rutas SPA en Vercel y monitor de disponibilidad (UptimeRobot) | PR #13 |
-| 2026-11-12 | Joaquín | 4 (estimado, a confirmar) | RF-4 contacto y RF-11 chat (enviar y listar mensajes) | PR #22 |
-| 2026-11-13 | Joaquín | 5 (estimado, a confirmar) | Chat en tiempo real y bandeja de contactos | PR #37 |
-| 2026-11-09 a 15 | Joaquín | 2 (estimado, a confirmar) | Revisión e integración de PR de `premain` a `main` | PR #1 a #48 |
-| 2026-11-10 | Hugo | 3 (estimado, a confirmar) | CI-2: promedio bayesiano con pruebas y análisis de sensibilidad | `87791bd`, `f67038a` |
-| 2026-11-11 | Hugo | 2 (estimado, a confirmar) | Plan de pruebas para E3 | PR #18 |
-| 2026-11-14 | Hugo | 5 (estimado, a confirmar) | RF-5 reseñas y perfil público del maestro, con pruebas | PR #43 |
-| 2026-11-11 | Pedro | 2 (estimado, a confirmar) | `haversineKm` para CI-1 | `3ea2c93`, `22176d1` |
-| 2026-11-13 | Pedro | 2 (estimado, a confirmar) | Función `buscar_maestros` con PostGIS | `5d6d2b7` |
-| 2026-11-14 | Pedro | 4 (estimado, a confirmar) | Pruebas de Haversine, corrección de `buscar_maestros`, CI-1 y ADR-001 | `fe7c6be` a `52446a3` |
+| 2026-11-09 | Joaquín | 2 (confirmado) | Proyecto Supabase, conexión con Vercel y primer despliegue | «deploy en vercel» |
+| 2026-11-10 | Joaquín | 2 (confirmado) | Rutas SPA en Vercel y monitor de disponibilidad (UptimeRobot) | PR #13 |
+| 2026-11-12 | Joaquín | 4 (confirmado) | RF-4 contacto y RF-11 chat (enviar y listar mensajes) | PR #22 |
+| 2026-11-13 | Joaquín | 5 (confirmado) | Chat en tiempo real y bandeja de contactos | PR #37 |
+| 2026-11-09 a 15 | Joaquín | 2 (confirmado) | Revisión e integración de PR de `premain` a `main` | PR #1 a #48 |
+| 2026-11-10 | Hugo | 3 (confirmado) | CI-2: promedio bayesiano con pruebas y análisis de sensibilidad | `87791bd`, `f67038a` |
+| 2026-11-11 | Hugo | 2 (confirmado) | Plan de pruebas para E3 | PR #18 |
+| 2026-11-14 | Hugo | 5 (confirmado) | RF-5 reseñas y perfil público del maestro, con pruebas | PR #43 |
+| 2026-11-11 | Pedro | 2 (confirmado) | `haversineKm` para CI-1 | `3ea2c93`, `22176d1` |
+| 2026-11-13 | Pedro | 2 (confirmado) | Función `buscar_maestros` con PostGIS | `5d6d2b7` |
+| 2026-11-14 | Pedro | 4 (confirmado) | Pruebas de Haversine, corrección de `buscar_maestros`, CI-1 y ADR-001 | `fe7c6be` a `52446a3` |
 
 ## Resumen semanal (lo completa Diego)
 
+Completado por Diego el 16-11-2026. Todos los integrantes confirmaron sus horas de la semana 6.
+
 | Semana | Estimado (Gantt E1) | Registrado | Diferencia | Causa |
 |---|---|---|---|---|
-| S6 09–15 nov | 240 h | ≈ 82 h | ≈ −158 h | Ignacio y Diego registraron sus horas (20,3 h); las de Gabriel (29 h en S6) son una estimación propia, y las de Joaquín, Hugo y Pedro se estimaron el 15-11 desde sus commits y PR (a confirmar). No incluyen reuniones ni trabajo sin commit; ver `replanificacion.md` |
+| S6 09–15 nov | 240 h | 82,3 h | −157,7 h | La implementación empezó el 9-11 y no el 12-10, como indicaba la Gantt de E1 (R-09), así que la semana 6 fue la primera de desarrollo. Además, el registro no incluye reuniones ni estudio sin entregable; ver `replanificacion.md` |
 | S7 16–22 nov | 240 h | | | |
+
+**Detalle de la semana 6 por integrante** (estimado: 40 h por persona):
+
+| Integrante | Registrado | Diferencia |
+|---|---|---|
+| Diego | 9 h | −31 h |
+| Gabriel | 29 h (más 4 h el 8-11, fuera de la semana) | −11 h |
+| Hugo | 10 h | −30 h |
+| Ignacio | 11,3 h | −28,7 h |
+| Joaquín | 15 h | −25 h |
+| Pedro | 8 h | −32 h |
+| **Total** | **82,3 h** | **−157,7 h** |
