@@ -92,8 +92,10 @@ Formato de cada iteración: **disparador** (medición, prueba, retroalimentació
   alternativas".
 - **Efecto verificado:** la búsqueda por distancia funciona en `main` (con PostGIS o con el cálculo de respaldo) y
   la tarea T3 de la validación pide justamente buscar un gásfiter en la comuna de cada participante; la pregunta T5
-  mide si distinguen identidad, reseñas y certificado. [Agregar el 15-11 cuántos completaron T3 y cómo respondieron
-  T5, según el análisis de Gabriel.]
+  mide si distinguen identidad y certificado. Resultado de la validación (15-11): los 4 clientes completaron T3, y los
+  que explicaron su elección citaron la cercanía; en T5, los 3 maestros distinguieron identidad y certificado, pero
+  ningún cliente (H-03). En A2, las reseñas y la identidad verificada quedaron primeras y la cercanía última
+  (`docs/validacion/plan_validacion.md`, sección 9; Iteración 5).
 
 ### Iteración 2 · Cómo decide el sistema quién es administrador y cómo se aprueba la cédula (10-11-2026)
 
@@ -160,9 +162,48 @@ el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de 
 - **Efecto verificado:** al 15-11 los 7 Must de E3 están en `premain`, así que el recorte (b) no hizo falta: la
   búsqueda usa `buscar_maestros` con PostGIS (migración 20261114120000) y conserva el respaldo; el botón "Contactar"
   abre la conversación; el chat se actualiza con Realtime (20261113173000), y la reseña tiene confirmación del servicio
-  y lectura pública (20261114180000 y 20261114190000). En la validación, 6 de 7 participantes terminaron la prueba: 3
-  de los 4 clientes dejaron contacto con mensaje (T4), pero **ninguno de los 2 maestros quedó registrado en la base
-  (T1)**, que pasa a ser el hallazgo principal para revisar RF-1 (`docs/validacion/plan_validacion.md`).
+  y lectura pública (20261114180000 y 20261114190000). Ojo: al 15-11 esas migraciones están en el repositorio, pero no
+  aplicadas en la base de producción (riesgo R-11). En la validación terminaron 7 participantes (3 maestros y 4
+  clientes): los 4 clientes contactaron a un maestro (T4) y 2 de 3 maestros se registraron (T1), en ambos casos con
+  datos confirmados en conversación con los participantes. El hallazgo principal de T1 es que la guía no dejaba claro
+  dónde inscribirse (H-01; `docs/validacion/plan_validacion.md`, sección 9).
   [Agregar el 16-11: si el flujo completo corrió en el ensayo y el tiempo cronometrado.]
 
-### Iteración 4 · [título] (opcional para E3, exigida en E4)
+### Iteración 4 · Instrumento de la validación con usuarios dentro de la página (14-11-2026)
+
+- **Disparador:** al preparar el envío, el equipo vio que la prueba remota obligaba a los participantes a ir y volver
+  entre el Google Form y la página. En el celular, que es lo que usan los maestros, eso es lento y confuso, y arriesga
+  que abandonen. Además, el plan reconocía como límite que los tiempos de las tareas eran autorreportados.
+- **Alternativas:**
+  - (a) Mantener el Google Form y pedir que hagan primero todas las tareas y respondan el formulario al final.
+  - (b) Un formulario dentro de la página que simule la navegación de las tareas.
+  - (c) Un enlace único por participante que lo guía paso a paso sobre la página real, con un panel fijo durante cada
+    tarea, y guarda respuestas y tiempos en tablas solo para la validación.
+- **Decisión:** (c). Se descartó (b) porque mediría una simulación y no MasterPlace: V1 y V2 perderían validez y no se
+  podría verificar en la base. (a) reduce el ir y venir, pero mantiene los tiempos autorreportados. Se decidió antes de
+  enviar el primer enlace, así que todos los participantes usan el mismo instrumento. Se conservan los textos del
+  formulario (consentimiento, tareas, SUS y preguntas) para no cambiar lo que se mide. Implementación: migración
+  `20261114000000_validacion_usuarios.sql` y `src/features/validacion/`.
+- **Efecto verificado (15-11):** de 8 invitados terminaron 7 (3 maestros y 4 clientes), más de lo esperado (5 de 8 a
+  10). El tiempo de T1 se midió en la página, pero solo un dato es válido: 5:28 (P2), sobre la meta de 5 minutos. Los
+  botones «Comenzar» y «Terminé» no siempre se pulsaron durante la tarea (H-06), así que la medición automática no
+  reemplazó del todo a la verificación en la base. Detalle en `docs/validacion/plan_validacion.md`, sección 9.
+
+### Iteración 5 · Cambios a partir de la validación con usuarios (15-11-2026)
+
+- **Disparador:** resultados de la validación (14 y 15-11, 7 participantes). Un maestro no encontró dónde inscribirse
+  (H-01, crítico), ningún cliente distinguió «Identidad verificada» de «Certificado» (H-03) y un cliente creyó haber
+  enviado un mensaje que no se guardó (H-04). En A2, las reseñas y la identidad verificada quedaron primeras y la
+  cercanía última.
+- **Alternativas:**
+  - (a) Informar los hallazgos en E3 y dejar todos los cambios para E4.
+  - (b) Corregir antes del congelamiento del 16-11 los cambios pequeños y de bajo riesgo, y planificar el resto para E4.
+  - (c) Rediseñar el registro de maestro y los sellos antes de E3.
+- **Decisión (propuesta de Gabriel, a confirmar en el ensayo del 16-11):** (b). Se descarta (c) porque arriesga la demo
+  a un día de congelar el código. Entran antes de E3, si caben: el acceso directo a «Soy maestro» en la guía de T1 (H-01)
+  y el texto de ayuda en los sellos (H-03). Quedan para E4: la confirmación de «Mensaje enviado» (H-04), la vinculación
+  de la cuenta al enlace (H-02) y la foto de perfil (H-07). La propuesta de valor frente a 2x3 (Iteración 1) se apoya en
+  las reseñas y la identidad verificada más que en la cercanía.
+- **Efecto verificado:** pendiente; se medirá en la validación de E4 con el mismo instrumento.
+
+### Iteración 6 · [título] (opcional para E3, exigida en E4)
