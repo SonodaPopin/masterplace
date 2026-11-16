@@ -106,16 +106,17 @@ la base se analiza en la sección 9. Los enlaces del equipo (P90 en adelante) no
 | P2 | Maestro | Comuna del piloto (confirmada en conversación; en la app marcó «Otra») | Sí (consentimiento en la app) | Sí | Sí, terminó el 15-11 a las 09:39 |
 | P3 | Maestro | Comuna: Concepción; oficio no registrado | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 15:56 |
 | P4 | Maestro | — | — | No (código sin usar) | — |
-| P5 | Maestro | Comuna: Concepción; oficio no vinculado | Sí (consentimiento en la app) | [confirmar quién lo envió] | Sí, terminó el 15-11 a las 21:56 (después del cierre de las 20:00) |
+| P5 | Maestro | Comuna: Concepción; oficio no vinculado | Sí (consentimiento en la app) | Sí, como suplente | Sí, terminó el 15-11 a las 21:56 (después del cierre de las 20:00) |
 | P6 | Cliente | Comuna: Concepción | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 16:20 |
 | P7 | Cliente | Comuna: Concepción | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 17:32 |
 | P8 | Cliente | Comuna: Concepción | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 13:34 |
 | P9 | Cliente | Comuna del piloto (confirmada en conversación; en la app marcó «Otra») | Sí (consentimiento en la app) | Sí | Sí, terminó el 14-11 a las 15:45 |
 | P10 | Cliente | — | — | No (código sin usar) | — |
 
-**Resumen:** Gabriel envió 7 enlaces (P1, P2, P3 y P6 a P9). P5 no estaba en esa lista, pero respondió completo el
-15-11 a las 21:56, después del cierre. En total terminaron **7 participantes (3 maestros y 4 clientes)**: se cumplen el
-mínimo de 5 respuestas completas y el de 3 maestros, este último solo contando a P5 fuera de plazo. P1 nunca abrió su
+**Resumen:** Gabriel envió 7 enlaces (P1, P2, P3 y P6 a P9) y luego uno más a P5, como suplente (riesgo R-03: con P1
+sin responder faltaba un maestro). P5 respondió completo el 15-11 a las 21:56, después del cierre. En total terminaron
+**7 participantes (3 maestros y 4 clientes)**: se cumplen el mínimo de 5 respuestas completas y el de 3 maestros, este
+último solo contando a P5 fuera de plazo. P1 nunca abrió su
 enlace; P4 y P10 no se usaron. Todos viven en una de las 6 comunas del piloto: P2 y P9 marcaron «Otra» en la app, pero
 en la conversación posterior con Gabriel confirmaron que su comuna está dentro del piloto.
 
@@ -394,7 +395,7 @@ Gabriel: falta la segunda clasificación independiente que pide la sección 8 (p
   maestros y clientes del Gran Concepción.
 - **Tres datos se corrigieron por conversación con los participantes**, porque la base no los refleja: la cuenta de P2
   (T1), el mensaje de P7 (T4) y la comuna de P2 y P9. Se marcan en cada caso (sección 6).
-- P5 respondió después del cierre y sin estar en la lista de envíos de Gabriel; sin P5 habría solo 2 maestros.
+- P5, el suplente, respondió después del cierre de las 20:00; sin P5 habría solo 2 maestros.
 - Prueba sin observación: los tiempos dependen de que el participante pulse «Comenzar» y «Terminé» en el momento justo
   (H-06), y la base confirma si la tarea quedó hecha, pero no cómo.
 - La clasificación de T5 la hizo una sola persona.
