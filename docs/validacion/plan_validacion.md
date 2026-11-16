@@ -125,8 +125,9 @@ en la conversación posterior con Gabriel confirmaron que su comuna está dentro
 Después del cierre, Gabriel conversó con los participantes para aclarar las diferencias entre sus respuestas y la base.
 Lo que confirmaron se usa en el análisis y se marca como «confirmado en conversación».
 
-- **T1:** los maestros crearon su cuenta, excepto P3, que respondió «No pude». En la base está la cuenta de P5 (creada
-  con otro correo, sin vínculo con su enlace); la de P2 no aparece, aunque confirmó haberla creado.
+- **T1:** los maestros crearon su cuenta, excepto P3, que respondió «No pude». Las cuentas de P2 y P5 no aparecen en
+  la base, aunque ambos confirmaron haberlas creado. (La cuenta de maestro pendiente creada el 15-11 a las 20:00 resultó
+  ser una prueba de Ignacio, «Ignacio Pueba Maestro», según el panel de moderación del 15-11.)
 - **T4 (P7):** creó su cuenta, abrió un contacto y envió un mensaje, según confirmó en la conversación. En la base
   quedaron la cuenta y el contacto, pero no el mensaje: P7 explicó que pulsó en otros lugares de la pantalla, así que
   probablemente el envío no llegó a hacerse.
@@ -307,9 +308,8 @@ cédulas, contactos y mensajes), consultadas en el SQL Editor de Supabase el 15-
 P5 (maestros) y P6 a P9 (clientes). Se excluyen los enlaces del equipo (P90 en adelante).
 
 **Seguimiento con los participantes:** cuando la respuesta y la base no coincidían, Gabriel conversó con la persona.
-Con eso, P2 y P5 se cuentan como registrados en T1, y P7 como logrado en T4. En la base están la cuenta de P5 (maestro
-pendiente con cédula, creada el 15-11 a las 20:00 con otro correo) y la cuenta y el contacto de P7; no están la cuenta
-de P2 ni el mensaje de P7. Esto se aparta de la regla de la sección 6 («vale lo que dice la base») y se declara en los
+Con eso, P2 y P5 se cuentan como registrados en T1, y P7 como logrado en T4. En la base están la cuenta y el contacto
+de P7; no están las cuentas de P2 y P5 ni el mensaje de P7. Esto se aparta de la regla de la sección 6 («vale lo que dice la base») y se declara en los
 límites.
 
 ### Resultados por participante
@@ -327,8 +327,8 @@ límites.
 
 ✓ = confirmado en la base. T3 no deja rastro en la base: vale lo declarado y la respuesta escrita.
 
-1. Confirmado en conversación; su cuenta no aparece en la base. 2. Cuenta en la base con otro correo, confirmado en
-conversación. 3. Muy por debajo de lo posible
+1. Confirmado en conversación; su cuenta no aparece en la base. 2. Confirmado en conversación; su cuenta no aparece en
+la base. 3. Muy por debajo de lo posible
 para 3 pasos: es probable que se registrara antes de pulsar «Comenzar»; el tiempo no es representativo. 4. Confirmado en
 conversación: creó la cuenta, abrió el contacto y envió el mensaje; en la base están la cuenta y el contacto, pero no el
 mensaje. 5. Comentó «Me ayudaron». 6. Interpretó «Identidad verificada» como «se filtró
@@ -364,7 +364,7 @@ Gabriel: falta la segunda clasificación independiente que pide la sección 8 (p
 | Código | Tarea | Evidencia | Severidad | Requisito | Cambio decidido | Responsable |
 |---|---|---|---|---|---|---|
 | H-01 | T1 | P3 no encontró dónde inscribirse: «¿Dónde me inscribo? ¿O era imaginario…? […] no supe dónde debía inscribirme». Abandonó a los 90 s | Crítico | RF-1, RNF-3 | En la guía de T1, un botón que lleve directo a «Soy maestro» y una frase que diga que el registro es real | Gabriel |
-| H-02 | T1 | La cuenta de P2 no aparece en la base, aunque confirmó haberla creado; P5 se registró con otro correo y su cuenta no quedó vinculada a su enlace | Mayor | RF-1 | Vincular la cuenta al enlace aunque use otro correo, y mostrar en la guía «Tu registro quedó pendiente de verificación» solo cuando exista | Gabriel |
+| H-02 | T1 | Las cuentas de P2 y P5 no aparecen en la base, aunque ambos confirmaron haberlas creado | Mayor | RF-1 | Vincular la cuenta al enlace aunque use otro correo, y mostrar en la guía «Tu registro quedó pendiente de verificación» solo cuando exista | Gabriel |
 | H-03 | T5 | Ningún cliente distinguió las dos señales; P9 entendió «Identidad verificada» como una filtración de datos | Mayor | RB-10, R-05 | Texto de ayuda en cada sello: «Revisamos su cédula; no la publicamos» y «Acreditó su oficio con un certificado» | Gabriel |
 | H-04 | T4 | P7 escribió su mensaje, pero no quedó guardado: pulsó en otros lugares de la pantalla y creyó haberlo enviado | Mayor | RF-4, RF-11 | Al crear el contacto, poner el foco en la caja de mensaje, confirmar «Mensaje enviado» y avisar si se sale con un mensaje sin enviar | Joaquín |
 | H-05 | T2 | P8 completó el registro con ayuda de otra persona | Menor | RF-10 | Se registra; observar en la próxima validación | Gabriel |
@@ -374,7 +374,7 @@ Gabriel: falta la segunda clasificación independiente que pide la sección 8 (p
 ### Conclusiones
 
 - **V1 (registro de maestro sin ayuda y en ≤ 5 min): no se cumple.** 2 de 3 maestros se registraron (meta: 4 de 5),
-  confirmado en conversación; en la base está la cuenta de P5. El único tiempo válido, el de P2, fue 5:28, por encima de
+  confirmado en conversación; ninguna de las dos cuentas aparece en la base. El único tiempo válido, el de P2, fue 5:28, por encima de
   la meta. La causa principal (H-01) no es el formulario de registro, sino que la guía no deja claro dónde empieza.
 - **V2 (el cliente encuentra y contacta a un maestro): se cumple.** 4 de 4 crearon su cuenta, encontraron un maestro y
   le escribieron (meta: 4 de 5); en la base hay 3 mensajes, y el de P7 se confirmó en conversación (H-04). El orden por distancia se entendió: los que
@@ -393,8 +393,8 @@ Gabriel: falta la segunda clasificación independiente que pide la sección 8 (p
 
 - Muestra pequeña y por conveniencia (7 personas): los resultados orientan el diseño, pero no representan a todos los
   maestros y clientes del Gran Concepción.
-- **Tres datos se corrigieron por conversación con los participantes**, porque la base no los refleja: la cuenta de P2
-  (T1), el mensaje de P7 (T4) y la comuna de P2 y P9. Se marcan en cada caso (sección 6).
+- **Tres datos se corrigieron por conversación con los participantes**, porque la base no los refleja: las cuentas de
+  P2 y P5 (T1), el mensaje de P7 (T4) y la comuna de P2 y P9. Se marcan en cada caso (sección 6).
 - P5, el suplente, respondió después del cierre de las 20:00; sin P5 habría solo 2 maestros.
 - Prueba sin observación: los tiempos dependen de que el participante pulse «Comenzar» y «Terminé» en el momento justo
   (H-06), y la base confirma si la tarea quedó hecha, pero no cómo.

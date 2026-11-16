@@ -13,6 +13,7 @@ const TITULOS: { patron: string; titulo: string }[] = [
   { patron: '/contactos/:contactoId/resena', titulo: 'Nueva reseña' },
   { patron: '/contactos/:contactoId', titulo: 'Conversación' },
   { patron: '/prueba/:token', titulo: 'Prueba de la página' },
+  { patron: '/maestros/:maestroId', titulo: 'Perfil del maestro' },
 ]
 
 export function tituloDeRuta(pathname: string): string {
