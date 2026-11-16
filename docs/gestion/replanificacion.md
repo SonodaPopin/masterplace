@@ -23,21 +23,21 @@ y 40 h por persona.
 | Integrante | Estimado S6 (9 al 15-11) | Registrado | Diferencia | Principal tarea |
 |---|---|---|---|---|
 | Diego | 40 h | 9 h | −31 h | Bitácora, panel de moderación, replanificación |
-| Gabriel | 40 h | ≈ 29 h (estimación propia) | ≈ −11 h | Registro, búsqueda y validación |
-| Hugo | 40 h | ≈ 10 h (estimado desde commits, a confirmar) | ≈ −30 h | Pruebas y CI-2 |
+| Gabriel | 40 h | 29 h | −11 h | Registro, búsqueda y validación |
+| Hugo | 40 h | 10 h | −30 h | Pruebas y CI-2 |
 | Ignacio | 40 h | 11,3 h | −28,7 h | Esquema, RLS y semilla |
-| Joaquín | 40 h | ≈ 15 h (estimado desde commits, a confirmar) | ≈ −25 h | Supabase, Vercel y chat |
-| Pedro | 40 h | ≈ 8 h (estimado desde commits, a confirmar) | ≈ −32 h | Búsqueda PostGIS y CI-1 |
-| **Total** | **240 h** | **≈ 82 h** | **≈ −158 h** | |
+| Joaquín | 40 h | 15 h | −25 h | Supabase, Vercel y chat |
+| Pedro | 40 h | 8 h | −32 h | Búsqueda PostGIS y CI-1 |
+| **Total** | **240 h** | **82,3 h** | **−157,7 h** | |
 
-Valor a $5.000 por hora: estimado $1.200.000 por semana; ejecutado ≈ $410.000 (≈ 82 h, de las cuales 20,3 h están
-registradas por sus autores y el resto estimadas el 15-11 a partir del repositorio).
+Valor a $5.000 por hora: estimado $1.200.000 por semana; ejecutado $411.500 (82,3 h, confirmadas por cada
+integrante).
 
 **Lectura:** el plan se hace con jornada completa, 40 h semanales por persona (240 h de equipo), tal como pidió
 la profesora en la observación O1 de E2: es el esfuerzo que exige un proyecto real de este tamaño. Lo registrado en
-S6 (≈ 82 h) es un piso: solo Ignacio y Diego anotaron sus horas, y las demás se estimaron desde los commits, que no
-recogen reuniones, estudio ni trabajo sin commit. Aun así, la diferencia con las 240 h es grande y se explica sobre todo
-porque la implementación empezó el 9-11 (R-09). **Efecto en el plan:** E4 y E5 se
+S6 (82,3 h, confirmadas por los seis) queda muy por debajo de las 240 h. La causa principal es que la implementación
+empezó el 9-11 (R-09), así que fue la primera semana de desarrollo; además, el registro no incluye reuniones ni estudio
+sin entregable. **Efecto en el plan:** E4 y E5 se
 planifican con 240 h de equipo por semana, y desde el 16-11 cada integrante registra sus horas en cada PR, para que en
 E4 la comparación entre estimado y ejecutado sea completa.
 
