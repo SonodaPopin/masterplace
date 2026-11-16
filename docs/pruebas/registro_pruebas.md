@@ -14,4 +14,4 @@
 
 | ID | Fecha | Caso | Descripción | Severidad | Responsable | Estado |
 |---|---|---|---|---|---|---|
-| D-01 | 2026-11-15 | TC-04 | El perfil público del maestro (`/maestros/:id`) no muestra su nombre («Maestro verificado») ni su oficio («Oficio no disponible»), no tiene botón «Contactar» y la pestaña no tiene título propio. En la búsqueda el nombre y el oficio sí aparecen | Mayor | Hugo (perfil público, RF-5) y Gabriel (título) | Abierto |
+| D-01 | 2026-11-15 | TC-04 | El perfil público del maestro (`/maestros/:id`) no muestra su nombre («Maestro verificado») ni su oficio («Oficio no disponible»), no tiene botón «Contactar» y la pestaña no tiene título propio. En la búsqueda el nombre y el oficio sí aparecen | Mayor | Gabriel | **Corregido** (16-11): el perfil leía el nombre y el oficio como lista, pero Supabase los devuelve como objeto (`src/lib/maestros/perfilPublico.ts`, con 3 pruebas). Se agregó «Contactar» con la misma regla que la lista y el título «Perfil del maestro». Verificado en local contra la base de producción; falta verificarlo en Vercel tras el PR de `premain` a `main` |
