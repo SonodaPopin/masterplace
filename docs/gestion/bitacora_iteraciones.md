@@ -123,23 +123,23 @@ Formato de cada iteración: **disparador** (medición, prueba, retroalimentació
   (Ignacio, `docs/pruebas/mediciones_rnf.md`). Las reglas puras del panel tienen 15 pruebas en
   `src/lib/moderacion/moderacion.test.ts`.
 
-### Revisión de la Integración 2 frente al MVP de E1 §9.1 (13-11-2026)
+### Revisión de la Integración 2 frente al MVP de E1 §9.1 (13-11-2026, actualizada el 16-11)
 
-Estado de cada Must en `premain` el 13-11 a las 17:00, revisado en el código y en las migraciones.
+Estado de cada Must de E1 (Tabla 28: RF-1, 2, 3, 4, 5, 8, 10 y 11). El 13-11 a las 17:00 había 2 de 7 completos, 4
+parciales o en revisión y 1 pendiente: la Integración 2 no se cumplió ese día (disparador del riesgo R-09). Al 16-11:
 
-| Must | Estado | Qué falta | Responsable |
+| Must | 13-11 | 16-11 | Evidencia |
 |---|---|---|---|
-| RF-10 Registro de cliente e inicio de sesión | Listo | Desactivar "Confirm email" en Supabase para la validación | Joaquín |
-| RF-1 Registro de maestro con cédula | Listo | — | Gabriel |
-| RF-2 Verificación de identidad | En revisión (PR `diego/moderacion`) | Aplicar la migración `revisar_identidad` en Supabase y crear un admin | Diego e Ignacio |
-| RF-3 Búsqueda y filtro | Funciona con respaldo | Función `buscar_maestros` en PostGIS; gásfiters verificados en Talcahuano, Hualpén y Penco | Pedro e Ignacio |
-| RF-4 Contacto | Parcial | La función `crear_o_reutilizar_contacto` existe, pero ninguna pantalla la llama (falta el botón "Contactar") | Joaquín |
-| RF-11 Mensajería | Parcial | La conversación funciona, pero sin Realtime: el otro participante debe recargar | Joaquín |
-| RF-5 Reseña | Pendiente | La pantalla sigue "En construcción" | Hugo |
-| RF-8 Moderación de denuncias | Fuera de E3 | Depende de RF-12 (Should); queda para E4 | Diego |
+| RF-10 Registro de cliente e inicio de sesión | Listo | Listo | TC-01 |
+| RF-1 Registro de maestro con cédula | Listo | Listo | TC-01 |
+| RF-2 Verificación de identidad | En revisión | Listo: el admin aprueba, la cédula se borra y queda en `auditoria` | TC-02 |
+| RF-3 Búsqueda y filtro | Funciona con respaldo | Listo, con PostGIS (`buscar_maestros` aplicada en producción el 15-11) | TC-03, CI-1 |
+| RF-4 Contacto | Parcial | Listo: «Contactar» en la búsqueda y en el perfil, contacto único | TC-04 |
+| RF-11 Mensajería | Parcial | Listo, con Realtime | TC-04 |
+| RF-5 Reseña | Pendiente | Listo: una reseña por contacto y promedio bayesiano en el perfil | TC-05, CI-2 |
+| RF-8 Moderación de denuncias | Fuera de E3 | Fuera de E3: depende de RF-12 (Should); queda para E4 | — |
 
-**Resultado:** 2 de 7 Must de E3 completos, 4 parciales o en revisión y 1 pendiente. La Integración 2 no se cumplió
-el 13-11 (disparador del riesgo R-09). [ACTUALIZAR esta tabla el 16-11 antes de congelar el código.]
+**Resultado al 16-11:** 7 de los 8 Must de E1 implementados y probados de extremo a extremo; RF-8 pasa a E4.
 
 ### Iteración 3 · Alcance de la demo de E3 tras la Integración 2 (13-11-2026)
 
