@@ -8,14 +8,26 @@ on:
 jobs:
   verificar:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      pull-requests: write
+
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
+
       - run: npm ci
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run test:coverage
+
+      - name: Comentar cobertura en el PR
+        if: ${{ always() && github.event_name == 'pull_request' && hashFiles('coverage/coverage-summary.json') != '' && github.event.pull_request.head.repo.full_name == github.repository }}
+        uses: davelosert/vitest-coverage-report-action@v2
+
       - run: npm run build
