@@ -1,0 +1,25 @@
+
+version: 2
+
+updates:
+  # Dependencias de npm
+  - package-ecosystem: "npm"
+    directory: "/"
+    target-branch: "premain"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Santiago"
+    open-pull-requests-limit: 5
+
+  # Actualizaciones de GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    target-branch: "premain"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:15"
+      timezone: "America/Santiago"
+    open-pull-requests-limit: 5
