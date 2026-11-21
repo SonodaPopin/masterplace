@@ -118,8 +118,10 @@ local con `npm run dev` (que usa la base de producción a través de `.env.local
 
 ## 4. Tablero
 
-- Tablero de GitHub Projects del repositorio, con una tarjeta por cada issue: Backlog → Lista → En curso → En
-  revisión → Hecho.
+- Tablero: <https://github.com/users/G6B0/projects/1> (privado; los seis tienen permiso de edición). Una tarjeta por
+  cada issue: Backlog → Lista → En curso → En revisión → Hecho, con los campos «Fecha límite», «Horas estimadas» y
+  «Horas reales». Las tareas que ya se pueden tomar están en «Lista»; las demás pasan de «Backlog» a «Lista» cuando
+  llega su contrato.
 - Cada issue tiene responsable, fecha límite y horas estimadas, y enlaza a la sección de tu archivo donde está el
   detalle.
 - **Cada día**, antes de las 22:00, deja un comentario corto en el issue en el que estás trabajando:
