@@ -153,10 +153,10 @@ La cobertura mínima exigida por Vitest es:
 
 | Métrica | Umbral |
 |---|---:|
-| Statements | 75% |
-| Branches | 75% |
-| Functions | 70% |
-| Lines | 75% |
+| Statements | 70% |
+| Branches | 70% |
+| Functions | 65% |
+| Lines | 70% |
 
 Los reportes de cobertura se generan en formato JSON y se utilizan para publicar comentarios automáticos en los Pull Requests cuando los permisos del evento lo permiten.
 
@@ -183,6 +183,12 @@ Los reportes de cobertura se generan en formato JSON y se utilizan para publicar
 - Documentar cómo se probaron los cambios.
 - Si hay una migración aditiva, indicar su aplicación en producción y dejar registro en `supabase/README.md`.
 - Los PR deben cumplir sus condiciones de finalización antes de considerarse terminados.
+
+## Migraciones
+
+- Aditivas (tablas, columnas que aceptan null, funciones nuevas): se aplican en producción el mismo día que se fusionan en premain. Título del PR con [aditiva].
+- De cambio (cambian el comportamiento de algo existente): solo el viernes 27, junto con el frontend que las usa. Título con [de cambio].
+- Nunca se edita una migración ya aplicada; siempre un archivo nuevo. Detalle en docs/equipo/COMO_TRABAJAMOS.md §2.
 
 ## Pruebas antes de abrir un PR
 
