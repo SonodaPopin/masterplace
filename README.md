@@ -5,18 +5,22 @@ búsqueda por comuna y cercanía, mensajería interna y reseñas ligadas a un se
 
 Proyecto Semestral · Proyecto Informático · Ingeniería Civil Informática, UdeC · 2026 · Grupo 8.
 
-> **Próximo hito: Avance Oral 2 (R3, Revisión Crítica de Diseño), martes 17 de noviembre de 2026.**
-> El plan día a día está en [docs/PLAN_E3.md](docs/PLAN_E3.md) y las tareas de cada integrante en [docs/equipo/](docs/equipo/).
+> **Próximo hito: informe final (E4) y defensa con demo en vivo (E5), entre el 1 y el 10 de diciembre de 2026.**
+>
+> - **Tablero de tareas:** <https://github.com/users/G6B0/projects/1> (privado; acceso para el equipo)
+> - **Plan:** [docs/PLAN_FINAL.md](docs/PLAN_FINAL.md)
+> - **Cómo trabajamos:** [docs/equipo/COMO_TRABAJAMOS.md](docs/equipo/COMO_TRABAJAMOS.md), y las tareas de cada integrante
+>   en [docs/equipo/](docs/equipo/)
 
 ## Equipo
 
 | Integrante | Rol | Tareas |
 |---|---|---|
-| Diego Oyarzo | Coordinación y producto | [docs/equipo/diego.md](docs/equipo/diego.md) |
+| Diego Oyarzo | Coordinación, iteraciones y denuncias | [docs/equipo/diego.md](docs/equipo/diego.md) |
 | Gabriel Huerta | Experiencia de usuario y frontend | [docs/equipo/gabriel.md](docs/equipo/gabriel.md) |
 | Hugo Flores | Calidad y pruebas | [docs/equipo/hugo.md](docs/equipo/hugo.md) |
-| Pedro Gajardo | Arquitectura y liderazgo técnico | [docs/equipo/pedro.md](docs/equipo/pedro.md) |
-| Joaquín Hernández | Operación y despliegue | [docs/equipo/joaquin.md](docs/equipo/joaquin.md) |
+| Pedro Gajardo | Arquitectura y ciencias de la ingeniería | [docs/equipo/pedro.md](docs/equipo/pedro.md) |
+| Joaquín Hernández | Operación, despliegue y costos | [docs/equipo/joaquin.md](docs/equipo/joaquin.md) |
 | Ignacio Barría | Datos y seguridad | [docs/equipo/ignacio.md](docs/equipo/ignacio.md) |
 
 ## Alcance del MVP (requisitos Must de E1)
