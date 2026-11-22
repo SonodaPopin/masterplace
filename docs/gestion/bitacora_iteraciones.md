@@ -71,6 +71,26 @@ dos partes pueden seguir por teléfono. Nuestra respuesta es que al maestro le c
 de evadir, y perjudicaría a clientes y maestros que ya se conocen. **Riesgo nuevo** en `docs/gestion/riesgos.md`:
 desintermediación, con probabilidad alta, impacto medio y la mitigación anterior.
 
+### Observaciones de E3 (presentación oral, 17-11-2026)
+
+Observaciones orales de la profesora tras la presentación de E3, reconstruidas por el equipo. El detalle de cada
+decisión está en `docs/PLAN_FINAL.md` §2 y §3. Estado al 21-11; se actualiza el 29-11.
+
+| # | Observación (resumen) | Qué cambiamos | Evidencia | Estado |
+|---|---|---|---|---|
+| O3 | Usar la fórmula de Laplace para ordenar por reseñas | Se adopta Laplace por estrellas, `L = (n·r + 15)/(n + 5)`: un voto ficticio por cada estrella, es decir, el promedio bayesiano con C = 3 fijo y m = 5. Ordena la búsqueda («Mejor evaluados»); en pantalla se muestra el promedio real con la cantidad de reseñas. Ver Iteración 6 | `docs/ciencias/CI-2_*.md`, `src/lib/reputacion/` | En curso |
+| O4 | Validar el código con un bot en GitHub | Repositorio con reglas de ramas (CI obligatoria y una revisión antes de fusionar), CodeQL, Dependabot y escaneo de secretos | Rulesets y pestaña *Security* del repositorio | En curso |
+| O5 | Planificar en un kanban y hacer seguimiento | Tablero de GitHub Projects: un issue por tarea con responsable, fecha límite, horas estimadas y reales; comentario diario «Hice / Mañana / Me bloquea» en el issue | Tablero del proyecto; `docs/equipo/COMO_TRABAJAMOS.md` §4 | En curso |
+| O6 | Se trabajó «retroactivamente»: cada uno esperaba lo que otro subía a `main` | Contratos primero: la migración aditiva y el archivo de servicio con sus tipos se fusionan antes que las pantallas, y cada uno trabaja en paralelo contra ese contrato (cinco contratos, del 22 al 23-11) | `docs/equipo/COMO_TRABAJAMOS.md` §1; historial de PR | En curso |
+| O7 | Solo hay pruebas unitarias; faltan pruebas de navegabilidad y de un usuario que intente superar los límites | Pruebas extremo a extremo con Playwright en la CI y pruebas de abuso documentadas (acceso a `/admin` sin ser admin, reseñar sin servicio realizado, archivos falsos, XSS, textos enormes, sesión expirada, 375 px, solo teclado) | `docs/pruebas/`, job de la CI | En curso |
+| O8 | El manejo de la cédula debería parecerse al de Mercado Público (RUT, número de serie, vigencia) | RUT con dígito verificador y único; el número de documento se tapa en el navegador antes de subir; vigencia de 90 días. Se descarta pedir el número de serie (minimización de datos, Ley 21.719). Ver Iteración 8 | `src/lib/rut/`, migración de RUT y vigencia, registro de maestro | En curso |
+
+Además, al probar la app el 20-11 se encontró que al pulsar «Contactar» el contacto quedaba como «Servicio confirmado»
+y se podía reseñar sin haber escrito un mensaje (decisión provisional de E3, `20261114180000_rf5_confirmacion_temporal.sql`).
+Se corrige con la solicitud de servicio (Iteración 7).
+
+
+
 ## 2. Iteraciones de diseño
 
 Formato de cada iteración: **disparador** (medición, prueba, retroalimentación o riesgo materializado) →
