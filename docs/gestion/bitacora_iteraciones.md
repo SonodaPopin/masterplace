@@ -226,4 +226,53 @@ parciales o en revisión y 1 pendiente: la Integración 2 no se cumplió ese dí
   las reseñas y la identidad verificada más que en la cercanía.
 - **Efecto verificado:** pendiente; se medirá en la validación de E4 con el mismo instrumento.
 
-### Iteración 6 · [título] (opcional para E3, exigida en E4)
+### Iteración 6 · Fórmula de reputación: de bayesiano a Laplace por estrellas (20-11-2026)
+
+- **Disparador:** observación O3 de E3: la profesora pidió usar Laplace.
+- **Alternativas:**
+  - (a) Mantener el promedio bayesiano con el promedio global de la plataforma, C (diseño de E3).
+  - (b) Laplace por estrellas: `L = (n·r + 15)/(n + 5)`, un voto ficticio por cada estrella (1+2+3+4+5 = 15).
+  - (c) Laplace binaria: `(positivas + 1)/(n + 2)`, contando como positivas las reseñas de 4 o 5 estrellas.
+- **Decisión:** (b). Es el mismo método de E3 con C = 3 fijo y m = 5, así que no depende del promedio global (una
+  consulta menos y sin caso «todavía no hay promedio» cuando la plataforma parte vacía) y conserva el orden obtenido
+  en la sensibilidad de E3. (c) se descarta porque pierde información: un 4 y un 5 valen lo mismo.
+  Intercambio: con C = 3 un maestro nuevo y bueno parte más abajo que con el promedio global (con 1 reseña de 5, 3,33
+  frente a ≈ 4,17). Por eso el valor suavizado solo se usa para **ordenar**; en pantalla se muestra el promedio real
+  con la cantidad de reseñas («★ 4,6 · 12 reseñas»).
+- **Efecto verificado:** [PENDIENTE, lo aporta Pedro el 27-11: orden de la búsqueda antes y después con los datos de
+  la semilla, y pruebas de la función.]
+
+### Iteración 7 · Solicitud de servicio dentro del chat (20-11-2026)
+
+- **Disparador:** al probar la app el 20-11, pulsar «Contactar» dejaba el contacto como «Servicio confirmado» y
+  permitía reseñar sin haber escrito un mensaje. Eso contradice RB-2 (solo se reseña un servicio realizado) y deja la
+  reputación expuesta a reseñas falsas.
+- **Alternativas:**
+  - (a) Doble confirmación: el servicio cuenta como realizado solo si lo marcan el cliente y el maestro.
+  - (b) Uno de los dos marca «Realizado», con un plazo para que el otro lo objete.
+  - (c) Basta con que uno de los dos marque «Realizado», desde 2 horas después de la fecha acordada; si el maestro marca
+    un servicio que no ocurrió, el cliente lo denuncia.
+- **Decisión:** (c). (a) deja servicios trabados si uno de los dos no responde, y (b) agrega estados y tiempo de
+  construcción que no caben antes del 30-11. Las reglas las aplica la base de datos, no la pantalla (como
+  `revisar_identidad` en la Iteración 2). Cambian RB-2 y RB-7: la reseña exige una solicitud realizada y hay una
+  reseña por solicitud, no por contacto, así un cliente que vuelve a contratar al mismo maestro puede reseñar cada
+  trabajo.
+- **Efecto verificado:** [PENDIENTE, lo aportan Hugo (pruebas TA-02 a TA-04) e Ignacio (pruebas en la base): no se
+  puede reseñar sin solicitud realizada, ni dos veces, ni marcar «Realizado» antes de tiempo.]
+
+### Iteración 8 · Cédula: RUT, número oculto y vigencia (20-11-2026)
+
+- **Disparador:** observación O8 de E3 (comparación con Mercado Público). Como el registro de maestro se rediseña de
+  todas formas por el hallazgo H-01 de la validación (los maestros no encontraron dónde inscribirse y ninguno quedó
+  registrado), los cambios de la cédula entran en ese mismo rediseño.
+- **Alternativas:**
+  - (a) Pedir RUT, número de serie y vigencia, y consultar la vigencia del documento en el Registro Civil.
+  - (b) Pedir RUT validado con dígito verificador, tapar el número de documento en el navegador antes de subir y
+    guardar una vigencia de 90 días desde la aprobación.
+  - (c) Leer los datos de la cédula con OCR.
+- **Decisión:** (b). (a) exige guardar el número de serie, un dato que no necesitamos para el servicio; con la Ley
+  21.719 (vigente desde el 01-12-2026) se prioriza la minimización de datos. (c) quedó fuera del alcance en E1 y es
+  frágil con fotos de celular. Intercambio: se pierde la consulta de vigencia en el Registro Civil a cambio de no
+  almacenar el número de serie ni la imagen después de aprobar.
+- **Efecto verificado:** [PENDIENTE, lo aporta Gabriel con la validación del sábado 28: ¿cuántos maestros completan el
+  registro, frente a 0 de 2 en E3?]
