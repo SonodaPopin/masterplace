@@ -28,6 +28,14 @@ type Mensaje = {
   enviado_en: string
 }
 
+// H-04 (validación de E3): el mensaje propio aparece altiro con «Enviando…» y queda «Enviado» o
+// «No se envió · Reintentar». Mientras no se confirma vive aquí, con una clave local en vez del id de la base.
+type MensajePendiente = {
+  clave: string
+  contenido: string
+  estado: 'enviando' | 'error'
+}
+
 const FORMATO_FECHA = new Intl.DateTimeFormat('es-CL', {
   dateStyle: 'short',
   timeStyle: 'short',
@@ -70,9 +78,9 @@ export default function Conversacion() {
   const [contacto, setContacto] = useState<Contacto | null>(null)
   const [contraparte, setContraparte] = useState<Contraparte | null>(null)
   const [mensajes, setMensajes] = useState<Mensaje[]>([])
+  const [pendientes, setPendientes] = useState<MensajePendiente[]>([])
   const [texto, setTexto] = useState('')
   const [cargando, setCargando] = useState(true)
-  const [enviando, setEnviando] = useState(false)
   const [errorCarga, setErrorCarga] = useState<string | null>(null)
   const [errorEnvio, setErrorEnvio] = useState<string | null>(null)
   const [estadoRealtime, setEstadoRealtime] = useState<EstadoRealtime>('conectando')
@@ -122,6 +130,7 @@ export default function Conversacion() {
       setContacto(null)
       setContraparte(null)
       setMensajes([])
+      setPendientes([])
       setEstadoRealtime('conectando')
 
       try {
@@ -214,7 +223,7 @@ export default function Conversacion() {
 
   useEffect(() => {
     finalMensajesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  }, [mensajes.length])
+  }, [mensajes.length, pendientes.length])
 
   if (cargandoSesion) {
     return <p className="texto-suave" role="status">Comprobando tu sesión…</p>
@@ -233,48 +242,71 @@ export default function Conversacion() {
     )
   }
 
-  async function enviarMensaje(evento: FormEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    const contenido = texto.trim()
-    if (!contenido || !usuario || !contacto || !contactoId || enviando) return
+  async function enviar(pendiente: MensajePendiente) {
+    if (!usuario || !contactoId) return
+    setPendientes((actuales) =>
+      actuales.map((p) => (p.clave === pendiente.clave ? { ...p, estado: 'enviando' } : p)),
+    )
 
-    if (contacto.estado === 'cerrado') {
-	setErrorEnvio('Esta conversación está cerrada y no admite nuevos mensajes.')
-	return
-	}
-    if (contenido.length > 2000) {
-      setErrorEnvio('El mensaje no puede superar los 2000 caracteres.')
-      return
-    }
-
-    setEnviando(true)
-    setErrorEnvio(null)
-
+    let motivo: string
     try {
       const { data, error } = await supabase
         .from('mensajes')
         .insert({
           contacto_id: contactoId,
           emisor_id: usuario.id,
-          contenido,
+          contenido: pendiente.contenido,
         })
         .select('id, contacto_id, emisor_id, contenido, enviado_en')
         .single()
 
-      if (error || !data) {
-        setErrorEnvio(mensajeErrorEnvio(error?.message ?? 'respuesta vacía'))
+      if (!error && data) {
+        // El INSERT local y el evento Realtime pueden entregar la misma fila.
+        // combinarMensajes la conserva una sola vez por su id.
+        setMensajes((actuales) => combinarMensajes(actuales, [data as Mensaje]))
+        setPendientes((actuales) => actuales.filter((p) => p.clave !== pendiente.clave))
         return
       }
-
-      // El INSERT local y el evento Realtime pueden entregar la misma fila.
-      // combinarMensajes la conserva una sola vez por su id.
-      setMensajes((actuales) => combinarMensajes(actuales, [data as Mensaje]))
-      setTexto('')
+      motivo = mensajeErrorEnvio(error?.message ?? 'respuesta vacía')
     } catch {
-      setErrorEnvio('Ocurrió un error de conexión al enviar el mensaje.')
-    } finally {
-      setEnviando(false)
+      motivo = 'Ocurrió un error de conexión al enviar el mensaje.'
     }
+
+    setPendientes((actuales) =>
+      actuales.map((p) => (p.clave === pendiente.clave ? { ...p, estado: 'error' } : p)),
+    )
+    setErrorEnvio(`No se envió el mensaje. ${motivo}`)
+  }
+
+  function enviarMensaje(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault()
+    const contenido = texto.trim()
+    if (!contenido || !usuario || !contacto || !contactoId) return
+
+    if (contacto.estado === 'cerrado') {
+      setErrorEnvio('Esta conversación está cerrada y no admite nuevos mensajes.')
+      return
+    }
+    if (contenido.length > 2000) {
+      setErrorEnvio('El mensaje no puede superar los 2000 caracteres.')
+      return
+    }
+
+    const pendiente: MensajePendiente = { clave: crypto.randomUUID(), contenido, estado: 'enviando' }
+    setPendientes((actuales) => [...actuales, pendiente])
+    setTexto('')
+    setErrorEnvio(null)
+    void enviar(pendiente)
+  }
+
+  function reintentar(pendiente: MensajePendiente) {
+    setErrorEnvio(null)
+    void enviar(pendiente)
+  }
+
+  function descartar(pendiente: MensajePendiente) {
+    setPendientes((actuales) => actuales.filter((p) => p.clave !== pendiente.clave))
+    setErrorEnvio(null)
   }
 
   return (
@@ -327,7 +359,7 @@ export default function Conversacion() {
       {!cargando && !errorCarga && (
         <>
           <ol className="conversacion-mensajes" aria-label="Mensajes de la conversación" aria-live="polite">
-            {mensajes.length === 0 && (
+            {mensajes.length === 0 && pendientes.length === 0 && (
               <li className="conversacion-vacia">
                 <Icono nombre="chat" tamano={28} />
                 <p>Aún no hay mensajes.</p>
@@ -340,11 +372,40 @@ export default function Conversacion() {
                 <li key={mensaje.id} className={`conversacion-fila${propio ? ' conversacion-fila-propia' : ''}`}>
                   <article className={`conversacion-burbuja${propio ? ' conversacion-burbuja-propia' : ''}`}>
                     <p>{mensaje.contenido}</p>
-                    <time dateTime={mensaje.enviado_en}>{mostrarFecha(mensaje.enviado_en)}</time>
+                    <p className="conversacion-meta">
+                      <time dateTime={mensaje.enviado_en}>{mostrarFecha(mensaje.enviado_en)}</time>
+                      {propio && <span className="conversacion-entrega">· Enviado</span>}
+                    </p>
                   </article>
                 </li>
               )
             })}
+            {pendientes.map((pendiente) => (
+              <li key={pendiente.clave} className="conversacion-fila conversacion-fila-propia">
+                <article
+                  className={`conversacion-burbuja conversacion-burbuja-propia conversacion-burbuja-${pendiente.estado}`}
+                >
+                  <p>{pendiente.contenido}</p>
+                  {pendiente.estado === 'enviando' ? (
+                    <p className="conversacion-meta">
+                      <span className="conversacion-entrega">Enviando…</span>
+                    </p>
+                  ) : (
+                    <p className="conversacion-meta conversacion-meta-error">
+                      <Icono nombre="alerta" tamano={14} />
+                      <span>No se envió</span>
+                      <span aria-hidden="true">·</span>
+                      <button type="button" className="conversacion-reintentar" onClick={() => reintentar(pendiente)}>
+                        Reintentar
+                      </button>
+                      <button type="button" className="conversacion-descartar" onClick={() => descartar(pendiente)}>
+                        Descartar
+                      </button>
+                    </p>
+                  )}
+                </article>
+              </li>
+            ))}
             <li ref={finalMensajesRef} aria-hidden="true" className="conversacion-final" />
           </ol>
 
@@ -361,14 +422,13 @@ export default function Conversacion() {
                 placeholder="Escribe tu mensaje…"
                 rows={3}
                 maxLength={2000}
-                disabled={enviando}
                 required
               />
               <div className="conversacion-acciones">
                 <span className="texto-suave">{texto.length}/2000</span>
-                <button type="submit" className="boton boton-primario" disabled={enviando || !texto.trim()}>
-                  {enviando ? <span className="girador" aria-hidden="true" /> : <Icono nombre="flecha" tamano={17} />}
-                  {enviando ? 'Enviando…' : 'Enviar mensaje'}
+                <button type="submit" className="boton boton-primario" disabled={!texto.trim()}>
+                  <Icono nombre="flecha" tamano={17} />
+                  Enviar mensaje
                 </button>
               </div>
               {errorEnvio && <p className="alerta-error" role="alert">{errorEnvio}</p>}
