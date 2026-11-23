@@ -230,14 +230,19 @@ BEGIN
 
   INSERT INTO public.contactos AS contacto (
     cliente_id,
-    maestro_id
+    maestro_id,
+    estado
   )
   VALUES (
     v_cliente_id,
-    v_maestro_id
+    v_maestro_id,
+    'servicio_confirmado'::public.estado_contacto
   )
   ON CONFLICT (cliente_id, maestro_id)
-    WHERE (estado = 'abierto'::public.estado_contacto)
+    WHERE estado IN (
+      'abierto'::public.estado_contacto,
+      'servicio_confirmado'::public.estado_contacto
+    )
   DO UPDATE SET creado_en = contacto.creado_en
   RETURNING contacto.id INTO v_contacto_id;
 

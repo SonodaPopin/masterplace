@@ -50,11 +50,8 @@ async function cargarProgreso(maestroId: string): Promise<Vista> {
 const vencimiento = maestro.data.identidad_vence_en
 
 if (
-  estado === 'rechazada' ||
-  (
-    estado === 'verificada' &&
-    (!vencimiento || Date.parse(vencimiento) <= Date.now())
-  )
+  estado === 'verificada' &&
+  (!vencimiento || Date.parse(vencimiento) <= Date.now())
 ) {
   return { tipo: 'cedula', renovacion: true }
 }

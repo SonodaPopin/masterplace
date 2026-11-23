@@ -182,3 +182,9 @@ select (select count(*) from auth.users where email like 'validacion%@masterplac
 -- Borrar estos maestros DESPUÉS de la verificación de Hugo (borra en cascada perfil, maestro, cobertura, RUT y
 -- también los contactos y mensajes que los participantes tuvieron con ellos):
 -- delete from auth.users where email like 'validacion%@masterplace.test';
+
+-- Asignar vigencia inicial a los maestros verificados de la semilla.
+UPDATE public.maestros
+SET identidad_vence_en = now() + interval '90 days'
+WHERE estado_identidad = 'verificada'
+  AND identidad_vence_en IS NULL;

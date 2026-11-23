@@ -9,8 +9,9 @@
 -- - Dígito verificador numérico o K mayúscula.
 -- - Validación mediante módulo 11.
 --
--- La vigencia de la cédula de 90 días queda fuera
--- de esta migración según PLAN_FINAL.md §7.
+-- La vigencia de identidad de 90 días se implementa
+-- de forma independiente en la migración
+-- 20261123020000_vigencia_identidad.sql.
 
 -- 1. Función de validación de RUT --------------------------------------------
 
