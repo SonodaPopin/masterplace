@@ -79,7 +79,7 @@ decisión está en `docs/PLAN_FINAL.md` §2 y §3. Estado al 21-11; se actualiza
 | # | Observación (resumen) | Qué cambiamos | Evidencia | Estado |
 |---|---|---|---|---|
 | O3 | Usar la fórmula de Laplace para ordenar por reseñas | Se adopta Laplace por estrellas, `L = (n·r + 15)/(n + 5)`: un voto ficticio por cada estrella, es decir, el promedio bayesiano con C = 3 fijo y m = 5. Ordena la búsqueda («Mejor evaluados»); en pantalla se muestra el promedio real con la cantidad de reseñas. Ver Iteración 6 | `docs/ciencias/CI-2_*.md`, `src/lib/reputacion/` | En curso |
-| O4 | Validar el código con un bot en GitHub | Repositorio con reglas de ramas (CI obligatoria y una revisión antes de fusionar), CodeQL, Dependabot y escaneo de secretos | Rulesets y pestaña *Security* del repositorio | En curso |
+| O4 | Validar el código con un bot en GitHub | Repositorio con reglas de ramas (CI obligatoria y una revisión antes de fusionar), CodeQL, Dependabot y escaneo de secretos | Rulesets y pestaña *Security* del repositorio | Hecho (21-11 |
 | O5 | Planificar en un kanban y hacer seguimiento | Tablero de GitHub Projects: un issue por tarea con responsable, fecha límite, horas estimadas y reales; comentario diario «Hice / Mañana / Me bloquea» en el issue | Tablero del proyecto; `docs/equipo/COMO_TRABAJAMOS.md` §4 | En curso |
 | O6 | Se trabajó «retroactivamente»: cada uno esperaba lo que otro subía a `main` | Contratos primero: la migración aditiva y el archivo de servicio con sus tipos se fusionan antes que las pantallas, y cada uno trabaja en paralelo contra ese contrato (cinco contratos, del 22 al 23-11) | `docs/equipo/COMO_TRABAJAMOS.md` §1; historial de PR | En curso |
 | O7 | Solo hay pruebas unitarias; faltan pruebas de navegabilidad y de un usuario que intente superar los límites | Pruebas extremo a extremo con Playwright en la CI y pruebas de abuso documentadas (acceso a `/admin` sin ser admin, reseñar sin servicio realizado, archivos falsos, XSS, textos enormes, sesión expirada, 375 px, solo teclado) | `docs/pruebas/`, job de la CI | En curso |
@@ -237,7 +237,7 @@ parciales o en revisión y 1 pendiente: la Integración 2 no se cumplió ese dí
   consulta menos y sin caso «todavía no hay promedio» cuando la plataforma parte vacía) y conserva el orden obtenido
   en la sensibilidad de E3. (c) se descarta porque pierde información: un 4 y un 5 valen lo mismo.
   Intercambio: con C = 3 un maestro nuevo y bueno parte más abajo que con el promedio global (con 1 reseña de 5, 3,33
-  frente a ≈ 4,17). Por eso el valor suavizado solo se usa para **ordenar**; en pantalla se muestra el promedio real
+  frente a ≈ 4,42). Por eso el valor suavizado solo se usa para **ordenar**; en pantalla se muestra el promedio real
   con la cantidad de reseñas («★ 4,6 · 12 reseñas»).
 - **Efecto verificado:** [PENDIENTE, lo aporta Pedro el 27-11: orden de la búsqueda antes y después con los datos de
   la semilla, y pruebas de la función.]
@@ -263,8 +263,7 @@ parciales o en revisión y 1 pendiente: la Integración 2 no se cumplió ese dí
 ### Iteración 8 · Cédula: RUT, número oculto y vigencia (20-11-2026)
 
 - **Disparador:** observación O8 de E3 (comparación con Mercado Público). Como el registro de maestro se rediseña de
-  todas formas por el hallazgo H-01 de la validación (los maestros no encontraron dónde inscribirse y ninguno quedó
-  registrado), los cambios de la cédula entran en ese mismo rediseño.
+  todas formas por el hallazgo H-01 de la validación (un maestro de tres no encontró dónde inscribirse y no se alcanzó la meta V1 de 4 de 5), los cambios de la cédula entran en ese mismo rediseño.
 - **Alternativas:**
   - (a) Pedir RUT, número de serie y vigencia, y consultar la vigencia del documento en el Registro Civil.
   - (b) Pedir RUT validado con dígito verificador, tapar el número de documento en el navegador antes de subir y
@@ -275,4 +274,4 @@ parciales o en revisión y 1 pendiente: la Integración 2 no se cumplió ese dí
   frágil con fotos de celular. Intercambio: se pierde la consulta de vigencia en el Registro Civil a cambio de no
   almacenar el número de serie ni la imagen después de aprobar.
 - **Efecto verificado:** [PENDIENTE, lo aporta Gabriel con la validación del sábado 28: ¿cuántos maestros completan el
-  registro, frente a 0 de 2 en E3?]
+  registro, frente a 2 de 3 en E3?]
