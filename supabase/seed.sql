@@ -278,3 +278,9 @@ on conflict do nothing;
 
 -- Hecho (Ignacio, martes 10-11): 6 comunas con código y centroide (fuente citada arriba),
 -- 5 oficios, 18 maestros (15 verificados, 3 pendientes) y 20 clientes de prueba.
+
+-- Asignar vigencia inicial a los maestros verificados de la semilla.
+UPDATE public.maestros
+SET identidad_vence_en = now() + interval '90 days'
+WHERE estado_identidad = 'verificada'
+  AND identidad_vence_en IS NULL;

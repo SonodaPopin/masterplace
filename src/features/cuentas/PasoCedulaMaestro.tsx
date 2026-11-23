@@ -13,11 +13,12 @@ type Props = {
   maestroId: string
   alVolver?: () => void
   alTerminar: () => void
+  renovacion?: boolean
 }
 
 // RF-1 · Paso 3 de 3: cédula al bucket privado «cedulas» y fila en `documentos` (estado pendiente).
 // La cédula solo la ven su dueño y un administrador (políticas de Storage), y se borra al aprobarla (RF-2).
-export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar }: Props) {
+export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar, renovacion = false, }: Props) {
   const [archivo, setArchivo] = useState<File | null>(null)
   const [vistaPrevia, setVistaPrevia] = useState<string | null>(null)
   const [acepta, setAcepta] = useState(false)
@@ -90,7 +91,9 @@ export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar }: P
 
       <div className={`campo${errorArchivo ? ' campo-con-error' : ''}`}>
         <span className="campo-etiqueta" id="cedula-etiqueta">
-          Foto o PDF de la cédula (por delante)
+          {renovacion
+            ? 'Nueva foto o PDF de tu cédula (por delante)'
+            : 'Foto o PDF de la cédula (por delante)'}
         </span>
         <label className={`zona-archivo${archivo && !errorArchivo ? ' zona-archivo-lista' : ''}`} htmlFor="cedula">
           <input
@@ -151,8 +154,9 @@ export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar }: P
           />
           <span className="opcion-marca" aria-hidden="true" />
           <span>
-            Acepto que un administrador de MasterPlace revise mi cédula solo para verificar mi identidad. Se elimina
-            al aprobarla.
+            {renovacion
+              ? 'Acepto que un administrador de MasterPlace revise mi nueva cédula solo para verificar mi identidad. Se elimina al aprobarla.'
+              : 'Acepto que un administrador de MasterPlace revise mi cédula solo para verificar mi identidad. Se elimina al aprobarla.'}
           </span>
         </label>
         {errorAcepta && (
@@ -178,7 +182,11 @@ export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar }: P
         )}
         <button type="submit" className="boton boton-primario" disabled={enviando} aria-busy={enviando}>
           {enviando && <span className="girador" aria-hidden="true" />}
-          {enviando ? 'Enviando…' : 'Enviar a verificación'}
+          {enviando
+            ? 'Enviando…'
+            : renovacion
+              ? 'Enviar nueva cédula'
+              : 'Enviar a verificación'}
         </button>
       </div>
     </form>

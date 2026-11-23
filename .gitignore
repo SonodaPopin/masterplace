@@ -31,3 +31,4 @@ coverage
 .env.*
 !.env.example
 .superdesign
+/supabase/snippets
