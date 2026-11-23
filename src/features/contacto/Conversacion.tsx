@@ -66,7 +66,7 @@ function mensajeErrorEnvio(mensaje: string): string {
   if (mensaje.includes('char_length') || mensaje.includes('check constraint')) {
     return 'El mensaje debe contener entre 1 y 2000 caracteres.'
   }
-  return 'No se pudo enviar el mensaje. Inténtalo nuevamente.'
+  return 'No se pudo enviar el mensaje. Toca «Reintentar» en el mensaje para intentarlo otra vez.'
 }
 
 // RF-11 · Carga cronológicamente, envía y recibe mensajes en tiempo real.
@@ -269,13 +269,13 @@ export default function Conversacion() {
       }
       motivo = mensajeErrorEnvio(error?.message ?? 'respuesta vacía')
     } catch {
-      motivo = 'Ocurrió un error de conexión al enviar el mensaje.'
+      motivo = 'No se pudo enviar el mensaje por un problema de conexión. Toca «Reintentar» en el mensaje.'
     }
 
     setPendientes((actuales) =>
       actuales.map((p) => (p.clave === pendiente.clave ? { ...p, estado: 'error' } : p)),
     )
-    setErrorEnvio(`No se envió el mensaje. ${motivo}`)
+    setErrorEnvio(motivo)
   }
 
   function enviarMensaje(evento: FormEvent<HTMLFormElement>) {
