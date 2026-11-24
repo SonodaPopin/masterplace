@@ -67,6 +67,7 @@ export async function buscarMaestros(filtros: FiltrosBusqueda): Promise<Respuest
       'id, descripcion, anios_experiencia, referencia, disponible, certificado_ok, nivel_reputacion, perfiles(nombre), oficios(nombre), coberturas!inner(comuna_id)',
     )
     .eq('estado_identidad', 'verificada')
+    .gt('identidad_vence_en', new Date().toISOString())
     .eq('coberturas.comuna_id', filtros.comunaId)
   if (filtros.oficioId != null) consulta = consulta.eq('oficio_id', filtros.oficioId)
 

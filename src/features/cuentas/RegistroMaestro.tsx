@@ -19,8 +19,8 @@ type Vista =
   | { tipo: 'noEsMaestro' }
   | { tipo: 'errorCarga' }
   | { tipo: 'perfil'; maestroCreado: boolean }
-  | { tipo: 'cedula' }
-  | { tipo: 'listo'; estado: EstadoIdentidad }
+  | { tipo: 'cedula'; renovacion?: boolean }
+  | { tipo: 'listo'; estado: EstadoIdentidad; identidadVenceEn: string | null }
 
 const RUTA = '/registro/maestro'
 const TOTAL_PASOS = 3
@@ -29,13 +29,40 @@ const TOTAL_PASOS = 3
 // Así, si cierra la página a mitad de camino, al volver retoma donde quedó.
 async function cargarProgreso(maestroId: string): Promise<Vista> {
   const [maestro, cedula] = await Promise.all([
-    supabase.from('maestros').select('estado_identidad').eq('id', maestroId).maybeSingle(),
-    supabase.from('documentos').select('id').eq('maestro_id', maestroId).eq('tipo', 'cedula').limit(1),
+    supabase
+      .from('maestros')
+      .select('estado_identidad, identidad_vence_en')
+      .eq('id', maestroId)
+      .maybeSingle(),
+    supabase
+      .from('documentos')
+      .select('id')
+      .eq('maestro_id', maestroId)
+      .eq('tipo', 'cedula')
+      .limit(1),
   ])
+
   if (maestro.error || cedula.error) return { tipo: 'errorCarga' }
+
   if (!maestro.data) return { tipo: 'perfil', maestroCreado: false }
-  if (!cedula.data.length) return { tipo: 'cedula' }
-  return { tipo: 'listo', estado: maestro.data.estado_identidad as EstadoIdentidad }
+
+  const estado = maestro.data.estado_identidad as EstadoIdentidad
+const vencimiento = maestro.data.identidad_vence_en
+
+if (
+  estado === 'verificada' &&
+  (!vencimiento || Date.parse(vencimiento) <= Date.now())
+) {
+  return { tipo: 'cedula', renovacion: true }
+}
+
+if (!cedula.data.length) return { tipo: 'cedula' }
+
+return {
+  tipo: 'listo',
+  estado,
+  identidadVenceEn: vencimiento,
+}
 }
 
 // RF-1 · Registro de maestro en 3 pasos (RNF-3): 1 cuenta, 2 oficio y comunas, 3 cédula. Responsable: Gabriel.
@@ -189,17 +216,28 @@ export default function RegistroMaestro() {
     return (
       <DisenoCuentas
         publico="maestro"
-        titulo="Verifica tu identidad"
-        subtitulo="Revisamos tu cédula para que los clientes sepan que eres quien dices ser."
+        titulo={vista.renovacion ? 'Renueva tu identidad' : 'Verifica tu identidad'}
+        subtitulo={
+          vista.renovacion
+            ? 'Tu verificación anterior venció. Sube una nueva cédula para volver a ofrecer tus servicios.'
+            : 'Revisamos tu cédula para que los clientes sepan que eres quien dices ser.'
+      }
         pasoActual={3}
         pasoTotal={TOTAL_PASOS}
         nombrePaso="Cédula"
       >
         <PasoCedulaMaestro
           maestroId={maestroId}
+          renovacion={vista.renovacion ?? false}
           // Solo se puede volver si el paso 2 se llenó en esta visita (si no, el formulario partiría vacío).
           alVolver={datosPerfil ? () => setVista({ tipo: 'perfil', maestroCreado: true }) : undefined}
-          alTerminar={() => setVista({ tipo: 'listo', estado: 'pendiente' })}
+          alTerminar={() =>
+            setVista({
+              tipo: 'listo',
+              estado: 'pendiente',
+              identidadVenceEn: null,
+            })
+          }
         />
       </DisenoCuentas>
     )
@@ -208,7 +246,11 @@ export default function RegistroMaestro() {
   if (vista.tipo === 'listo') {
     return (
       <DisenoCuentas publico="maestro" titulo={TITULO_ESTADO[vista.estado]}>
-        <EstadoRegistro estado={vista.estado} alSubirOtra={() => setVista({ tipo: 'cedula' })} />
+        <EstadoRegistro
+          estado={vista.estado}
+          identidadVenceEn={vista.identidadVenceEn}
+          alSubirOtra={() => setVista({ tipo: 'cedula' })}
+        />
       </DisenoCuentas>
     )
   }
@@ -223,7 +265,11 @@ const TITULO_ESTADO: Record<EstadoIdentidad, string> = {
   rechazada: 'No pudimos verificar tu cédula',
 }
 
-function EstadoRegistro({ estado, alSubirOtra }: { estado: EstadoIdentidad; alSubirOtra: () => void }) {
+function EstadoRegistro({estado, identidadVenceEn, alSubirOtra,}: {
+  estado: EstadoIdentidad
+  identidadVenceEn: string | null
+  alSubirOtra: () => void
+}) {
   if (estado === 'rechazada') {
     return (
       <div className="confirmacion" role="status">
@@ -249,6 +295,15 @@ function EstadoRegistro({ estado, alSubirOtra }: { estado: EstadoIdentidad; alSu
           ? 'Ya apareces en las búsquedas de los clientes de tus comunas.'
           : 'Recibimos tus datos. Un administrador revisará tu cédula; mientras tanto tu perfil no aparece en las búsquedas.'}
       </p>
+
+          {verificada && identidadVenceEn && (
+            <p>
+              Tu identidad está vigente hasta el{' '}
+              <strong>
+                {new Date(identidadVenceEn).toLocaleDateString('es-CL')}
+              </strong>.
+            </p>
+          )}
 
       <ol className="sellos" aria-label="Sellos de confianza">
         <li className={verificada ? 'sello sello-ok' : 'sello sello-pendiente'}>
