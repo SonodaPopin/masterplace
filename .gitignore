@@ -32,3 +32,4 @@ coverage
 !.env.example
 .superdesign
 /supabase/snippets
+/graphify-out

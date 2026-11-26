@@ -25,6 +25,33 @@ npx supabase@latest db push
 - La clave `service_role` nunca va al frontend ni al repositorio.
 - Buckets `cedulas` y `certificados` privados; se accede solo con URL firmada de corta duración.
 
+## Migraciones aplicadas en producción
+
+Agrega una fila cada vez que apliques una migración en producción. Las aditivas se aplican el mismo día que se fusionan en `premain`; las de cambio, solo el viernes de congelamiento.
+
+| Archivo | Fecha | Quién la aplicó | Comprobación hecha |
+|---|---|---|---|
+| `20261109000000_esquema_inicial.sql` | 2026-11-08 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261109235900_funcion_es_admin.sql` | 2026-11-10 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261110000000_politicas_rls.sql` | 2026-11-11 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261110120000_perfil_al_registrarse.sql` | 2026-11-10 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261112000000_borrar_cedula_al_aprobar.sql` | 2026-11-13 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261112090000_contactos_chat.sql` | 2026-11-12 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261113120000_revisar_identidad.sql` | 2026-11-13 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261113173000_habilitar_realtime_mensajes.sql` | 2026-11-13 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261113180000_bandeja_contactos.sql` | 2026-11-13 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261114000000_validacion_usuarios.sql` | 2026-11-13 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261114120000_buscar_maestros.sql` | 2026-11-14 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261114180000_rf5_confirmacion_temporal.sql` | 2026-11-15 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261114190000_rf5_resenas_publicas.sql` | 2026-11-15 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261123000000_denuncias.sql` | 2026-11-22 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261123010000_rut.sql` | 2026-11-23 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261123020000_vigencia_identidad.sql` | 2026-11-23 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+
+La fecha registrada es la de fusión en `premain`, porque producción no guarda la fecha de aplicación.
+
+Pendiente: `20261122000000_solicitudes_servicio.sql` (aditiva, fusionada en `premain` el 2026-11-24) aún no está aplicada en producción.
+
 
 ## Migración: validación de RUT
 
@@ -71,7 +98,7 @@ Esta migración incorpora la vigencia de 90 días para la verificación de ident
 **Estado de aplicación**
 
 - Desarrollo local: aplicada y probada.
-- Producción: pendiente de aplicación después de la integración y aprobación del PR.
+- Producción: aplicada (ver «Migraciones aplicadas en producción»).
 
 
 ### Pruebas
@@ -85,4 +112,4 @@ Esta migración incorpora la vigencia de 90 días para la verificación de ident
 ### Estado de aplicación
 
 - Desarrollo local: aplicada y probada.
-- Producción: pendiente de aplicación después de la integración y aprobación del PR.
+- Producción: aplicada (ver «Migraciones aplicadas en producción»).
