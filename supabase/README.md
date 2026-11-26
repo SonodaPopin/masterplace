@@ -29,7 +29,7 @@ npx supabase@latest db push
 
 Agrega una fila cada vez que apliques una migración en producción. Las aditivas se aplican el mismo día que se fusionan en `premain`; las de cambio, solo el viernes de congelamiento.
 
-| Archivo | Fecha | Quién la aplicó | Comprobación hecha |
+| Archivo | Fusión en premain | Quién la aplicó | Comprobación hecha |
 |---|---|---|---|
 | `20261109000000_esquema_inicial.sql` | 2026-11-08 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
 | `20261109235900_funcion_es_admin.sql` | 2026-11-10 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
@@ -44,14 +44,12 @@ Agrega una fila cada vez que apliques una migración en producción. Las aditiva
 | `20261114120000_buscar_maestros.sql` | 2026-11-14 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
 | `20261114180000_rf5_confirmacion_temporal.sql` | 2026-11-15 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
 | `20261114190000_rf5_resenas_publicas.sql` | 2026-11-15 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
-| `20261123000000_denuncias.sql` | 2026-11-22 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
-| `20261123010000_rut.sql` | 2026-11-23 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
-| `20261123020000_vigencia_identidad.sql` | 2026-11-23 | (por confirmar) | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261122000000_solicitudes_servicio.sql` | 2026-11-24 | Joaquín | Aparece en `schema_migrations`; existen la tabla con RLS, las 5 funciones, `resenas.solicitud_id` y la publicación Realtime; `anon` no puede ejecutar `crear_solicitud` |
+| `20261123000000_denuncias.sql` | 2026-11-22 | Joaquín | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261123010000_rut.sql` | 2026-11-23 | Joaquín | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
+| `20261123020000_vigencia_identidad.sql` | 2026-11-23 | Joaquín | Aparece en `supabase_migrations.schema_migrations` (revisado el 2026-11-26) |
 
 La fecha registrada es la de fusión en `premain`, porque producción no guarda la fecha de aplicación.
-
-Pendiente: `20261122000000_solicitudes_servicio.sql` (aditiva, fusionada en `premain` el 2026-11-24) aún no está aplicada en producción.
-
 
 ## Migración: validación de RUT
 
