@@ -3,6 +3,8 @@ import { Link, Navigate, useLocation } from 'react-router-dom'
 import Icono from '../../components/Icono'
 import { useSesion } from '../../lib/auth/contexto'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
+import { TEXTO_AVISO, type AvisoBandeja } from '../../lib/solicitudes/presentacion'
+import { avisosPorContacto } from './avisosSolicitudes'
 import './bandejaContactos.css'
 
 type EstadoContacto = 'abierto' | 'servicio_confirmado' | 'cerrado'
@@ -42,10 +44,9 @@ function nombreRol(rol: string): string {
   return 'Participante'
 }
 
-function etiquetaEstado(estado: EstadoContacto): string {
-  if (estado === 'abierto') return 'Abierta'
-  if (estado === 'servicio_confirmado') return 'Servicio confirmado'
-  return 'Cerrada'
+// #64: «Servicio confirmado» ya no se usa; el avance del servicio se ve en el aviso de la solicitud.
+function estadoVisible(estado: EstadoContacto): 'abierto' | 'cerrado' {
+  return estado === 'cerrado' ? 'cerrado' : 'abierto'
 }
 
 // RF-11 · Bandeja privada: cada usuario ve sus contactos y el nombre de la contraparte.
@@ -54,6 +55,7 @@ export default function BandejaContactos() {
   const ubicacion = useLocation()
   const { usuario, rol, cargando: cargandoSesion } = useSesion()
   const [contactos, setContactos] = useState<ResumenContacto[]>([])
+  const [avisos, setAvisos] = useState<Map<string, AvisoBandeja>>(new Map())
   const [cargando, setCargando] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [estadoRealtime, setEstadoRealtime] = useState<EstadoRealtime>('conectando')
@@ -63,6 +65,7 @@ export default function BandejaContactos() {
 
     let vigente = true
     let solicitudActual = 0
+    const usuarioId = usuario.id
 
     async function cargarBandeja() {
       const solicitud = ++solicitudActual
@@ -76,9 +79,18 @@ export default function BandejaContactos() {
         return
       }
 
-      setContactos((data ?? []) as ResumenContacto[])
+      const lista = (data ?? []) as ResumenContacto[]
+      setContactos(lista)
       setError(null)
       setCargando(false)
+
+      // Los avisos de solicitudes son un extra: si fallan, la bandeja se muestra igual, sin ellos.
+      try {
+        const nuevos = await avisosPorContacto(lista.map((c) => c.contacto_id), usuarioId)
+        if (vigente && solicitud === solicitudActual) setAvisos(nuevos)
+      } catch {
+        if (vigente && solicitud === solicitudActual) setAvisos(new Map())
+      }
     }
 
     // Carga inicial; la consulta reemplaza el estado completo, por lo que repetirla
@@ -97,6 +109,13 @@ export default function BandejaContactos() {
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'mensajes' },
+        () => {
+          if (vigente) void cargarBandeja()
+        },
+      )
+      .on(
+        'postgres_changes',
+        { event: '*', schema: 'public', table: 'solicitudes_servicio' },
         () => {
           if (vigente) void cargarBandeja()
         },
@@ -185,6 +204,8 @@ export default function BandejaContactos() {
             const vistaMensaje = contacto.ultimo_mensaje
               ? `${contacto.ultimo_mensaje_emisor_id === usuario.id ? 'Tú: ' : ''}${contacto.ultimo_mensaje}`
               : 'Aún no hay mensajes. Abre la conversación para iniciar.'
+            const aviso = avisos.get(contacto.contacto_id) ?? null
+            const estado = estadoVisible(contacto.estado)
 
             return (
               <li key={contacto.contacto_id}>
@@ -200,8 +221,16 @@ export default function BandejaContactos() {
                       {vistaMensaje}
                     </span>
                     <span className="bandeja-fila-inferior">
-                      <span className={`bandeja-estado bandeja-estado-${contacto.estado}`}>
-                        {etiquetaEstado(contacto.estado)}
+                      <span className="bandeja-etiquetas">
+                        <span className={`bandeja-estado bandeja-estado-${estado}`}>
+                          {estado === 'cerrado' ? 'Cerrada' : 'Abierta'}
+                        </span>
+                        {aviso && (
+                          <span className={`bandeja-aviso bandeja-aviso-${aviso}`}>
+                            <Icono nombre={aviso === 'resenar' ? 'estrella' : 'herramienta'} tamano={14} />
+                            {TEXTO_AVISO[aviso]}
+                          </span>
+                        )}
                       </span>
                       <span className="bandeja-abrir">Abrir conversación <Icono nombre="flecha" tamano={15}/></span>
                     </span>

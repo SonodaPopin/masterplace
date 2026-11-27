@@ -1,0 +1,173 @@
+/* MasterPlace · Solicitud de servicio en el chat (#64).
+   Usa los tokens de src/index.css. Objetivos táctiles >= 44 px (RNF-7). */
+
+.solicitudes {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px clamp(20px, 4vw, 34px);
+  border-bottom: 1px solid var(--color-borde);
+  background: var(--color-superficie);
+}
+
+.solicitudes-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.solicitudes-cabecera h2 {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+/* Reciben el foco por código (tabIndex -1) después de una acción. */
+.solicitudes-cabecera h2:focus-visible,
+.solicitud:focus-visible {
+  outline: 3px solid var(--color-foco);
+  outline-offset: 3px;
+}
+
+.solicitudes-vacio {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 0.92rem;
+}
+
+.solicitudes-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.solicitud,
+.solicitud-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 14px 16px;
+  border: 1px solid var(--color-borde);
+  border-left: 4px solid var(--color-borde-fuerte);
+  border-radius: var(--radio);
+  background: #fbfcfc;
+}
+
+.solicitud-pendiente { border-left-color: var(--color-acento); }
+.solicitud-aceptada { border-left-color: var(--color-primario); }
+.solicitud-realizada { border-left-color: #1f6b3a; }
+.solicitud-rechazada,
+.solicitud-cancelada { border-left-color: var(--color-borde); background: #f6f7f7; }
+
+.solicitud-formulario {
+  gap: 14px;
+  border-left-color: var(--color-primario);
+}
+
+.solicitud-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.solicitud-titulo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--color-primario);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.solicitud-estado {
+  display: inline-flex;
+  align-items: center;
+  min-height: 26px;
+  padding: 2px 10px;
+  border: 1px solid var(--color-borde);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-texto-suave);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.solicitud-estado-pendiente { border-color: #f0d3a4; background: var(--color-aviso-suave); color: var(--color-aviso); }
+.solicitud-estado-aceptada { border-color: #b7d3cf; background: var(--color-primario-suave); color: var(--color-primario); }
+.solicitud-estado-realizada { border-color: #b9dcc4; background: #edf8f0; color: #1f6b3a; }
+
+.solicitud-descripcion {
+  margin: 0;
+  color: var(--color-texto);
+  font-size: 1rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.solicitud-fecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  color: var(--color-texto);
+  font-weight: 700;
+  font-size: 0.93rem;
+}
+
+.solicitud-fecha time::first-letter { text-transform: uppercase; }
+
+.solicitud-ayuda {
+  margin: 0;
+  color: var(--color-texto-suave);
+  font-size: 0.9rem;
+}
+
+.solicitud-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+/* Los botones de la tarjeta se tocan en el celular: 44 px de alto aunque sean «chicos». */
+.solicitudes .boton-chico { min-height: 44px; }
+
+.boton-peligro { background: var(--color-error); border-color: var(--color-error); color: #fff; }
+.boton-peligro:hover:not(:disabled) { background: #8f1e18; color: #fff; }
+
+.solicitud-rechazo,
+.solicitud-confirmar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--color-borde);
+}
+
+.solicitud-confirmar p { margin: 0; font-weight: 600; }
+
+.solicitudes-anteriores summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--color-primario);
+  font-weight: 700;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.solicitudes-anteriores[open] summary { margin-bottom: 6px; }
+
+@media (max-width: 560px) {
+  .solicitud-acciones .boton { flex: 1 1 100%; }
+}

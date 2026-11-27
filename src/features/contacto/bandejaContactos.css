@@ -125,7 +125,23 @@
   font-weight: 800;
 }
 .bandeja-estado-abierto { color: #1f6b3a; border-color: #b9dcc4; background: #edf8f0; }
-.bandeja-estado-servicio_confirmado { color: #214f85; border-color: #c5d6ef; background: #eef4fc; }
+
+/* #64: aviso de la solicitud de servicio junto al estado de la conversación. */
+.bandeja-etiquetas { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.bandeja-aviso {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 24px;
+  padding: 3px 9px;
+  border: 1px solid #f0d3a4;
+  border-radius: 999px;
+  color: var(--color-aviso);
+  background: var(--color-aviso-suave);
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+.bandeja-aviso-resenar { color: var(--color-primario); border-color: #b7d3cf; background: var(--color-primario-suave); }
 
 .bandeja-abrir { display: inline-flex; align-items: center; gap: 5px; color: var(--color-primario); font-size: 0.82rem; font-weight: 800; }
 

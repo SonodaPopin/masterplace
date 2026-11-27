@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
-import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 import Icono from '../../components/Icono'
 import { useSesion } from '../../lib/auth/contexto'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
+import SolicitudesServicio from '../solicitudes/SolicitudesServicio'
 import './conversacion.css'
 
 type EstadoContacto = 'abierto' | 'servicio_confirmado' | 'cerrado'
@@ -324,28 +325,15 @@ export default function Conversacion() {
                 : 'Conectando actualización en tiempo real…'}
           </p>
         </div>
-        <span className={`conversacion-estado conversacion-estado-${contacto?.estado ?? 'cargando'}`}>
-          {contacto?.estado === 'abierto'
-            ? 'Abierta'
-            : contacto?.estado === 'servicio_confirmado'
-              ? 'Servicio confirmado'
-              : contacto?.estado === 'cerrado'
-                ? 'Cerrada'
-                : 'Cargando'}
-        </span>
+        {/* #64: el servicio ahora se sigue en la tarjeta de solicitud; el encabezado solo dice si está abierta. */}
+        {contacto && (
+          <span
+            className={`conversacion-estado conversacion-estado-${contacto.estado === 'cerrado' ? 'cerrado' : 'abierto'}`}
+          >
+            {contacto.estado === 'cerrado' ? 'Cerrada' : 'Abierta'}
+          </span>
+        )}
       </header>
-
-{contacto?.estado === 'servicio_confirmado' &&
-  contacto.cliente_id === usuario.id && (
-    <div className="conversacion-acciones">
-      <Link
-        to={`/contactos/${contacto.id}/resena`}
-        className="boton boton-primario"
-      >
-        Dejar reseña
-      </Link>
-    </div>
-  )}
 
       {cargando && <p className="texto-suave" role="status">Cargando conversación…</p>}
 
@@ -358,6 +346,15 @@ export default function Conversacion() {
 
       {!cargando && !errorCarga && (
         <>
+          {contacto && (
+            <SolicitudesServicio
+              contactoId={contacto.id}
+              rol={contacto.cliente_id === usuario.id ? 'cliente' : 'maestro'}
+              abierta={contacto.estado !== 'cerrado'}
+              nombreContraparte={contraparte?.nombre ?? (contacto.cliente_id === usuario.id ? 'El maestro' : 'El cliente')}
+            />
+          )}
+
           <ol className="conversacion-mensajes" aria-label="Mensajes de la conversación" aria-live="polite">
             {mensajes.length === 0 && pendientes.length === 0 && (
               <li className="conversacion-vacia">
