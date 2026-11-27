@@ -12,7 +12,7 @@ const BENEFICIOS_CLIENTE: Beneficio[] = [
 const BENEFICIOS_MAESTRO: Beneficio[] = [
   { icono: 'herramienta', titulo: 'Tu oficio a la vista', texto: 'Perfil con tu oficio, experiencia y comunas donde trabajas.' },
   { icono: 'escudo', titulo: 'Sellos de confianza', texto: 'Identidad, reputación y certificación como señales separadas.' },
-  { icono: 'estrella', titulo: 'Reseñas reales', texto: 'Solo opinan clientes con un servicio confirmado.' },
+  { icono: 'estrella', titulo: 'Reseñas reales', texto: 'Solo opinan clientes con un servicio realizado.' },
 ]
 
 type Props = {

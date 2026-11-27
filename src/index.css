@@ -302,6 +302,32 @@ code { font-size: 0.9em; background: var(--color-primario-suave); padding: 1px 6
 #titulo-cuenta:focus-visible { outline: 3px solid var(--color-foco); outline-offset: 4px; }
 .cuentas-paso-nombre { display: block; margin-top: 2px; font-size: 0.85rem; font-weight: 700; color: var(--color-primario); }
 
+/* En el celular el progreso va sobre el título y a todo el ancho, para no angostar el título (#62). */
+@media (max-width: 520px) {
+  .cuentas-encabezado-form { flex-direction: column-reverse; gap: 12px; }
+  .cuentas-paso { width: 100%; text-align: left; }
+  .cuentas-paso-nombre { display: inline; margin-left: 6px; }
+  .cuentas-paso-barra { width: 100%; }
+}
+
+/* «Antes de empezar» (#62, H-01): qué tener a mano, los pasos y qué pasa después */
+.registro-intro { display: flex; flex-direction: column; gap: 22px; margin-top: 8px; }
+.registro-intro h2 { margin: 0 0 10px; font-size: 1.05rem; }
+.registro-intro p { margin: 0; }
+.registro-intro-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.registro-intro-lista li { display: flex; align-items: flex-start; gap: 12px; }
+.registro-intro-lista .icono { flex: 0 0 auto; margin-top: 2px; color: var(--color-primario); }
+.registro-intro-pasos { margin: 0; padding: 0; list-style: none; counter-reset: paso; display: flex; flex-direction: column; gap: 10px; }
+.registro-intro-pasos li { counter-increment: paso; display: flex; align-items: baseline; gap: 12px; }
+.registro-intro-pasos li::before {
+  content: counter(paso); flex: 0 0 28px; display: grid; place-items: center; width: 28px; height: 28px;
+  border-radius: 50%; background: var(--color-primario); color: #fff; font-weight: 800; font-size: 0.9rem;
+}
+.registro-intro-despues { padding: 14px 16px; border-radius: var(--radio); background: var(--color-primario-suave); }
+.registro-intro-despues h2 { color: var(--color-primario); }
+/* Enlaces en forma de texto dentro de párrafos: objetivo táctil de 44 px sin cambiar cómo se ven (RNF-7). */
+.cuentas-alterno .enlace-boton { min-height: 44px; }
+
 .campo textarea { resize: vertical; min-height: 96px; line-height: 1.5; }
 .campo .campo-corto { max-width: 160px; }
 .campo-contador { text-align: right; font-variant-numeric: tabular-nums; }
