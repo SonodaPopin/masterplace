@@ -188,7 +188,11 @@ insert into public.perfiles (id, rol, nombre, telefono, comuna_id) values
   ('b2a9c0ed-ed90-5517-98d9-0912e2d2196c', 'cliente', 'Bárbara Castillo Sánchez', '+56 9 5551 0018', 8108),
   ('9c7559c0-6856-53d7-ae6e-c456d5352034', 'cliente', 'Pedro Tapia Fernández', '+56 9 5551 0019', 8103),
   ('40f05b9d-9964-5a86-9816-6b774d2ff021', 'cliente', 'Verónica Reyes Ramírez', '+56 9 5551 0020', 8101)
-on conflict (id) do nothing;
+on conflict (id) do update
+  set rol       = excluded.rol,
+      nombre    = excluded.nombre,
+      telefono  = excluded.telefono,
+      comuna_id = excluded.comuna_id;
 
 -- 5. Maestros (01-15: 3 por oficio; 16-18: gásfiters de Talcahuano, Hualpén y Penco). Punto de referencia = centroide de su comuna con
 --    un desplazamiento fijo de ±0,8 km aprox., para que ST_Distance sea variado.
