@@ -22,6 +22,17 @@
 .busqueda-eyebrow .icono { color: var(--color-acento); }
 .busqueda-bajada { margin: 0; max-width: 560px; color: rgb(255 255 255 / 85%); }
 
+/* «Soy maestro» en la portada (#62, H-01). Ámbar como relleno con texto oscuro: 9,4:1. */
+.busqueda-soy-maestro {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin: 18px 0 0;
+  color: #fff; font-weight: 700;
+}
+.boton-acento { background: var(--color-acento); color: var(--color-texto); border-color: var(--color-acento); font-weight: 800; }
+.boton-acento:hover:not(:disabled) { background: #f6bd63; color: var(--color-texto); }
+@media (max-width: 520px) {
+  .busqueda-soy-maestro .boton { width: 100%; }
+}
+
 .filtros {
   display: grid; grid-template-columns: 1fr 1fr auto; align-items: end; gap: 12px;
   padding: 16px; border-radius: var(--radio); background: var(--color-superficie); color: var(--color-texto);

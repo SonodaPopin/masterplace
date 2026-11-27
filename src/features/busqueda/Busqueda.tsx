@@ -1,5 +1,5 @@
 import { lazy, Suspense, useCallback, useEffect, useMemo, useState } from 'react'
-import { Navigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import Icono from '../../components/Icono'
 import ListaResultados from './ListaResultados'
 import './busqueda.css'
@@ -159,6 +159,16 @@ function BuscadorMaestros() {
           <p className="busqueda-bajada">
             Elige el oficio y tu comuna. Te mostramos quiénes trabajan ahí, del más cercano al más lejano.
           </p>
+          {/* H-01: un maestro no encontró dónde inscribirse; el enlace del menú no bastaba. Solo para visitantes. */}
+          {!usuario && (
+            <p className="busqueda-soy-maestro">
+              <span>¿Eres maestro?</span>
+              <Link to="/registro/maestro" className="boton boton-acento">
+                <Icono nombre="herramienta" tamano={18} />
+                Soy maestro: quiero ofrecer mis servicios
+              </Link>
+            </p>
+          )}
         </div>
 
         <form className="filtros" role="search" aria-label="Filtros de búsqueda" onSubmit={(e) => e.preventDefault()}>

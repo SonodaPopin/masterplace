@@ -1,6 +1,9 @@
 import { useEffect, useState, type ChangeEvent, type FormEvent } from 'react'
+import Campo from '../../components/Campo'
 import Icono from '../../components/Icono'
 import { supabase } from '../../lib/supabase'
+import { formatearRut } from '../../lib/rut/rut'
+import { errorRutDesdeBase, prepararRut, rutAlSalir } from '../../lib/maestros/rutMaestro'
 import {
   formatearTamano,
   mensajeErrorDatos,
@@ -16,9 +19,18 @@ type Props = {
   renovacion?: boolean
 }
 
-// RF-1 · Paso 3 de 3: cédula al bucket privado «cedulas» y fila en `documentos` (estado pendiente).
-// La cédula solo la ven su dueño y un administrador (políticas de Storage), y se borra al aprobarla (RF-2).
+// RF-1 · Paso 3 de 3: RUT en `maestros_privado` (#62) y cédula al bucket privado «cedulas» con su fila en
+// `documentos` (estado pendiente). El RUT y la cédula solo los ven su dueño y un administrador (RLS y Storage);
+// la cédula se borra al aprobarla (RF-2). El RUT va aquí porque `maestros_privado` necesita la fila de `maestros`
+// (paso 2) y porque el administrador lo compara con la cédula.
 export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar, renovacion = false, }: Props) {
+  const [rut, setRut] = useState('')
+  // RUT ya guardado («12345678-5»): si el maestro recarga la página o vuelve, no se le pide de nuevo.
+  const [rutGuardado, setRutGuardado] = useState<string | null>(null)
+  const [cargandoRut, setCargandoRut] = useState(true)
+  const [errorRut, setErrorRut] = useState<string | undefined>()
+  // RUT que rechazó la base (p. ej. duplicado): su error se mantiene al salir del campo mientras no lo cambie.
+  const [rechazoBase, setRechazoBase] = useState<{ rut: string; error: string } | null>(null)
   const [archivo, setArchivo] = useState<File | null>(null)
   const [vistaPrevia, setVistaPrevia] = useState<string | null>(null)
   const [acepta, setAcepta] = useState(false)
@@ -26,6 +38,26 @@ export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar, ren
   const [errorAcepta, setErrorAcepta] = useState<string | undefined>()
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
   const [enviando, setEnviando] = useState(false)
+
+  useEffect(() => {
+    let activo = true
+    supabase
+      .from('maestros_privado')
+      .select('rut')
+      .eq('id', maestroId)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!activo) return
+        if (data?.rut) {
+          setRutGuardado(data.rut)
+          setRut(formatearRut(data.rut))
+        }
+        setCargandoRut(false)
+      })
+    return () => {
+      activo = false
+    }
+  }, [maestroId])
 
   // Vista previa local de la imagen (no sale del navegador hasta enviar).
   useEffect(() => {
@@ -48,16 +80,41 @@ export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar, ren
     evento.preventDefault()
     setErrorGeneral(null)
 
+    const rutListo = prepararRut(rut)
     const eArchivo = validarArchivoCedula(archivo)
     const eAcepta = acepta ? undefined : 'Debes aceptar la revisión de tu cédula para continuar.'
+    setErrorRut(rutListo.ok ? undefined : rutListo.error)
     setErrorArchivo(eArchivo)
     setErrorAcepta(eAcepta)
-    if (eArchivo || eAcepta || !archivo) {
-      document.getElementById(eArchivo ? 'cedula' : 'acepta')?.focus()
+    if (!rutListo.ok || eArchivo || eAcepta || !archivo) {
+      document.getElementById(!rutListo.ok ? 'rut' : eArchivo ? 'cedula' : 'acepta')?.focus()
       return
     }
 
     setEnviando(true)
+
+    // 1. RUT (solo si cambió). Un RUT de otra cuenta lo rechaza el unique de la base (23505).
+    if (rutListo.guardar !== rutGuardado) {
+      const guardado = rutGuardado
+        ? await supabase.from('maestros_privado').update({ rut: rutListo.guardar }).eq('id', maestroId)
+        : await supabase.from('maestros_privado').insert({ id: maestroId, rut: rutListo.guardar })
+      if (guardado.error) {
+        setEnviando(false)
+        const deRut = errorRutDesdeBase(guardado.error)
+        if (deRut) {
+          setErrorRut(deRut)
+          setRechazoBase({ rut: rutListo.guardar, error: deRut })
+          document.getElementById('rut')?.focus()
+        } else {
+          setErrorGeneral(mensajeErrorDatos(guardado.error.message))
+        }
+        return
+      }
+      setRutGuardado(rutListo.guardar)
+    }
+    setRut(rutListo.mostrar)
+
+    // 2. Cédula
     const ruta = rutaCedula(maestroId, archivo.type)
     const subida = await supabase.storage
       .from('cedulas')
@@ -88,6 +145,35 @@ export default function PasoCedulaMaestro({ maestroId, alVolver, alTerminar, ren
           real.
         </span>
       </p>
+
+      <Campo
+        id="rut"
+        etiqueta="Tu RUT"
+        autoComplete="off"
+        spellCheck={false}
+        placeholder="12.345.678-5"
+        maxLength={14}
+        value={rut}
+        disabled={cargandoRut}
+        onChange={(e) => {
+          setRut(e.target.value)
+          if (errorRut) setErrorRut(undefined)
+        }}
+        onBlur={() => {
+          const { valor, error } = rutAlSalir(rut)
+          const preparado = prepararRut(rut)
+          const sigueRechazado = rechazoBase && preparado.ok && preparado.guardar === rechazoBase.rut
+          setRut(valor)
+          setErrorRut(error ?? (sigueRechazado ? rechazoBase.error : undefined))
+        }}
+        error={errorRut}
+        ayuda={
+          rutGuardado
+            ? 'Ya lo guardamos. Puedes corregirlo si te equivocaste.'
+            : 'Con puntos y guion, o todo junto. Lo comparamos con tu cédula y no aparece en tu perfil.'
+        }
+        required
+      />
 
       <div className={`campo${errorArchivo ? ' campo-con-error' : ''}`}>
         <span className="campo-etiqueta" id="cedula-etiqueta">

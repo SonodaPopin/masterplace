@@ -14,6 +14,7 @@ type EstadoIdentidad = 'pendiente' | 'verificada' | 'rechazada'
 
 type Vista =
   | { tipo: 'cargando' }
+  | { tipo: 'intro' }
   | { tipo: 'cuenta' }
   | { tipo: 'revisarCorreo'; correo: string }
   | { tipo: 'noEsMaestro' }
@@ -24,6 +25,25 @@ type Vista =
 
 const RUTA = '/registro/maestro'
 const TOTAL_PASOS = 3
+
+// Si recarga mientras espera el correo de confirmación, vuelve a ver «Revisa tu correo» y no el formulario vacío.
+// Solo el correo (nada sensible) y solo en esta pestaña.
+const CLAVE_CORREO = 'masterplace.registroMaestro.correo'
+function leerCorreoPendiente(): string | null {
+  try {
+    return sessionStorage.getItem(CLAVE_CORREO)
+  } catch {
+    return null
+  }
+}
+function guardarCorreoPendiente(correo: string | null) {
+  try {
+    if (correo) sessionStorage.setItem(CLAVE_CORREO, correo)
+    else sessionStorage.removeItem(CLAVE_CORREO)
+  } catch {
+    // Sin almacenamiento (modo privado): solo se pierde el aviso al recargar.
+  }
+}
 
 // Dónde quedó el maestro: sin fila en `maestros` → paso 2; sin cédula → paso 3; con ambas → estado.
 // Así, si cierra la página a mitad de camino, al volver retoma donde quedó.
@@ -79,9 +99,15 @@ export default function RegistroMaestro() {
   useEffect(() => {
     if (cargando) return
     if (!maestroId) {
-      setVista((v) => (v.tipo === 'revisarCorreo' ? v : { tipo: 'cuenta' }))
+      // Sin sesión: primero «Antes de empezar» (H-01), salvo que ya esté en el formulario o esperando el correo.
+      setVista((v) => {
+        if (v.tipo === 'revisarCorreo' || v.tipo === 'cuenta') return v
+        const correo = leerCorreoPendiente()
+        return correo ? { tipo: 'revisarCorreo', correo } : { tipo: 'intro' }
+      })
       return
     }
+    guardarCorreoPendiente(null)
     if (rol !== 'maestro') {
       setVista({ tipo: 'noEsMaestro' })
       return
@@ -110,14 +136,26 @@ export default function RegistroMaestro() {
     )
   }
 
+  if (vista.tipo === 'intro') {
+    return (
+      <DisenoCuentas
+        publico="maestro"
+        titulo="Ofrece tus servicios en MasterPlace"
+        subtitulo="Son 3 pasos y toman unos 5 minutos. Puedes dejarlo a medias: lo que guardes no se pierde."
+      >
+        <AntesDeEmpezar alEmpezar={() => setVista({ tipo: 'cuenta' })} />
+      </DisenoCuentas>
+    )
+  }
+
   if (vista.tipo === 'cuenta') {
     return (
       <DisenoCuentas
         publico="maestro"
-        titulo="Ofrece tus servicios"
+        titulo="Crea tu cuenta de maestro"
         subtitulo={
           <>
-            Crea tu cuenta de maestro. ¿Ya tienes una? <Link to="/ingresar">Ingresa</Link>
+            ¿Ya tienes una? <Link to="/ingresar">Ingresa</Link>
           </>
         }
         pasoActual={1}
@@ -135,7 +173,10 @@ export default function RegistroMaestro() {
           rutaTrasConfirmar={RUTA}
           textoBoton="Crear cuenta y continuar"
           textoEnviando="Creando cuenta…"
-          alPedirConfirmacion={(correo) => setVista({ tipo: 'revisarCorreo', correo })}
+          alPedirConfirmacion={(correo) => {
+            guardarCorreoPendiente(correo)
+            setVista({ tipo: 'revisarCorreo', correo })
+          }}
         />
         <p className="cuentas-alterno">
           ¿Buscas un maestro? <Link to="/registro/cliente">Crea una cuenta de cliente</Link>
@@ -149,8 +190,21 @@ export default function RegistroMaestro() {
       <DisenoCuentas publico="maestro" titulo="Revisa tu correo" pasoActual={1} pasoTotal={TOTAL_PASOS}>
         <RevisaTuCorreo
           correo={vista.correo}
-          siguiente="Al abrir el enlace volverás aquí para completar los pasos 2 y 3: tu oficio y tu cédula."
+          siguiente="Al abrir el enlace volverás aquí para completar los pasos 2 y 3: tu oficio, tu RUT y tu cédula."
         />
+        <p className="cuentas-alterno">
+          ¿Te equivocaste de correo?{' '}
+          <button
+            type="button"
+            className="enlace-boton"
+            onClick={() => {
+              guardarCorreoPendiente(null)
+              setVista({ tipo: 'cuenta' })
+            }}
+          >
+            Crear la cuenta con otro correo
+          </button>
+        </p>
       </DisenoCuentas>
     )
   }
@@ -220,17 +274,17 @@ export default function RegistroMaestro() {
         subtitulo={
           vista.renovacion
             ? 'Tu verificación anterior venció. Sube una nueva cédula para volver a ofrecer tus servicios.'
-            : 'Revisamos tu cédula para que los clientes sepan que eres quien dices ser.'
-      }
+            : 'Revisamos tu RUT y tu cédula para que los clientes sepan que eres quien dices ser.'
+        }
         pasoActual={3}
         pasoTotal={TOTAL_PASOS}
-        nombrePaso="Cédula"
+        nombrePaso="RUT y cédula"
       >
         <PasoCedulaMaestro
           maestroId={maestroId}
           renovacion={vista.renovacion ?? false}
-          // Solo se puede volver si el paso 2 se llenó en esta visita (si no, el formulario partiría vacío).
-          alVolver={datosPerfil ? () => setVista({ tipo: 'perfil', maestroCreado: true }) : undefined}
+          // El paso 2 carga lo guardado si no viene de esta visita, así que siempre se puede volver (salvo al renovar).
+          alVolver={vista.renovacion ? undefined : () => setVista({ tipo: 'perfil', maestroCreado: true })}
           alTerminar={() =>
             setVista({
               tipo: 'listo',
@@ -257,6 +311,78 @@ export default function RegistroMaestro() {
 
   // Hay vista de paso pero se cerró la sesión en otra pestaña: ProveedorSesion actualiza y el efecto la corrige.
   return null
+}
+
+// H-01 (validación de E3): un maestro no encontró dónde inscribirse ni qué le iban a pedir. Antes del paso 1 se
+// dice qué tener a mano, cuáles son los pasos y qué pasa después.
+function AntesDeEmpezar({ alEmpezar }: { alEmpezar: () => void }) {
+  return (
+    <div className="registro-intro">
+      <section aria-labelledby="intro-necesitas">
+        <h2 id="intro-necesitas">Ten a mano</h2>
+        <ul className="registro-intro-lista">
+          <li>
+            <Icono nombre="documento" tamano={20} />
+            <span>
+              <strong>Tu cédula de identidad</strong> para sacarle una foto por delante.
+            </span>
+          </li>
+          <li>
+            <Icono nombre="usuarioVerificado" tamano={20} />
+            <span>
+              <strong>Tu RUT.</strong> No aparece en tu perfil.
+            </span>
+          </li>
+          <li>
+            <Icono nombre="correo" tamano={20} />
+            <span>
+              <strong>Un correo</strong> para entrar a tu cuenta. El celular es opcional.
+            </span>
+          </li>
+        </ul>
+      </section>
+
+      <section aria-labelledby="intro-pasos">
+        <h2 id="intro-pasos">Los 3 pasos</h2>
+        <ol className="registro-intro-pasos">
+          <li>
+            <span>
+              <strong>Tus datos:</strong> nombre, correo, celular y una contraseña.
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>Tu oficio</strong> y las comunas donde trabajas.
+            </span>
+          </li>
+          <li>
+            <span>
+              <strong>Tu RUT y la foto de tu cédula.</strong>
+            </span>
+          </li>
+        </ol>
+      </section>
+
+      <section aria-labelledby="intro-despues" className="registro-intro-despues">
+        <h2 id="intro-despues">¿Qué pasa después?</h2>
+        <p>
+          Un administrador de MasterPlace revisa tu cédula. Mientras tanto tu perfil no aparece en las búsquedas; cuando
+          la aprueba, los clientes de tus comunas ya pueden encontrarte y escribirte. Tu cédula se borra apenas se
+          aprueba.
+        </p>
+      </section>
+
+      <button type="button" className="boton boton-primario boton-ancho" onClick={alEmpezar}>
+        Empezar registro
+        <span className="icono-flecha">
+          <Icono nombre="flecha" tamano={18} />
+        </span>
+      </button>
+      <p className="cuentas-alterno">
+        ¿Ya tienes cuenta? <Link to="/ingresar">Ingresa</Link> y sigue donde quedaste.
+      </p>
+    </div>
+  )
 }
 
 const TITULO_ESTADO: Record<EstadoIdentidad, string> = {

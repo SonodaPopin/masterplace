@@ -45,6 +45,33 @@ export default function PasoPerfilMaestro({ maestroId, comunaHogarId, maestroCre
   const [estadoUbicacion, setEstadoUbicacion] = useState<EstadoUbicacion>('inactiva')
   const [errorGeneral, setErrorGeneral] = useState<string | null>(null)
   const [enviando, setEnviando] = useState(false)
+  // Si el paso 2 ya se guardó (volvió desde el paso 3 después de recargar), se cargan sus datos para no partir vacío.
+  const [cargandoGuardado, setCargandoGuardado] = useState(maestroCreado && !inicial)
+
+  useEffect(() => {
+    if (!maestroCreado || inicial) return
+    let activo = true
+    Promise.all([
+      supabase.from('maestros').select('oficio_id, anios_experiencia, descripcion').eq('id', maestroId).maybeSingle(),
+      supabase.from('coberturas').select('comuna_id').eq('maestro_id', maestroId),
+    ]).then(([maestro, coberturas]) => {
+      if (!activo) return
+      if (maestro.data) {
+        setDatos({
+          oficioId: maestro.data.oficio_id != null ? String(maestro.data.oficio_id) : '',
+          aniosExperiencia: maestro.data.anios_experiencia != null ? String(maestro.data.anios_experiencia) : '',
+          descripcion: maestro.data.descripcion ?? '',
+          coberturas: coberturas.data?.length
+            ? coberturas.data.map((c: { comuna_id: number }) => c.comuna_id)
+            : [comunaHogar.id],
+        })
+      }
+      setCargandoGuardado(false)
+    })
+    return () => {
+      activo = false
+    }
+  }, [maestroCreado, inicial, maestroId, comunaHogar.id])
 
   useEffect(() => {
     let activo = true
@@ -144,6 +171,14 @@ export default function PasoPerfilMaestro({ maestroId, comunaHogarId, maestroCre
   }
 
   const largoDescripcion = datos.descripcion.trim().length
+
+  if (cargandoGuardado) {
+    return (
+      <p className="texto-suave" role="status">
+        Cargando lo que ya guardaste…
+      </p>
+    )
+  }
 
   return (
     <form onSubmit={enviar} noValidate className="formulario">
@@ -266,9 +301,9 @@ export default function PasoPerfilMaestro({ maestroId, comunaHogarId, maestroCre
       </fieldset>
 
       <fieldset className="grupo" aria-describedby="punto-ayuda">
-        <legend>Punto de referencia</legend>
+        <legend>¿Desde dónde sales a trabajar?</legend>
         <p id="punto-ayuda" className="campo-ayuda">
-          Sirve para ordenar la búsqueda por distancia. Nunca mostramos tu dirección.
+          Así te mostramos primero a los clientes que están cerca. Nunca mostramos tu dirección.
         </p>
         <div className="opciones-lista">
           <label className="opcion opcion-tarjeta">
