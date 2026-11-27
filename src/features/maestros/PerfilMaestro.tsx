@@ -4,6 +4,8 @@ import { supabase, supabaseConfigurado } from '../../lib/supabase'
 import { useSesion } from '../../lib/auth/contexto'
 import { nombreDeRelacion, type Relacion } from '../../lib/maestros/perfilPublico'
 import { crearOReutilizarContacto } from '../contacto/servicioContactos'
+import SellosConfianza from '../../components/SellosConfianza'
+import { sellosDeMaestro } from '../../lib/maestros/sellos'
 import {
   obtenerReputacionMaestro,
   type ReputacionMaestro,
@@ -15,6 +17,7 @@ type MaestroPublico = {
   anios_experiencia: number | null
   disponible: boolean
   certificado_ok: boolean
+  nivel_reputacion: boolean
   perfiles: Relacion
   oficios: Relacion
 }
@@ -74,6 +77,7 @@ export default function PerfilMaestro() {
           anios_experiencia,
           disponible,
           certificado_ok,
+          nivel_reputacion,
           perfiles(nombre),
           oficios(nombre)
         `)
@@ -150,6 +154,14 @@ void cargarReputacion()
 
           <p>{nombreDeRelacion(maestro.oficios) ?? 'Oficio no disponible'}</p>
 
+          <SellosConfianza
+            sellos={sellosDeMaestro({
+              certificado: maestro.certificado_ok,
+              reputacion: maestro.nivel_reputacion,
+              disponible: maestro.disponible,
+            })}
+          />
+
           {rol !== 'maestro' && rol !== 'admin' && (
             <div className="perfil-acciones">
               <button
@@ -181,13 +193,6 @@ void cargarReputacion()
             {maestro.anios_experiencia != null ? ' años' : ''}
           </p>
 
-          <p>
-            Disponibilidad: {maestro.disponible ? 'Disponible' : 'Sin cupo'}
-          </p>
-
-          {maestro.certificado_ok && (
-            <p>Certificado verificado</p>
-          )}
 
 <h2>Calificaciones y reseñas</h2>
 

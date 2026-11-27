@@ -2,6 +2,8 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import Icono from '../../components/Icono'
+import SellosConfianza from '../../components/SellosConfianza'
+import { sellosDeMaestro } from '../../lib/maestros/sellos'
 import { useSesion } from '../../lib/auth/contexto'
 import { crearOReutilizarContacto } from '../contacto/servicioContactos.ts'
 import {
@@ -126,37 +128,7 @@ export default function ListaResultados({
                   </p>
                 )}
 
-                <ul className="resultado-sellos" aria-label="Señales de confianza">
-                  <li className="sello-chip sello-chip-identidad">
-                    <Icono nombre="escudo" tamano={14} />
-                    Identidad verificada
-                  </li>
-
-                  {r.certificado && (
-                    <li className="sello-chip sello-chip-certificado">
-                      <Icono nombre="herramienta" tamano={14} />
-                      Certificado
-                    </li>
-                  )}
-
-                  {r.reputacion && (
-                    <li className="sello-chip sello-chip-reputacion">
-                      <Icono nombre="estrella" tamano={14} />
-                      Buena reputación
-                    </li>
-                  )}
-
-                  <li
-                    className={`sello-chip ${
-                      r.disponible
-                        ? 'sello-chip-disponible'
-                        : 'sello-chip-ocupado'
-                    }`}
-                  >
-                    <span className="punto-estado" aria-hidden="true" />
-                    {r.disponible ? 'Disponible' : 'Sin cupo por ahora'}
-                  </li>
-                </ul>
+                <SellosConfianza sellos={sellosDeMaestro(r)} />
 
                 <div className="resultado-acciones">
                   <button

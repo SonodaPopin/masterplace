@@ -1,0 +1,31 @@
+/* Sellos de confianza (búsqueda y perfil del maestro). Cada sello es un botón que muestra qué significa (H-03). */
+
+.sellos-confianza { display: flex; flex-direction: column; gap: 6px; }
+.sellos-confianza-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+
+.sello-chip {
+  display: inline-flex; align-items: center; gap: 5px; min-height: 28px; padding: 3px 6px 3px 10px;
+  border-radius: 999px; border: 1px solid transparent;
+  font: inherit; font-size: 0.8rem; font-weight: 700; line-height: 1.2; cursor: pointer;
+}
+.sello-chip:focus-visible { outline: 3px solid var(--color-foco); outline-offset: 2px; border-radius: 999px; }
+.sello-chip[aria-expanded='true'] { border-color: currentColor; }
+
+.sello-chip-pregunta {
+  display: inline-grid; place-items: center; width: 16px; height: 16px; margin-left: 1px;
+  border-radius: 50%; border: 1.5px solid currentColor; font-size: 0.68rem; font-weight: 800; opacity: 0.85;
+}
+
+.sello-chip-identidad { background: var(--color-primario-suave); color: var(--color-primario); }
+.sello-chip-certificado { background: #e8eefb; color: #1d4a9e; }
+.sello-chip-reputacion { background: var(--color-acento-suave); color: var(--color-aviso); }
+.sello-chip-disponible { background: var(--color-superficie); color: #1f6b3a; border-color: #b9dcc4; }
+.sello-chip-ocupado { background: var(--color-superficie); color: var(--color-texto-suave); border-color: var(--color-borde); }
+.sello-chip-disponible[aria-expanded='true'], .sello-chip-ocupado[aria-expanded='true'] { border-color: currentColor; }
+.punto-estado { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+
+.sellos-confianza-ayuda { margin: 0; font-size: 0.86rem; color: var(--color-texto); }
+.sellos-confianza-ayuda > span {
+  display: block; padding: 8px 12px; border-radius: 10px;
+  background: var(--color-fondo); border: 1px solid var(--color-borde);
+}
