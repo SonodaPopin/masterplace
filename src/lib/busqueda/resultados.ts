@@ -1,5 +1,7 @@
 import { haversineKm, type Punto } from '../geo/haversine'
 
+export type OrdenBusqueda = 'distancia' | 'reputacion'
+
 // Contrato entre la búsqueda (Pedro, RF-3) y su presentación en mapa y lista (Gabriel).
 // Un resultado es un maestro verificado con su punto de referencia y la distancia al punto de búsqueda.
 export type ResultadoBusqueda = {
@@ -13,12 +15,16 @@ export type ResultadoBusqueda = {
   reputacion: boolean
   punto: Punto
   distanciaKm: number
+  cantidadResenas: number
+  promedioResenas: number | null
+  puntajeLaplace: number | null
 }
 
 export type FiltrosBusqueda = {
   oficioId: number | null
   comunaId: number
   punto: Punto
+  orden?: OrdenBusqueda
 }
 
 // PostgREST entrega una columna geography(point) como EWKB en hexadecimal, por ejemplo
@@ -72,6 +78,9 @@ export function aResultados(filas: FilaMaestro[], desde: Punto): ResultadoBusque
       reputacion: f.nivel_reputacion,
       punto,
       distanciaKm: haversineKm(desde, punto),
+      cantidadResenas: 0,
+      promedioResenas: null,
+      puntajeLaplace: null,
     })
   }
   return ordenarPorDistancia(resultados)
@@ -79,6 +88,18 @@ export function aResultados(filas: FilaMaestro[], desde: Punto): ResultadoBusque
 
 export function ordenarPorDistancia(resultados: ResultadoBusqueda[]): ResultadoBusqueda[] {
   return [...resultados].sort((a, b) => a.distanciaKm - b.distanciaKm || a.id.localeCompare(b.id))
+}
+
+export function ordenarPorReputacion(resultados: ResultadoBusqueda[]): ResultadoBusqueda[] {
+  return [...resultados].sort((a, b) => {
+    const aSinResenas = a.puntajeLaplace === null || a.cantidadResenas === 0
+    const bSinResenas = b.puntajeLaplace === null || b.cantidadResenas === 0
+    if (aSinResenas !== bSinResenas) return aSinResenas ? 1 : -1
+    if (!aSinResenas && !bSinResenas && a.puntajeLaplace !== b.puntajeLaplace) {
+      return b.puntajeLaplace! - a.puntajeLaplace!
+    }
+    return a.distanciaKm - b.distanciaKm || a.id.localeCompare(b.id)
+  })
 }
 
 export function formatearDistancia(km: number): string {
