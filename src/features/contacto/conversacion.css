@@ -92,12 +92,6 @@
   color: #1f6b3a;
 }
 
-.conversacion-estado-servicio_confirmado {
-  border-color: #c5d6ef;
-  background: #eef4fc;
-  color: #214f85;
-}
-
 .conversacion-estado-cerrado {
   border-color: var(--color-borde);
   background: #f1f3f2;

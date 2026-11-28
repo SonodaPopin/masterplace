@@ -1,20 +1,43 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link, Navigate, useLocation, useParams } from 'react-router-dom'
+import { Link, Navigate, useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { useSesion } from '../../lib/auth/contexto'
 import { supabase, supabaseConfigurado } from '../../lib/supabase'
+import { DIAS_PLAZO_RESENA } from '../../lib/solicitudes/reglas'
+import { listarSolicitudes, type Solicitud } from '../solicitudes/servicioSolicitudes'
 
 type Contacto = {
   id: string
   cliente_id: string
-  estado: 'abierto' | 'servicio_confirmado' | 'cerrado'
 }
 
+const FORMATO_FECHA = new Intl.DateTimeFormat('es-CL', { dateStyle: 'long', timeStyle: 'short', hourCycle: 'h23' })
+
+// Errores del trigger de la migración de cambio de Ignacio (20261124000000_resena_exige_solicitud.sql).
+const ERRORES_RESENA: Record<string, string> = {
+  RESENA_SIN_SOLICITUD: 'La reseña tiene que ser de un servicio realizado.',
+  RESENA_SOLICITUD_INVALIDA: 'No encontramos ese servicio en esta conversación.',
+  RESENA_SOLO_CLIENTE: 'Solo el cliente puede publicar una reseña.',
+  RESENA_SOLICITUD_NO_REALIZADA: 'Podrás dejar la reseña cuando el servicio esté marcado como realizado.',
+  RESENA_FUERA_DE_PLAZO: `Pasaron más de ${DIAS_PLAZO_RESENA} días desde el servicio; ya no se puede dejar una reseña.`,
+}
+
+function mensajeErrorResena(mensaje: string): string {
+  for (const [codigo, texto] of Object.entries(ERRORES_RESENA)) {
+    if (mensaje.includes(codigo)) return texto
+  }
+  return 'No se pudo publicar la reseña. Inténtalo nuevamente.'
+}
+
+// #64: la reseña es de una solicitud de servicio realizada (?solicitud=<id>), no de la conversación.
 export default function NuevaResena() {
   const { contactoId } = useParams<{ contactoId: string }>()
+  const [parametros] = useSearchParams()
+  const solicitudId = parametros.get('solicitud')
   const ubicacion = useLocation()
   const { usuario, cargando: cargandoSesion } = useSesion()
 
   const [contacto, setContacto] = useState<Contacto | null>(null)
+  const [solicitud, setSolicitud] = useState<Solicitud | null>(null)
   const [calificacion, setCalificacion] = useState(5)
   const [comentario, setComentario] = useState('')
   const [cargando, setCargando] = useState(true)
@@ -32,11 +55,12 @@ export default function NuevaResena() {
       setCargando(true)
       setError(null)
       setContacto(null)
+      setSolicitud(null)
       setYaExiste(false)
 
       const { data, error: errorContacto } = await supabase
         .from('contactos')
-        .select('id, cliente_id, estado')
+        .select('id, cliente_id')
         .eq('id', contactoId!)
         .maybeSingle()
 
@@ -57,24 +81,40 @@ export default function NuevaResena() {
         return
       }
 
-      if (contactoActual.estado !== 'servicio_confirmado') {
-        setError('El servicio debe estar confirmado para publicar una reseña.')
+      if (!solicitudId) {
+        setError('Para dejar una reseña, abre la conversación y toca «Dejar reseña» en el servicio realizado.')
         setCargando(false)
         return
       }
 
-      const { data: resena, error: errorResena } = await supabase
-        .from('resenas')
-        .select('id')
-        .eq('contacto_id', contactoId!)
-        .maybeSingle()
-
+      let solicitudes: Solicitud[]
+      try {
+        solicitudes = await listarSolicitudes(contactoId!)
+      } catch {
+        if (!vigente) return
+        setError('No se pudo comprobar el servicio. Inténtalo nuevamente.')
+        setCargando(false)
+        return
+      }
       if (!vigente) return
 
-      if (errorResena) {
-        setError('No se pudo comprobar si el contacto ya tiene una reseña.')
-      } else {
-        setYaExiste(resena !== null)
+      const actual = solicitudes.find((s) => s.id === solicitudId) ?? null
+      setSolicitud(actual)
+
+      if (!actual) {
+        setError(ERRORES_RESENA.RESENA_SOLICITUD_INVALIDA)
+      } else if (actual.estado !== 'realizada') {
+        setError(ERRORES_RESENA.RESENA_SOLICITUD_NO_REALIZADA)
+      } else if (!actual.puedeResenar) {
+        // Ya tiene reseña o pasó el plazo de 30 días.
+        const { data: resena } = await supabase
+          .from('resenas')
+          .select('id')
+          .eq('solicitud_id', actual.id)
+          .maybeSingle()
+        if (!vigente) return
+        if (resena) setYaExiste(true)
+        else setError(ERRORES_RESENA.RESENA_FUERA_DE_PLAZO)
       }
 
       setCargando(false)
@@ -85,14 +125,13 @@ export default function NuevaResena() {
     return () => {
       vigente = false
     }
-  }, [contactoId, usuario, cargandoSesion])
+  }, [contactoId, solicitudId, usuario, cargandoSesion])
 
   async function publicar(evento: FormEvent<HTMLFormElement>) {
     evento.preventDefault()
 
-    if (!contacto || !usuario || enviando || yaExiste) return
-    if (contacto.cliente_id !== usuario.id) return
-    if (contacto.estado !== 'servicio_confirmado') return
+    if (!contacto || !solicitud || !usuario || enviando || yaExiste) return
+    if (contacto.cliente_id !== usuario.id || !solicitud.puedeResenar) return
 
     if (!Number.isInteger(calificacion) || calificacion < 1 || calificacion > 5) {
       setError('Selecciona una calificación entre 1 y 5.')
@@ -111,6 +150,7 @@ export default function NuevaResena() {
       .from('resenas')
       .insert({
         contacto_id: contacto.id,
+        solicitud_id: solicitud.id,
         calificacion,
         comentario: comentario.trim() || null,
       })
@@ -118,9 +158,8 @@ export default function NuevaResena() {
     if (errorInsertar) {
       if (errorInsertar.code === '23505') {
         setYaExiste(true)
-        setError('Este contacto ya tiene una reseña.')
       } else {
-        setError('No se pudo publicar la reseña. Inténtalo nuevamente.')
+        setError(mensajeErrorResena(errorInsertar.message))
       }
     } else {
       setPublicada(true)
@@ -161,13 +200,19 @@ export default function NuevaResena() {
         <>
           {error && <p className="alerta-error" role="alert">{error}</p>}
 
-          {yaExiste && <p>Este contacto ya tiene una reseña registrada.</p>}
+          {yaExiste && <p>Ya dejaste una reseña para este servicio. ¡Gracias!</p>}
+
+          {solicitud && (
+            <p className="texto-suave">
+              Servicio: <strong>{solicitud.descripcion}</strong> ·{' '}
+              <time dateTime={solicitud.fechaAcordada}>{FORMATO_FECHA.format(new Date(solicitud.fechaAcordada))}</time>
+            </p>
+          )}
 
           {contacto &&
+            solicitud?.puedeResenar &&
             contacto.cliente_id === usuario.id &&
-            contacto.estado === 'servicio_confirmado' &&
-            !yaExiste &&
-            !error?.startsWith('No se pudo comprobar') && (
+            !yaExiste && (
               <form onSubmit={(evento) => void publicar(evento)}>
                 <fieldset disabled={enviando}>
                   <legend>Calificación del servicio</legend>
